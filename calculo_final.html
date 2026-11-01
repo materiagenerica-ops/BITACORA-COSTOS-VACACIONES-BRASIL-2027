@@ -42,7 +42,7 @@
                 <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                     <i class="fa-solid fa-calculator mr-3 text-brasil-green"></i> Cálculo Final y Consolidado
                 </h3>
-                <p class="text-slate-300 text-sm">Resumen manual y unificado de la bitácora de gastos.</p>
+                <p class="text-slate-300 text-sm">Resumen de historiales y operación manual mediante botones.</p>
             </div>
             
             <div class="w-full md:w-auto p-4 rounded-2xl bg-slate-900/80 border border-amber-400/30 space-y-2">
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <!-- BOTONES DE CÁLCULO Y RESULTADOS -->
+        <!-- PANEL DE BOTONES Y RESULTADOS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <!-- Botón y Total Pesos -->
@@ -83,7 +83,7 @@
             <!-- Costo Total Consolidado -->
             <div class="glass-panel p-6 rounded-3xl border border-brasil-green/40 bg-emerald-950/30 space-y-4 shadow-xl">
                 <div class="py-1 text-center bg-brasil-green/20 rounded-xl border border-brasil-green/30 text-brasil-green font-bold text-xs uppercase tracking-wider">
-                    Cálculo Final Consolidado
+                    Cálculo Final Total
                 </div>
                 <div>
                     <span class="text-xs uppercase tracking-wider text-emerald-300 font-bold block mb-1">Costo Total Bitácora ($ ARS):</span>
@@ -95,7 +95,7 @@
         <!-- TABLAS DE HISTORIALES -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- 1. Hoteles (hoteles_reservas) -->
+            <!-- 1. Hoteles -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-purple-400 flex items-center">
                     <i class="fa-solid fa-hotel mr-2"></i> Historial Hoteles
@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <!-- 2. Alimentos (menu_comidas) -->
+            <!-- 2. Alimentos -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-orange-400 flex items-center">
                     <i class="fa-solid fa-utensils mr-2"></i> Historial Alimentos
@@ -133,7 +133,7 @@
                 </div>
             </div>
 
-            <!-- 3. Combustibles (combustible_recorridos) -->
+            <!-- 3. Combustibles -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-amber-400 flex items-center">
                     <i class="fa-solid fa-gas-pump mr-2"></i> Historial Combustible
@@ -152,7 +152,7 @@
                 </div>
             </div>
 
-            <!-- 4. Playa (playa_opciones) -->
+            <!-- 4. Playa -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center">
                     <i class="fa-solid fa-umbrella-beach mr-2"></i> Historial Playa
@@ -201,7 +201,7 @@
         const btnCalcularReales = document.getElementById("btn-calcular-reales");
 
         function renderizarHistoriales() {
-            // 1. Hoteles (hoteles_reservas) -> En pesos
+            // 1. Hoteles (hoteles_reservas)
             const tbHot = document.getElementById("tabla-hoteles");
             tbHot.innerHTML = "";
             if (cache.hoteles.length > 0) {
@@ -218,7 +218,7 @@
                 tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
             }
 
-            // 2. Alimentos (menu_comidas) -> En reales
+            // 2. Alimentos (menu_comidas)
             const tbAli = document.getElementById("tabla-alimentos");
             tbAli.innerHTML = "";
             if (cache.alimentos.length > 0) {
@@ -235,7 +235,7 @@
                 tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
             }
 
-            // 3. Combustible (combustible_recorridos) -> Puede ser ARS o BRA (reales)
+            // 3. Combustible (combustible_recorridos)
             const tbComb = document.getElementById("tabla-combustible");
             tbComb.innerHTML = "";
             if (cache.combustible.length > 0) {
@@ -255,7 +255,7 @@
                 tbComb.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
             }
 
-            // 4. Playa (playa_opciones) -> En reales
+            // 4. Playa (playa_opciones)
             const tbPlaya = document.getElementById("tabla-playa");
             tbPlaya.innerHTML = "";
             if (cache.playa.length > 0) {
@@ -273,53 +273,31 @@
             }
         }
 
-        // Botón 1: Calcular la suma total en Pesos
+        // Función para calcular la suma total en Pesos mediante el botón
         btnCalcularPesos.addEventListener("click", () => {
             let totalARS = 0;
-            
-            // Sumar Hoteles (guardados en pesos)
-            cache.hoteles.forEach(item => {
-                totalARS += parseFloat(item.costoPesos) || 0;
-            });
-
-            // Sumar Combustible hecho en Argentina (territorio != 'BRA')
+            cache.hoteles.forEach(item => totalARS += parseFloat(item.costoPesos) || 0);
             cache.combustible.forEach(item => {
-                if (item.territorio !== 'BRA') {
-                    totalARS += parseFloat(item.costoFinal) || 0;
-                }
+                if (item.territorio !== 'BRA') totalARS += parseFloat(item.costoFinal) || 0;
             });
-
             document.getElementById("display-total-ars").textContent = `$ ${totalARS.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
-            realizarCalculoFinal();
+            actualizarConsolidado();
         });
 
-        // Botón 2: Calcular la suma total en Reales
+        // Función para calcular la suma total en Reales mediante el botón
         btnCalcularReales.addEventListener("click", () => {
             let totalBRL = 0;
-
-            // Sumar Alimentos (guardados en reales)
-            cache.alimentos.forEach(item => {
-                totalBRL += parseFloat(item.reales) || 0;
-            });
-
-            // Sumar Combustible hecho en Brasil (territorio === 'BRA')
+            cache.alimentos.forEach(item => totalBRL += parseFloat(item.reales) || 0);
             cache.combustible.forEach(item => {
-                if (item.territorio === 'BRA') {
-                    totalBRL += parseFloat(item.costoFinal) || 0;
-                }
+                if (item.territorio === 'BRA') totalBRL += parseFloat(item.costoFinal) || 0;
             });
-
-            // Sumar Playa (guardados en reales)
-            cache.playa.forEach(item => {
-                totalBRL += parseFloat(item.costoTotal) || 0;
-            });
-
+            cache.playa.forEach(item => totalBRL += parseFloat(item.costoTotal) || 0);
             document.getElementById("display-total-brl").textContent = `R$ ${totalBRL.toFixed(2)}`;
-            realizarCalculoFinal();
+            actualizarConsolidado();
         });
 
-        // Cálculo Final Consolidado
-        function realizarCalculoFinal() {
+        // Cálculo Final Consolidado (Suma pesos + reales convertidos según los totales operados)
+        function actualizarConsolidado() {
             let totalARS = 0;
             cache.hoteles.forEach(item => totalARS += parseFloat(item.costoPesos) || 0);
             cache.combustible.forEach(item => { if (item.territorio !== 'BRA') totalARS += parseFloat(item.costoFinal) || 0; });
@@ -336,9 +314,9 @@
             document.getElementById("display-total-consolidado").textContent = `$ ${costoFinalTotal.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
         }
 
-        cotizacionInput.addEventListener("input", realizarCalculoFinal);
+        cotizacionInput.addEventListener("input", actualizarConsolidado);
 
-        // Conexiones en tiempo real a Firestore para las 4 colecciones exactas
+        // Conexiones en tiempo real a las colecciones exactas de Firestore
         onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
             cache.hoteles = [];
             snap.forEach(d => cache.hoteles.push(d.data()));
