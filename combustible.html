@@ -28,11 +28,6 @@
         .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
-        .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(254, 223, 0, 0.3); }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #050b14; }
-        ::-webkit-scrollbar-thumb { background: #002776; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -44,7 +39,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-umbrella-beach mr-3 text-amber-400"></i> Gastos de Playa y Parador
             </h3>
-            <p class="text-slate-300 text-sm">Indica la cantidad y precio unitario de cada consumo, calcula el costo del día, multiplícalo por la cantidad de días y guárdalo en la base de datos.</p>
+            <p class="text-slate-300 text-sm">Indica cantidades y precios unitarios. El cálculo se realiza al instante.</p>
         </div>
 
         <!-- FORMULARIO -->
@@ -56,64 +51,64 @@
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-chair text-amber-400 mr-1.5"></i> Reposera</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Gacebo -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-tent text-cyan-400 mr-1.5"></i> Gacebo</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Papas -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-utensils text-yellow-400 mr-1.5"></i> Papas Fritas</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Rabas -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-fish text-emerald-400 mr-1.5"></i> Rabas</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Pastel -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-cookie-bite text-orange-400 mr-1.5"></i> Pastel</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Caipirinha -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-glass-citrus text-lime-400 mr-1.5"></i> Caipirinha</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Milho -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-seedling text-amber-200 mr-1.5"></i> Milho</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
                 <!-- Frango -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-drumstick-bite text-amber-600 mr-1.5"></i> Frango</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
                     </div>
                 </div>
             </div>
@@ -130,7 +125,7 @@
 
                 <div class="p-5 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-3">
                     <label class="block text-xs uppercase tracking-wider text-blue-300/80 font-bold">Cantidad de Días:</label>
-                    <input type="text" inputmode="numeric" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" value="1">
+                    <input type="number" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm calc-trigger" value="1" min="1">
                     <div>
                         <span class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">Costo Opción Total:</span>
                         <div id="costo-opcion-display" class="font-cinzel text-2xl font-black text-cyan-400">R$ 0.00</div>
@@ -140,7 +135,7 @@
 
             <!-- BOTONES -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
+                <button type="button" id="btn-guardar" class="px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)
                 </button>
                 <button type="button" id="btn-cancelar" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs cursor-pointer">
@@ -170,7 +165,7 @@
 
     </div>
 
-    <!-- SCRIPT DEFINITIVO -->
+    <!-- SCRIPT LIMPIO Y FUNCIONAL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -195,19 +190,20 @@
             { id: 'frango', label: 'Frango' }
         ];
 
-        function parseNum(val) {
-            return parseFloat(val ? val.toString().replace(',', '.') : 0) || 0;
+        function getVal(id) {
+            const el = document.getElementById(id);
+            return el ? parseFloat(el.value) || 0 : 0;
         }
 
-        function calcular() {
+        function calcularCostos() {
             let costoDia = 0;
             items.forEach(i => {
-                const cant = parseNum(document.getElementById(`cant_${i.id}`).value);
-                const prec = parseNum(document.getElementById(`precio_${i.id}`).value);
+                const cant = getVal(`cant_${i.id}`);
+                const prec = getVal(`precio_${i.id}`);
                 costoDia += (cant * prec);
             });
 
-            const dias = parseNum(document.getElementById("cantidad_dias").value) || 1;
+            const dias = getVal("cantidad_dias") || 1;
             const costoTotal = costoDia * dias;
 
             document.getElementById("costo-dia-display").textContent = `R$ ${costoDia.toFixed(2)}`;
@@ -216,24 +212,23 @@
             return { costoDia, costoTotal, dias };
         }
 
-        // Eventos en vivo para inputs
-        document.querySelectorAll("input").forEach(input => {
-            input.addEventListener("input", calcular);
+        // Asignación limpia de eventos nativos
+        document.querySelectorAll(".calc-trigger").forEach(el => {
+            el.addEventListener("input", calcularCostos);
         });
 
-        document.getElementById("btn-calcular").addEventListener("click", calcular);
+        document.getElementById("btn-calcular").addEventListener("click", calcularCostos);
 
-        // Guardar o Actualizar
         document.getElementById("btn-guardar").addEventListener("click", async () => {
             const id = document.getElementById("playa-id").value;
-            const dias = parseNum(document.getElementById("cantidad_dias").value);
+            const dias = getVal("cantidad_dias");
 
             if (dias <= 0) {
                 alert("La cantidad de días debe ser mayor a 0.");
                 return;
             }
 
-            const { costoDia, costoTotal } = calcular();
+            const { costoDia, costoTotal } = calcularCostos();
             let data = {
                 cantidad_dias: dias,
                 costoDia: costoDia.toFixed(2),
@@ -242,8 +237,8 @@
             };
 
             items.forEach(i => {
-                data[`cant_${i.id}`] = parseNum(document.getElementById(`cant_${i.id}`).value);
-                data[`precio_${i.id}`] = parseNum(document.getElementById(`precio_${i.id}`).value);
+                data[`cant_${i.id}`] = getVal(`cant_${i.id}`);
+                data[`precio_${i.id}`] = getVal(`precio_${i.id}`);
             });
 
             try {
@@ -254,31 +249,31 @@
                     await addDoc(collection(db, "playa_opciones"), data);
                     alert("¡Guardado con éxito en Firestore!");
                 }
-                limpiarFormulario();
+                resetForm();
             } catch (err) {
                 alert("Error al guardar: " + err.message);
             }
         });
 
-        function limpiarFormulario() {
+        function resetForm() {
             document.getElementById("playa-id").value = "";
             document.getElementById("cantidad_dias").value = "1";
             items.forEach(i => {
                 document.getElementById(`cant_${i.id}`).value = "0";
-                document.getElementById(`precio_${i.id}`).value = "";
+                document.getElementById(`precio_${i.id}`).value = "0";
             });
-            document.getElementById("costo-dia-display").textContent = "R$ 0.00";
-            document.getElementById("costo-opcion-display").textContent = "R$ 0.00";
+            calcularCostos();
             document.getElementById("btn-cancelar").classList.add("hidden");
             document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)`;
         }
 
-        document.getElementById("btn-cancelar").addEventListener("click", limpiarFormulario);
+        document.getElementById("btn-cancelar").addEventListener("click", resetForm);
 
-        // Historial en tiempo real
+        // Firestore Realtime Historial
         onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
             const tbody = document.getElementById("historial-playa-body");
             tbody.innerHTML = "";
+            
             if (!snapshot.empty) {
                 let docs = [];
                 snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
@@ -307,7 +302,7 @@
                     tbody.appendChild(tr);
                 });
 
-                // Eventos de edición y eliminación seguros
+                // Acciones de Editar
                 document.querySelectorAll(".btn-edit").forEach(btn => {
                     btn.addEventListener("click", () => {
                         const data = JSON.parse(btn.getAttribute("data-json"));
@@ -315,30 +310,30 @@
                         document.getElementById("cantidad_dias").value = data.cantidad_dias;
                         items.forEach(i => {
                             document.getElementById(`cant_${i.id}`).value = data[`cant_${i.id}`] || 0;
-                            document.getElementById(`precio_${i.id}`).value = data[`precio_${i.id}`] || "";
+                            document.getElementById(`precio_${i.id}`).value = data[`precio_${i.id}`] || 0;
                         });
-                        calcular();
+                        calcularCostos();
                         document.getElementById("btn-cancelar").classList.remove("hidden");
                         document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar`;
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 });
 
+                // Acciones de Eliminar
                 document.querySelectorAll(".btn-del").forEach(btn => {
                     btn.addEventListener("click", async () => {
-                        if (confirm("¿Eliminar registro?")) {
+                        if (confirm("¿Seguro que deseas eliminar este registro?")) {
                             try {
                                 await deleteDoc(doc(db, "playa_opciones", btn.getAttribute("data-id")));
-                                alert("Eliminado correctamente");
                             } catch(e) {
-                                alert("Error: " + e.message);
+                                alert("Error al eliminar: " + e.message);
                             }
                         }
                     });
                 });
 
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros en Firestore.</td></tr>`;
             }
         });
     </script>
