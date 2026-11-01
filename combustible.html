@@ -99,12 +99,12 @@
                 </div>
             </div>
 
-            <!-- BOTONES DE ACCIÓN -->
+            <!-- BOTONES DE ACCIÓN CON LLAMADA DIRECTA EN LÍNEA -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar-combustible" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
+                <button type="button" id="btn-guardar-combustible" onclick="window.ejecutarGuardadoDirecto()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido
                 </button>
-                <button type="button" id="btn-cancelar-edicion" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
+                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionForm()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
                     Cancelar Edición
                 </button>
             </div>
@@ -194,64 +194,58 @@
             if (input) input.addEventListener("input", calcularCostoCombustible);
         });
 
-        // Evento de clic blindado con alert para depurar cualquier fallo al instante
-        btnGuardar.addEventListener("click", () => {
-            try {
-                const id = combustibleIdInput.value;
-                const origen = origenInput.value.trim();
-                const destino = destinoInput.value.trim();
-                const kilometros = parsearNumero(kmInput.value);
-                const kmLitro = parsearNumero(kmLitroInput.value);
-                const valorLitro = parsearNumero(valorLitroInput.value);
-                
-                if (!origen || !destino) {
-                    alert("Por favor completa los campos 'Desde' y 'Hasta'.");
-                    return;
-                }
-                if (kilometros <= 0 || kmLitro <= 0 || valorLitro <= 0) {
-                    alert("Verifica que los valores numéricos sean mayores a 0.");
-                    return;
-                }
-
-                const costoFinal = ((kilometros / kmLitro) * valorLitro).toFixed(2);
-
-                const recorridoData = {
-                    origen,
-                    destino,
-                    kilometros,
-                    kmLitro,
-                    valor_litro: valorLitro,
-                    costoFinal,
-                    timestamp: Date.now()
-                };
-
-                const dbRef = ref(db, "combustible_recorridos");
-
-                if (id) {
-                    const itemRef = ref(db, `combustible_recorridos/${id}`);
-                    update(itemRef, recorridoData)
-                        .then(() => {
-                            alert("¡Recorrido actualizado con éxito!");
-                            resetForm();
-                        })
-                        .catch((err) => alert("Error al actualizar en Firebase: " + err.message));
-                } else {
-                    const nuevoRef = push(dbRef);
-                    set(nuevoRef, recorridoData)
-                        .then(() => {
-                            alert("¡Recorrido guardado con éxito!");
-                            resetForm();
-                        })
-                        .catch((err) => alert("Error al guardar en Firebase: " + err.message));
-                }
-            } catch (error) {
-                alert("Error inesperado en el script: " + error.message);
+        // FUNCIÓN GLOBAL DIRECTA PARA EL BOTÓN (Evita bloqueos de addEventListener en módulos ES6)
+        window.ejecutarGuardadoDirecto = function() {
+            const id = combustibleIdInput.value;
+            const origen = origenInput.value.trim();
+            const destino = destinoInput.value.trim();
+            const kilometros = parsearNumero(kmInput.value);
+            const kmLitro = parsearNumero(kmLitroInput.value);
+            const valorLitro = parsearNumero(valorLitroInput.value);
+            
+            if (!origen || !destino) {
+                alert("Por favor completa los campos 'Desde' y 'Hasta'.");
+                return;
             }
-        });
+            if (kilometros <= 0 || kmLitro <= 0 || valorLitro <= 0) {
+                alert("Verifica que los valores numéricos sean mayores a 0.");
+                return;
+            }
 
-        btnCancelarEdicion.addEventListener("click", () => resetForm());
+            const costoFinal = ((kilometros / kmLitro) * valorLitro).toFixed(2);
 
-        function resetForm() {
+            const recorridoData = {
+                origen,
+                destino,
+                kilometros,
+                kmLitro,
+                valor_litro: valorLitro,
+                costoFinal,
+                timestamp: Date.now()
+            };
+
+            const dbRef = ref(db, "combustible_recorridos");
+
+            if (id) {
+                const itemRef = ref(db, `combustible_recorridos/${id}`);
+                update(itemRef, recorridoData)
+                    .then(() => {
+                        alert("¡Recorrido actualizado con éxito!");
+                        window.cancelarEdicionForm();
+                    })
+                    .catch((err) => alert("Error al actualizar en Firebase: " + err.message));
+            } else {
+                const nuevoRef = push(dbRef);
+                set(nuevoRef, recorridoData)
+                    .then(() => {
+                        alert("¡Recorrido guardado con éxito!");
+                        window.cancelarEdicionForm();
+                    })
+                    .catch((err) => alert("Error al guardar en Firebase: " + err.message));
+            }
+        };
+
+        window.cancelarEdicionForm = function() {
             origenInput.value = "";
             destinoInput.value = "";
             kmInput.value = "";
@@ -262,7 +256,7 @@
             btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
             costoFinalDisplay.textContent = `R$ 0.00`;
             mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar`;
-        }
+        };
 
         // Cargar historial en tiempo real desde Firebase
         const dbRef = ref(db, "combustible_recorridos");
@@ -281,47 +275,43 @@
                         <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
                         <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" class="btn-editar px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" data-id="${id}" data-origen="${item.origen}" data-destino="${item.destino}" data-km="${item.kilometros}" data-kmlitro="${item.kmLitro}" data-valor="${item.valor_litro}" title="Editar">
+                            <button type="button" onclick="window.editarRecorridoGlobal('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button type="button" class="btn-eliminar px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" data-id="${id}" title="Eliminar">
+                            <button type="button" onclick="window.eliminarRecorridoGlobal('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
-
-                document.querySelectorAll(".btn-editar").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        combustibleIdInput.value = btn.getAttribute("data-id");
-                        origenInput.value = btn.getAttribute("data-origen");
-                        destinoInput.value = btn.getAttribute("data-destino");
-                        kmInput.value = btn.getAttribute("data-km");
-                        kmLitroInput.value = btn.getAttribute("data-kmlitro");
-                        valorLitroInput.value = btn.getAttribute("data-valor");
-                        calcularCostoCombustible();
-
-                        btnCancelarEdicion.classList.remove("hidden");
-                        btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Recorrido`;
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    });
-                });
-
-                document.querySelectorAll(".btn-eliminar").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        if (confirm("¿Estás seguro de eliminar este registro?")) {
-                            remove(ref(db, `combustible_recorridos/${btn.getAttribute("data-id")}`))
-                                .then(() => alert("Registro eliminado correctamente."))
-                                .catch((err) => alert("Error al eliminar: " + err.message));
-                        }
-                    });
-                });
-
             } else {
                 historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">No hay recorridos registrados todavía.</td></tr>`;
             }
         });
+
+        window.editarRecorridoGlobal = function(id, origen, destino, km, kmLitro, valorLitro) {
+            combustibleIdInput.value = id;
+            origenInput.value = origen;
+            destinoInput.value = destino;
+            kmInput.value = km;
+            kmLitroInput.value = kmLitro;
+            valorLitroInput.value = valorLitro;
+            calcularCostoCombustible();
+
+            btnCancelarEdicion.classList.remove("hidden");
+            btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Recorrido`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.eliminarRecorridoGlobal = function(id) {
+            if (confirm("¿Estás seguro de eliminar este registro?")) {
+                const itemRef = ref(db, `combustible_recorridos/${id}`);
+                remove(itemRef)
+                    .then(() => alert("Registro eliminado correctamente."))
+                    .catch((err) => alert("Error al eliminar: " + err.message));
+            }
+        };
     </script>
 </body>
 </html>
