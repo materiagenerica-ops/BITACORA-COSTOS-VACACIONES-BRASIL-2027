@@ -48,7 +48,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Gestiona los trayectos, calcula costos en Reales y visualiza las rutas directamente en Google Maps.</p>
+            <p class="text-slate-300 text-sm">Gestiona los trayectos, calcula costos en Reales y visualiza el mapa de la ruta en tiempo real dentro del formulario.</p>
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
@@ -82,17 +82,21 @@
                     </div>
                 </div>
 
-                <!-- RESULTADO Y GOOGLE MAPS -->
-                <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
-                        <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
+                <!-- RESULTADO Y MAPA INCORPORADO EN EL FORMULARIO -->
+                <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
+                            <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
+                        </div>
+                        <div class="text-right text-xs text-slate-400">
+                            <i class="fa-solid fa-map-location-dot text-cyan-400 mr-1"></i> Visualización de ruta en vivo
+                        </div>
                     </div>
-                    <div id="map-link-container">
-                        <a id="btn-ver-maps" href="https://maps.google.com" target="_blank" class="immersive-btn px-5 py-3 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 border border-blue-400/40 text-blue-200 font-bold text-xs uppercase tracking-wider flex items-center space-x-2">
-                            <i class="fa-solid fa-map-location-dot text-cyan-400 text-base"></i>
-                            <span>Mostrar Recorrido en Google Maps</span>
-                        </a>
+
+                    <!-- Contenedor del Mapa Embebido -->
+                    <div class="w-full h-72 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
+                        <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7"></iframe>
                     </div>
                 </div>
 
@@ -132,9 +136,8 @@
 
     </div>
 
-    <!-- SCRIPT DE CONEXIÓN CON FIREBASE (HEREDADO DE PARENT WINDOW) -->
+    <!-- SCRIPT DE CONEXIÓN CON FIREBASE -->
     <script type="module">
-        // Importar Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -157,7 +160,7 @@
         const kmLitroInput = document.getElementById("km_litro");
         const valorLitroInput = document.getElementById("valor_litro");
         const costoFinalDisplay = document.getElementById("costo-final-display");
-        const btnVerMaps = document.getElementById("btn-ver-maps");
+        const mapIframe = document.getElementById("map-iframe");
         const historialBody = document.getElementById("historial-combustible-body");
         const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
         const combustibleIdInput = document.getElementById("combustible-id");
@@ -176,10 +179,13 @@
 
             const origen = encodeURIComponent(origenInput.value.trim());
             const destino = encodeURIComponent(destinoInput.value.trim());
+            
+            // Actualizar el mapa embebido dentro del formulario de manera automática
             if (origen && destino) {
-                btnVerMaps.href = `https://www.google.com/maps/dir/?api=1&origin=${origen}&destination=${destino}&travelmode=driving`;
+                // Usamos la URL de inserción de Google Maps para direcciones (modo embed estándar sin requerir clave de API de pago obligatoria para vistas básicas, o interfaz de consulta pública)
+                mapIframe.src = `https://www.google.com/maps?saddr=${origen}&daddr=${destino}&output=embed`;
             } else {
-                btnVerMaps.href = "https://maps.google.com";
+                mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
             }
         }
 
@@ -228,6 +234,7 @@
             btnCancelarEdicion.classList.add("hidden");
             document.getElementById("btn-guardar-combustible").innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
             costoFinalDisplay.textContent = "R$ 0.00";
+            mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
         }
 
         // Cargar en Tiempo Real desde Firebase
@@ -262,7 +269,6 @@
             }
         });
 
-        // Funciones globales para la tabla
         window.editarRecorrido = function(id, origen, destino, km, kmLitro, valorLitro) {
             combustibleIdInput.value = id;
             origenInput.value = origen;
