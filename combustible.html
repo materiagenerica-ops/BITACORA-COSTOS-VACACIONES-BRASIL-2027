@@ -100,6 +100,9 @@
                     </div>
                 </div>
 
+                <!-- MENSAJE DE ESTADO / ALERTA -->
+                <div id="form-status" class="hidden p-3 rounded-xl text-xs font-semibold text-center"></div>
+
                 <!-- BOTONES DE ACCIÓN -->
                 <div class="flex flex-wrap items-center gap-4 pt-2">
                     <button type="submit" id="btn-guardar-combustible" class="immersive-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-lg">
@@ -164,6 +167,14 @@
         const historialBody = document.getElementById("historial-combustible-body");
         const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
         const combustibleIdInput = document.getElementById("combustible-id");
+        const formStatus = document.getElementById("form-status");
+
+        function mostrarMensaje(texto, esError = false) {
+            formStatus.textContent = texto;
+            formStatus.className = `p-3 rounded-xl text-xs font-semibold text-center ${esError ? 'bg-red-950/60 text-red-300 border border-red-500/30' : 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'}`;
+            formStatus.classList.remove("hidden");
+            setTimeout(() => formStatus.classList.add("hidden"), 4000);
+        }
 
         function calcularCostoCombustible() {
             const km = parseFloat(kmInput.value) || 0;
@@ -191,7 +202,7 @@
             if (input) input.addEventListener("input", calcularCostoCombustible);
         });
 
-        // Guardar o Actualizar con manejo de errores visible
+        // Guardar o Actualizar
         combustibleForm.addEventListener("submit", (e) => {
             e.preventDefault();
             const id = combustibleIdInput.value;
@@ -218,13 +229,19 @@
             if (id) {
                 const itemRef = ref(db, `combustible_recorridos/${id}`);
                 update(itemRef, recorridoData)
-                    .then(() => resetForm())
-                    .catch((err) => alert("Error al actualizar en Firebase: " + err.message));
+                    .then(() => {
+                        mostrarMensaje("¡Recorrido actualizado con éxito!");
+                        resetForm();
+                    })
+                    .catch((err) => mostrarMensaje("Error al actualizar: " + err.message, true));
             } else {
                 const nuevoRef = push(dbRef);
                 set(nuevoRef, recorridoData)
-                    .then(() => resetForm())
-                    .catch((err) => alert("Error al guardar en Firebase: " + err.message));
+                    .then(() => {
+                        mostrarMensaje("¡Recorrido guardado con éxito!");
+                        resetForm();
+                    })
+                    .catch((err) => mostrarMensaje("Error al guardar: " + err.message, true));
             }
         });
 
@@ -239,7 +256,7 @@
             mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
         }
 
-        // Cargar en Tiempo Real desde Firebase con manejo de errores
+        // Cargar en Tiempo Real desde Firebase
         const dbRef = ref(db, "combustible_recorridos");
         onValue(dbRef, (snapshot) => {
             if (!historialBody) return;
@@ -256,22 +273,42 @@
                         <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
                         <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarRecorrido('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
+                            <button type="button" class="btn-editar px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" data-id="${id}" data-origen="${item.origen}" data-destino="${item.destino}" data-km="${item.kilometros}" data-kmlitro="${item.kmLitro}" data-valor="${item.valor_litro}" title="Editar">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button type="button" onclick="window.eliminarRecorrido('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
+                            <button type="button" class="btn-eliminar px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" data-id="${id}" title="Eliminar">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
+
+                // Asignar eventos a los botones generados dinámicamente para evitar bloqueos en iframes
+                document.querySelectorAll(".btn-editar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        window.editarRecorrido(
+                            btn.getAttribute("data-id"),
+                            btn.getAttribute("data-origen"),
+                            btn.getAttribute("data-destino"),
+                            btn.getAttribute("data-km"),
+                            btn.getAttribute("data-kmlitro"),
+                            btn.getAttribute("data-valor")
+                        );
+                    });
+                });
+
+                document.querySelectorAll(".btn-eliminar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        window.eliminarRecorrido(btn.getAttribute("data-id"));
+                    });
+                });
+
             } else {
                 historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">No hay recorridos registrados todavía.</td></tr>`;
             }
         }, (error) => {
             console.error("Error al leer de Firebase:", error);
-            historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400 italic">Error de conexión con la base de datos: ${error.message}</td></tr>`;
         });
 
         window.editarRecorrido = function(id, origen, destino, km, kmLitro, valorLitro) {
@@ -291,7 +328,9 @@
         window.eliminarRecorrido = function(id) {
             if (confirm("¿Estás seguro de eliminar este registro de combustible?")) {
                 const itemRef = ref(db, `combustible_recorridos/${id}`);
-                remove(itemRef).catch((err) => alert("Error al eliminar: " + err.message));
+                remove(itemRef)
+                    .then(() => mostrarMensaje("Registro eliminado correctamente."))
+                    .catch((err) => mostrarMensaje("Error al eliminar: " + err.message, true));
             }
         };
     </script>
