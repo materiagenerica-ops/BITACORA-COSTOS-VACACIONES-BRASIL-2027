@@ -6,9 +6,7 @@
     <title>Combustible - Bitácora Brasil 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -31,27 +29,21 @@
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
         .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
-        .immersive-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: 0.5s; }
-        .immersive-btn:hover::after { left: 100%; }
-        .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(254, 223, 0, 0.3); }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #050b14; }
-        ::-webkit-scrollbar-thumb { background: #002776; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen">
 
     <div class="max-w-5xl mx-auto space-y-8 pb-12">
         
-        <!-- ENCABEZADO DE MÓDULO -->
+        <!-- ENCABEZADO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Gestiona los trayectos, calcula costos en Reales, visualiza la ruta y guarda los registros en la base de datos.</p>
+            <p class="text-slate-300 text-sm">Gestiona los trayectos, calcula costos en Reales y guarda los registros.</p>
         </div>
 
-        <!-- FORMULARIO DE INGRESO -->
+        <!-- FORMULARIO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
             <input type="hidden" id="combustible-id">
             
@@ -68,51 +60,43 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Kilómetros:</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Kilómetros:</label>
                     <input type="text" inputmode="decimal" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro (Rendimiento):</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro:</label>
                     <input type="text" inputmode="decimal" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro Nafta/Gasolina ($ Reales):</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro ($ Reales):</label>
                     <input type="text" inputmode="decimal" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 6.29">
                 </div>
             </div>
 
-            <!-- RESULTADO Y MAPA INCORPORADO -->
+            <!-- RESULTADO Y MAPA -->
             <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div>
                         <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
                         <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
                     </div>
-                    <div class="text-right text-xs text-slate-400">
-                        <i class="fa-solid fa-map-location-dot text-cyan-400 mr-1"></i> Visualización de ruta en vivo
-                    </div>
                 </div>
-
-                <!-- Contenedor del Mapa Embebido -->
                 <div class="w-full h-72 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
                     <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar"></iframe>
                 </div>
             </div>
 
-            <!-- BOTONES DE ACCIÓN -->
+            <!-- BOTÓN CON LLAMADA INLINE DIRECTA -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar-combustible" onclick="window.ejecutarGuardadoDirecto()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
+                <button type="button" onclick="intentarGuardar()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido
-                </button>
-                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionForm()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
-                    Cancelar Edición
                 </button>
             </div>
         </div>
 
-        <!-- HISTORIAL DE RECORRIDOS -->
+        <!-- HISTORIAL -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Recorridos Registrados</h4>
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Recorridos</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
@@ -134,7 +118,7 @@
 
     </div>
 
-    <!-- SCRIPT DE CONEXIÓN CON FIREBASE -->
+    <!-- SCRIPT GENERAL Y DE FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -159,8 +143,6 @@
         const costoFinalDisplay = document.getElementById("costo-final-display");
         const mapIframe = document.getElementById("map-iframe");
         const historialBody = document.getElementById("historial-combustible-body");
-        const btnGuardar = document.getElementById("btn-guardar-combustible");
-        const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
         const combustibleIdInput = document.getElementById("combustible-id");
 
         function parsearNumero(valor) {
@@ -185,8 +167,6 @@
             
             if (origen && destino) {
                 mapIframe.src = `https://www.google.com/maps?q=${encodeURIComponent(origen)}+a+${encodeURIComponent(destino)}&output=embed`;
-            } else if (origen) {
-                mapIframe.src = `https://www.google.com/maps?q=${encodeURIComponent(origen)}&output=embed`;
             }
         }
 
@@ -194,9 +174,9 @@
             if (input) input.addEventListener("input", calcularCostoCombustible);
         });
 
-        // PRUEBA DE DIAGNÓSTICO: Este alert debe aparecer inmediatamente al hacer clic en el botón
-        window.ejecutarGuardadoDirecto = function() {
-            alert("¡DIAGNÓSTICO: El botón funciona y la función global se ejecutó!");
+        // Función global expuesta al botón
+        window.intentarGuardar = function() {
+            alert("¡Click detectado correctamente!");
 
             const id = combustibleIdInput.value;
             const origen = origenInput.value.trim();
@@ -206,15 +186,11 @@
             const valorLitro = parsearNumero(valorLitroInput.value);
             
             if (!origen || !destino) {
-                alert("Por favor completa los campos 'Desde' y 'Hasta'.");
-                return;
-            }
-            if (kilometros <= 0 || kmLitro <= 0 || valorLitro <= 0) {
-                alert("Verifica que los valores numéricos sean mayores a 0.");
+                alert("Completa 'Desde' y 'Hasta'.");
                 return;
             }
 
-            const costoFinal = ((kilometros / kmLitro) * valorLitro).toFixed(2);
+            const costoFinal = ((kilometros / (kmLitro || 1)) * valorLitro).toFixed(2);
 
             const recorridoData = {
                 origen,
@@ -229,40 +205,18 @@
             const dbRef = ref(db, "combustible_recorridos");
 
             if (id) {
-                const itemRef = ref(db, `combustible_recorridos/${id}`);
-                update(itemRef, recorridoData)
-                    .then(() => {
-                        alert("¡Recorrido actualizado con éxito en Firebase!");
-                        window.cancelarEdicionForm();
-                    })
-                    .catch((err) => alert("Error al actualizar en Firebase: " + err.message));
+                update(ref(db, `combustible_recorridos/${id}`), recorridoData)
+                    .then(() => alert("¡Actualizado con éxito!"))
+                    .catch((err) => alert("Error Firebase: " + err.message));
             } else {
-                const nuevoRef = push(dbRef);
-                set(nuevoRef, recorridoData)
-                    .then(() => {
-                        alert("¡Recorrido guardado con éxito en Firebase!");
-                        window.cancelarEdicionForm();
-                    })
-                    .catch((err) => alert("Error al guardar en Firebase: " + err.message));
+                set(push(dbRef), recorridoData)
+                    .then(() => alert("¡Guardado con éxito!"))
+                    .catch((err) => alert("Error Firebase: " + err.message));
             }
         };
 
-        window.cancelarEdicionForm = function() {
-            origenInput.value = "";
-            destinoInput.value = "";
-            kmInput.value = "";
-            kmLitroInput.value = "";
-            valorLitroInput.value = "";
-            combustibleIdInput.value = "";
-            btnCancelarEdicion.classList.add("hidden");
-            btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
-            costoFinalDisplay.textContent = `R$ 0.00`;
-            mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar`;
-        };
-
-        // Cargar historial en tiempo real desde Firebase
-        const dbRef = ref(db, "combustible_recorridos");
-        onValue(dbRef, (snapshot) => {
+        // Cargar historial
+        onValue(ref(db, "combustible_recorridos"), (snapshot) => {
             if (!historialBody) return;
             historialBody.innerHTML = "";
             const data = snapshot.val();
@@ -271,47 +225,39 @@
                     const tr = document.createElement("tr");
                     tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
                     tr.innerHTML = `
-                        <td class="p-3 font-semibold text-white"><i class="fa-solid fa-route mr-2 text-amber-400"></i>${item.origen} &rarr; ${item.destino}</td>
+                        <td class="p-3 font-semibold text-white">${item.origen} &rarr; ${item.destino}</td>
                         <td class="p-3">${item.kilometros} km</td>
                         <td class="p-3">${item.kmLitro} km/L</td>
                         <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
-                        <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
+                        <td class="p-3 font-cinzel font-bold text-amber-400 text-base">R$ ${item.costoFinal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarRecorridoGlobal('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button type="button" onclick="window.eliminarRecorridoGlobal('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button type="button" onclick="window.editar('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2 py-1 bg-blue-600/40 text-blue-300 rounded text-xs"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="window.eliminar('${id}')" class="px-2 py-1 bg-red-600/40 text-red-300 rounded text-xs"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
             } else {
-                historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">No hay recorridos registrados todavía.</td></tr>`;
+                historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">Sin registros.</td></tr>`;
             }
         });
 
-        window.editarRecorridoGlobal = function(id, origen, destino, km, kmLitro, valorLitro) {
+        window.editar = function(id, origen, destino, km, kmLitro, valor) {
             combustibleIdInput.value = id;
             origenInput.value = origen;
             destinoInput.value = destino;
             kmInput.value = km;
             kmLitroInput.value = kmLitro;
-            valorLitroInput.value = valorLitro;
+            valorLitroInput.value = valor;
             calcularCostoCombustible();
-
-            btnCancelarEdicion.classList.remove("hidden");
-            btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Recorrido`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.eliminarRecorridoGlobal = function(id) {
-            if (confirm("¿Estás seguro de eliminar este registro?")) {
-                const itemRef = ref(db, `combustible_recorridos/${id}`);
-                remove(itemRef)
-                    .then(() => alert("Registro eliminado correctamente."))
-                    .catch((err) => alert("Error al eliminar: " + err.message));
+        window.eliminar = function(id) {
+            if (confirm("¿Eliminar registro?")) {
+                remove(ref(db, `combustible_recorridos/${id}`))
+                    .then(() => alert("Eliminado correctamente"))
+                    .catch(err => alert("Error: " + err.message));
             }
         };
     </script>
