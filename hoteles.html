@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoteles y Alojamientos - Bitácora Brasil 2027</title>
+    <title>Menú y Comidas - Bitácora Brasil 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -44,76 +44,75 @@
         <!-- ENCABEZADO DE MÓDULO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
+                <i class="fa-solid fa-utensils mr-3 text-amber-400"></i> Control de Menú y Comidas
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches, ocupantes y costos en pesos.</p>
+            <p class="text-slate-300 text-sm">Registra las previsiones o consumos de alimentación y gastos en restaurantes o supermercados en Reales.</p>
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
-            <input type="hidden" id="hotel-id">
+            <input type="hidden" id="menu-id">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Mes -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-building text-amber-400 mr-1.5"></i> Hotel / Alojamiento:
+                        <i class="fa-solid fa-calendar-days text-amber-400 mr-1.5"></i> Mes:
                     </label>
-                    <input type="text" id="hotel_nombre" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Hotel De Torres">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-map-pin text-cyan-400 mr-1.5"></i> Lugar:
-                    </label>
-                    <select id="hotel_lugar" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        <option value="Sao Gabriel">Sao Gabriel</option>
-                        <option value="Capão da Canoa">Capão da Canoa</option>
-                        <option value="Torres">Torres</option>
+                    <select id="menu_mes" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
+                        <option value="Enero">Enero</option>
+                        <option value="Febrero">Febrero</option>
+                        <option value="Marzo">Marzo</option>
+                        <option value="Abril">Abril</option>
+                        <option value="Mayo">Mayo</option>
+                        <option value="Junio">Junio</option>
+                        <option value="Julio">Julio</option>
+                        <option value="Agosto">Agosto</option>
+                        <option value="Septiembre">Septiembre</option>
+                        <option value="Octubre">Octubre</option>
+                        <option value="Noviembre">Noviembre</option>
+                        <option value="Diciembre">Diciembre</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Desde -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-calendar-check text-emerald-400 mr-1.5"></i> Check-in:
+                        <i class="fa-solid fa-calendar-check text-emerald-400 mr-1.5"></i> Desde:
                     </label>
-                    <input type="date" id="check_in" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
+                    <input type="date" id="menu_desde" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
                 </div>
+                <!-- Hasta -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-calendar-xmark text-rose-400 mr-1.5"></i> Check-out:
+                        <i class="fa-solid fa-calendar-xmark text-rose-400 mr-1.5"></i> Hasta:
                     </label>
-                    <input type="date" id="check_out" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-moon text-yellow-400 mr-1.5"></i> Cantidad de Noches:
-                    </label>
-                    <input type="text" inputmode="numeric" id="cantidad_noches" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300" value="1" placeholder="Ej: 2">
+                    <input type="date" id="menu_hasta" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cantidad de días -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-users text-blue-400 mr-1.5"></i> Cantidad de Personas:
+                        <i class="fa-solid fa-sun text-yellow-400 mr-1.5"></i> Cantidad de Días:
                     </label>
-                    <input type="text" inputmode="numeric" id="cantidad_personas" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 4" value="2">
+                    <input type="text" inputmode="numeric" id="menu_dias" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300" value="1" placeholder="Ej: 7">
                 </div>
+                <!-- Costo en reales -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-money-bill-wave text-brasil-green mr-1.5"></i> Costo en Pesos ($ ARS):
+                        <i class="fa-solid fa-coins text-brasil-green mr-1.5"></i> Costo en Reales (R$):
                     </label>
-                    <input type="text" inputmode="decimal" id="costo_pesos" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 350000">
+                    <input type="text" inputmode="decimal" id="menu_reales" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 1500.00">
                 </div>
             </div>
 
             <!-- BOTONES DE ACCIÓN -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" onclick="window.guardarHotel()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
-                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Hotel
+                <button type="button" onclick="window.guardarMenu()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Menú
                 </button>
-                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionHotel()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
+                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionMenu()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
                     Cancelar Edición
                 </button>
             </div>
@@ -121,19 +120,19 @@
 
         <!-- HISTORIAL -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Alojamientos Registrados</h4>
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Menús y Comidas Registrados</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
-                            <th class="p-3">Hotel / Lugar</th>
-                            <th class="p-3">Fechas (Check-in / Out)</th>
-                            <th class="p-3">Noches / Pax</th>
-                            <th class="p-3 text-brasil-green">Costo en Pesos</th>
+                            <th class="p-3">Mes</th>
+                            <th class="p-3">Período (Desde / Hasta)</th>
+                            <th class="p-3">Días</th>
+                            <th class="p-3 text-brasil-green">Costo en Reales</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="historial-hoteles-body" class="divide-y divide-white/5">
+                    <tbody id="historial-menu-body" class="divide-y divide-white/5">
                         <!-- Dinámico -->
                     </tbody>
                 </table>
@@ -159,106 +158,94 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const hotelNombreInput = document.getElementById("hotel_nombre");
-        const hotelLugarInput = document.getElementById("hotel_lugar");
-        const checkInInput = document.getElementById("check_in");
-        const checkOutInput = document.getElementById("check_out");
-        const cantidadNochesInput = document.getElementById("cantidad_noches");
-        const cantidadPersonasInput = document.getElementById("cantidad_personas");
-        const costoPesosInput = document.getElementById("costo_pesos");
-        const hotelIdInput = document.getElementById("hotel-id");
+        const mesInput = document.getElementById("menu_mes");
+        const desdeInput = document.getElementById("menu_desde");
+        const hastaInput = document.getElementById("menu_hasta");
+        const diasInput = document.getElementById("menu_dias");
+        const realesInput = document.getElementById("menu_reales");
+        const menuIdInput = document.getElementById("menu-id");
         const btnCancelar = document.getElementById("btn-cancelar-edicion");
-        const btnGuardar = document.querySelector("button[onclick='window.guardarHotel()']");
-        const historialBody = document.getElementById("historial-hoteles-body");
+        const btnGuardar = document.querySelector("button[onclick='window.guardarMenu()']");
+        const historialBody = document.getElementById("historial-menu-body");
 
         function parsearNumero(valor) {
             if (!valor) return 0;
             return parseFloat(valor.toString().replace(',', '.')) || 0;
         }
 
-        // Sugerir cálculo de noches automáticamente al cambiar fechas, pero permitiendo modificarlo libremente
-        function calcularNoches() {
-            const checkInVal = checkInInput.value;
-            const checkOutVal = checkOutInput.value;
+        // Cálculo automático de días al modificar las fechas (opcional, editable libremente)
+        function calcularDiasMenu() {
+            const desdeVal = desdeInput.value;
+            const hastaVal = hastaInput.value;
 
-            if (checkInVal && checkOutVal) {
-                const fechaIn = new Date(checkInVal);
-                const fechaOut = new Date(checkOutVal);
+            if (desdeVal && hastaVal) {
+                const fechaIn = new Date(desdeVal);
+                const fechaOut = new Date(hastaVal);
                 const diferenciaTiempo = fechaOut - fechaIn;
-                const dias = Math.round(diferenciaTiempo / (1000 * 60 * 60 * 24));
+                const dias = Math.round(diferenciaTiempo / (1000 * 60 * 60 * 24)) + 1; // Incluyendo el día de inicio
 
                 if (dias > 0) {
-                    cantidadNochesInput.value = dias;
+                    diasInput.value = dias;
                 }
             }
         }
 
-        checkInInput.addEventListener("change", calcularNoches);
-        checkOutInput.addEventListener("change", calcularNoches);
+        desdeInput.addEventListener("change", calcularDiasMenu);
+        hastaInput.addEventListener("change", calcularDiasMenu);
 
-        window.guardarHotel = async function() {
-            const id = hotelIdInput.value;
-            const nombre = hotelNombreInput.value.trim();
-            const lugar = hotelLugarInput.value;
-            const checkIn = checkInInput.value;
-            const checkOut = checkOutInput.value;
-            const noches = parseInt(cantidadNochesInput.value) || 0;
-            const personas = parseInt(cantidadPersonasInput.value) || 0;
-            const costoPesos = parsearNumero(costoPesosInput.value);
+        window.guardarMenu = async function() {
+            const id = menuIdInput.value;
+            const mes = mesInput.value;
+            const desde = desdeInput.value;
+            const hasta = hastaInput.value;
+            const dias = parseInt(diasInput.value) || 0;
+            const reales = parsearNumero(realesInput.value);
 
-            if (!nombre) {
-                alert("Por favor ingresa el nombre del hotel.");
+            if (dias <= 0) {
+                alert("La cantidad de días debe ser mayor a 0.");
                 return;
             }
-            if (noches <= 0) {
-                alert("La cantidad de noches debe ser mayor a 0.");
-                return;
-            }
-            if (costoPesos <= 0) {
-                alert("Ingresa un costo válido en pesos mayor a 0.");
+            if (reales <= 0) {
+                alert("Ingresa un costo válido en reales mayor a 0.");
                 return;
             }
 
-            const hotelData = {
-                nombre,
-                lugar,
-                checkIn: checkIn || "Sin especificar",
-                checkOut: checkOut || "Sin especificar",
-                noches,
-                personas,
-                costoPesos: costoPesos.toFixed(2),
+            const menuData = {
+                mes,
+                desde: desde || "Sin especificar",
+                hasta: hasta || "Sin especificar",
+                dias,
+                reales: reales.toFixed(2),
                 timestamp: Date.now()
             };
 
             try {
                 if (id) {
-                    await updateDoc(doc(db, "hoteles_reservas", id), hotelData);
-                    alert("¡Reserva de hotel actualizada con éxito!");
+                    await updateDoc(doc(db, "menu_comidas", id), menuData);
+                    alert("¡Registro de menú actualizado con éxito!");
                 } else {
-                    await addDoc(collection(db, "hoteles_reservas"), hotelData);
-                    alert("¡Reserva de hotel guardada con éxito!");
+                    await addDoc(collection(db, "menu_comidas"), menuData);
+                    alert("¡Registro de menú guardado con éxito!");
                 }
-                window.cancelarEdicionHotel();
+                window.cancelarEdicionMenu();
             } catch (err) {
                 alert("Error al guardar en Firestore: " + err.message);
             }
         };
 
-        window.cancelarEdicionHotel = function() {
-            hotelNombreInput.value = "";
-            hotelLugarInput.value = "Sao Gabriel";
-            checkInInput.value = "";
-            checkOutInput.value = "";
-            cantidadNochesInput.value = "1";
-            cantidadPersonasInput.value = "2";
-            costoPesosInput.value = "";
-            hotelIdInput.value = "";
+        window.cancelarEdicionMenu = function() {
+            mesInput.value = "Enero";
+            desdeInput.value = "";
+            hastaInput.value = "";
+            diasInput.value = "1";
+            realesInput.value = "";
+            menuIdInput.value = "";
             if (btnCancelar) btnCancelar.classList.add("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Hotel`;
+            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Menú`;
         };
 
-        // Escuchar datos en tiempo real
-        onSnapshot(collection(db, "hoteles_reservas"), (snapshot) => {
+        // Escuchar datos en tiempo real con Firestore
+        onSnapshot(collection(db, "menu_comidas"), (snapshot) => {
             if (!historialBody) return;
             historialBody.innerHTML = "";
             if (!snapshot.empty) {
@@ -272,53 +259,49 @@
                     const tr = document.createElement("tr");
                     tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
                     tr.innerHTML = `
-                        <td class="p-3">
-                            <div class="font-semibold text-white"><i class="fa-solid fa-hotel mr-2 text-amber-400"></i>${item.nombre}</div>
-                            <div class="text-xs text-cyan-300 mt-0.5"><i class="fa-solid fa-map-pin mr-1"></i>${item.lugar}</div>
+                        <td class="p-3 font-semibold text-white">
+                            <i class="fa-solid fa-calendar-days mr-2 text-amber-400"></i>${item.mes}
                         </td>
                         <td class="p-3 text-xs text-slate-300">
-                            <div><span class="text-emerald-400">In:</span> ${item.checkIn}</div>
-                            <div><span class="text-rose-400">Out:</span> ${item.checkOut}</div>
+                            <div><span class="text-emerald-400">Desde:</span> ${item.desde}</div>
+                            <div><span class="text-rose-400">Hasta:</span> ${item.hasta}</div>
                         </td>
-                        <td class="p-3 text-xs text-slate-300">
-                            <div><span class="text-yellow-400 font-semibold">${item.noches}</span> noches</div>
-                            <div><span class="text-blue-400 font-semibold">${item.personas}</span> pax</div>
+                        <td class="p-3 text-xs text-white">
+                            <span class="text-yellow-400 font-semibold">${item.dias}</span> días
                         </td>
                         <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">
-                            $ ${Number(item.costoPesos).toLocaleString('es-AR')} ARS
+                            R$ ${Number(item.reales).toFixed(2)}
                         </td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarHotel('${item.id}', '${item.nombre}', '${item.lugar}', '${item.checkIn}', '${item.checkOut}', ${item.noches}, ${item.personas}, ${item.costoPesos})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" onclick="window.eliminarHotel('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" onclick="window.editarMenu('${item.id}', '${item.mes}', '${item.desde}', '${item.hasta}', ${item.dias}, ${item.reales})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="window.eliminarMenu('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
             } else {
-                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin reservas de hoteles registradas.</td></tr>`;
+                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de menú en Cloud Firestore.</td></tr>`;
             }
         });
 
-        window.editarHotel = function(id, nombre, lugar, checkIn, checkOut, noches, personas, costoPesos) {
-            hotelIdInput.value = id;
-            hotelNombreInput.value = nombre;
-            hotelLugarInput.value = lugar;
-            checkInInput.value = checkIn !== "Sin especificar" ? checkIn : "";
-            checkOutInput.value = checkOut !== "Sin especificar" ? checkOut : "";
-            cantidadNochesInput.value = noches;
-            cantidadPersonasInput.value = personas;
-            costoPesosInput.value = costoPesos;
+        window.editarMenu = function(id, mes, desde, hasta, dias, reales) {
+            menuIdInput.value = id;
+            mesInput.value = mes;
+            desdeInput.value = desde !== "Sin especificar" ? desde : "";
+            hastaInput.value = hasta !== "Sin especificar" ? hasta : "";
+            diasInput.value = dias;
+            realesInput.value = reales;
 
             if (btnCancelar) btnCancelar.classList.remove("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Hotel`;
+            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Menú`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.eliminarHotel = async function(id) {
-            if (confirm("¿Estás seguro de eliminar esta reserva de hotel?")) {
+        window.eliminarMenu = async function(id) {
+            if (confirm("¿Estás seguro de eliminar este registro de menú?")) {
                 try {
-                    await deleteDoc(doc(db, "hoteles_reservas", id));
-                    alert("Reserva eliminada correctamente");
+                    await deleteDoc(doc(db, "menu_comidas", id));
+                    alert("Registro eliminado correctamente");
                 } catch (err) {
                     alert("Error al eliminar: " + err.message);
                 }
