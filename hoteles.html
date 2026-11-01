@@ -40,7 +40,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches y elige si pagas en Pesos o Reales.</p>
+            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, noches y elige con total claridad si pagas en Pesos o Reales.</p>
         </div>
 
         <!-- FORMULARIO -->
@@ -77,21 +77,25 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Personas:</label>
                     <input type="number" id="cantidad_personas" class="glass-input w-full px-4 py-3 rounded-xl text-sm" value="2" min="1">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Moneda:</label>
-                    <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
-                        <option value="ARS">🇦🇷 Pesos ($ ARS)</option>
-                        <option value="BRL">🇧🇷 Reales (R$)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-costo">Costo Total:</label>
-                    <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Ej: 350000" step="any">
+                
+                <!-- SECCIÓN DE MONEDA Y COSTO BIEN CLARA -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Moneda:</label>
+                        <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                            <option value="ARS">Pesos ($ ARS)</option>
+                            <option value="BRL">Reales (R$)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brasil-green mb-2" id="label-costo">Costo Total:</label>
+                        <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Monto" step="any">
+                    </div>
                 </div>
             </div>
 
@@ -148,32 +152,26 @@
         const btnCancelar = document.getElementById("btn-cancelar");
         const historialBody = document.getElementById("historial-hoteles-body");
 
-        // Cambiar etiqueta de texto según la moneda elegida
         monedaSelect.addEventListener("change", () => {
             if (monedaSelect.value === 'BRL') {
-                labelCosto.textContent = "Costo Total en Reales (R$):";
-                costoInput.placeholder = "Ej: 1500.00";
+                labelCosto.textContent = "Costo en Reales (R$):";
+                costoInput.placeholder = "Ej: 1500";
             } else {
-                labelCosto.textContent = "Costo Total en Pesos ($ ARS):";
+                labelCosto.textContent = "Costo en Pesos ($):";
                 costoInput.placeholder = "Ej: 350000";
             }
         });
 
-        checkInInput.addEventListener("change", () => {
-            if (checkInInput.value && checkOutInput.value) {
-                const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
-                const dias = Math.round(diff / (1000 * 60 * 60 * 24));
-                if (dias > 0) nochesInput.value = dias;
-            }
-        });
+        checkInInput.addEventListener("change", calcNoches);
+        checkOutInput.addEventListener("change", calcNoches);
 
-        checkOutInput.addEventListener("change", () => {
+        function calcNoches() {
             if (checkInInput.value && checkOutInput.value) {
                 const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
                 const dias = Math.round(diff / (1000 * 60 * 60 * 24));
                 if (dias > 0) nochesInput.value = dias;
             }
-        });
+        }
 
         btnGuardar.addEventListener("click", async () => {
             const id = hotelIdInput.value;
@@ -273,9 +271,9 @@
                         costoInput.value = item.costo || item.costoPesos || "";
                         
                         if (monedaSelect.value === 'BRL') {
-                            labelCosto.textContent = "Costo Total en Reales (R$):";
+                            labelCosto.textContent = "Costo en Reales (R$):";
                         } else {
-                            labelCosto.textContent = "Costo Total en Pesos ($ ARS):";
+                            labelCosto.textContent = "Costo en Pesos ($):";
                         }
 
                         btnCancelar.classList.remove("hidden");
