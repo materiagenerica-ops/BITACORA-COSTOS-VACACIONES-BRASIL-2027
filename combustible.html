@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combustible y Recorridos - Bitácora Brasil 2027</title>
-    <!-- Tailwind CSS -->
+    <title>Combustible - Bitácora Brasil 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,101 +24,81 @@
     </script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050b14; color: #f8fafc; margin: 0; padding: 20px; }
-        .glass-panel { background: rgba(10, 22, 40, 0.90); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
-        .glass-input { background: rgba(5, 11, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; }
+        .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
+        .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        #mapa-recorrido { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
-
-    <div class="max-w-6xl mx-auto space-y-8 pb-12">
-        
-        <!-- ENCABEZADO -->
+    <div class="max-w-5xl mx-auto space-y-8 pb-12">
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                <i class="fa-solid fa-gas-pump mr-3 text-brasil-green"></i> Control de Combustible y Recorridos
+                <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible Multi-Moneda
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza el mapa oficial de Google Maps y registra los costos.</p>
+            <p class="text-slate-300 text-sm">Calcula trayectos en Argentina ($ ARS) o Brasil (R$).</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- FORMULARIO DE TRAMO -->
-            <div class="glass-panel p-6 rounded-3xl border border-brasil-yellow/20 shadow-xl space-y-5 lg:col-span-1">
-                <h4 class="font-cinzel text-base font-bold text-amber-300 border-b border-white/10 pb-3">
-                    <i class="fa-solid fa-route mr-2"></i> Nuevo Tramo
-                </h4>
-                
-                <input type="hidden" id="tramo-id">
-
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
+            <input type="hidden" id="combustible-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Origen:</label>
-                    <input type="text" id="origen" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm" placeholder="Ej: Córdoba">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde (Origen):</label>
+                    <input type="text" id="origen" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Destino:</label>
-                    <input type="text" id="destino" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm" placeholder="Ej: Sao Gabriel">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Distancia (km):</label>
-                        <input type="number" id="distancia" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm font-bold text-amber-300" placeholder="Ej: 1200" step="0.1">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Consumo (km/L):</label>
-                        <input type="number" id="rendimiento" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm" value="12" step="0.1">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Precio Combustible:</label>
-                        <input type="number" id="precio_combustible" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm" placeholder="Precio" step="0.01">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Territorio:</label>
-                        <select id="territorio" class="glass-input w-full px-3 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-amber-300">
-                            <option value="ARG">🇦🇷 Argentina ($)</option>
-                            <option value="BRA">🇧🇷 Brasil (R$)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-slate-900/80 rounded-xl border border-white/10 space-y-1">
-                    <span class="text-[11px] text-slate-400 uppercase tracking-wider block font-bold">Costo Estimado del Tramo:</span>
-                    <div id="preview-costo" class="font-cinzel text-xl font-black text-brasil-green">$ 0.00</div>
-                </div>
-
-                <div class="flex gap-2 pt-2">
-                    <button type="button" id="btn-guardar" class="w-full py-3 rounded-xl bg-brasil-green text-white font-bold text-xs uppercase cursor-pointer">Guardar Tramo</button>
-                    <button type="button" id="btn-cancelar" class="hidden px-4 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancelar</button>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta (Destino):</label>
+                    <input type="text" id="destino" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
                 </div>
             </div>
 
-            <!-- MAPA DE GOOGLE MAPS -->
-            <div class="glass-panel p-6 rounded-3xl border border-brasil-yellow/20 shadow-xl space-y-4 lg:col-span-2 flex flex-col">
-                <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center justify-between">
-                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Google Maps - Ruta de Recorrido</span>
-                </h4>
-                <iframe id="mapa-recorrido" src="https://maps.google.com/maps?q=Cordoba+to+Sao+Gabriel&output=embed" allowfullscreen="" loading="lazy"></iframe>
-                <p class="text-xs text-slate-400 italic">El mapa de Google se actualiza automáticamente con el origen y destino ingresados.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Kilómetros:</label>
+                    <input type="number" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850" value="0">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Rendimiento (Km/L):</label>
+                    <input type="number" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5" value="0" step="0.1">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Territorio / Moneda:</label>
+                    <select id="territorio" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                        <option value="ARG">🇦🇷 Argentina ($ ARS)</option>
+                        <option value="BRA">🇧🇷 Brasil (R$ Reales)</option>
+                    </select>
+                </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-valor-litro">Valor Litro Nafta ($ ARS):</label>
+                    <input type="number" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 1150.00" value="0" step="0.01">
+                </div>
+                <div class="flex items-end">
+                    <div class="w-full p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider text-amber-300/80 font-bold block">Costo Final:</span>
+                            <div id="costo-final-display" class="font-cinzel text-2xl font-black text-amber-400">$ 0.00</div>
+                        </div>
+                        <div id="moneda-sufijo" class="text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded">ARS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                <button type="button" id="btn-guardar-combustible" class="px-8 py-4 rounded-xl bg-brasil-green text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">Guardar Recorrido</button>
+            </div>
         </div>
 
-        <!-- HISTORIAL DE RECORRIDOS -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-4">
-            <h4 class="font-cinzel text-lg font-bold text-white">Historial de Tramos Registrados</h4>
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Combustible</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
                             <th class="p-3">Trayecto</th>
-                            <th class="p-3">Distancia / Consumo</th>
-                            <th class="p-3">Territorio</th>
+                            <th class="p-3">Km</th>
+                            <th class="p-3">Moneda</th>
                             <th class="p-3 text-brasil-green">Costo Final</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
@@ -128,13 +107,11 @@
                 </table>
             </div>
         </div>
-
     </div>
 
-    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const db = getFirestore(initializeApp({
           apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
@@ -145,168 +122,59 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        const origenInput = document.getElementById("origen");
-        const destinoInput = document.getElementById("destino");
-        const distanciaInput = document.getElementById("distancia");
-        const rendimientoInput = document.getElementById("rendimiento");
-        const precioInput = document.getElementById("precio_combustible");
-        const territorioSelect = document.getElementById("territorio");
-        const previewCosto = document.getElementById("preview-costo");
-        const tramoIdInput = document.getElementById("tramo-id");
-        const btnGuardar = document.getElementById("btn-guardar");
-        const btnCancelar = document.getElementById("btn-cancelar");
-        const historialBody = document.getElementById("historial-combustible-body");
-        const mapaIframe = document.getElementById("mapa-recorrido");
+        const km = document.getElementById("kilometros");
+        const kml = document.getElementById("km_litro");
+        const valLitro = document.getElementById("valor_litro");
+        const terr = document.getElementById("territorio");
+        const display = document.getElementById("costo-final-display");
+        const sufijo = document.getElementById("moneda-sufijo");
 
-        function actualizarMapaGoogle(origen, destino) {
-            const orig = origen || "Cordoba";
-            const dest = destino || "Sao Gabriel";
-            const query = encodeURIComponent(`${orig} to ${dest}`);
-            mapaIframe.src = `https://maps.google.com/maps?q=${query}&output=embed`;
+        function calc() {
+            const k = parseFloat(km.value) || 0;
+            const l = parseFloat(kml.value) || 0;
+            const v = parseFloat(valLitro.value) || 0;
+            const res = l > 0 ? (k / l) * v : 0;
+            const sim = terr.value === "BRA" ? "R$" : "$";
+            sufijo.textContent = terr.value === "BRA" ? "BRL" : "ARS";
+            display.textContent = `${sim} ${res.toFixed(2)}`;
         }
 
-        // Actualizar mapa al escribir en origen o destino
-        [origenInput, destinoInput].forEach(input => {
-            input.addEventListener("blur", () => {
-                if (origenInput.value && destinoInput.value) {
-                    actualizarMapaGoogle(origenInput.value, destinoInput.value);
-                }
+        [km, kml, valLitro, terr].forEach(el => el.addEventListener("input", calc));
+        terr.addEventListener("change", calc);
+
+        document.getElementById("btn-guardar-combustible").addEventListener("click", async () => {
+            const origen = document.getElementById("origen").value;
+            const destino = document.getElementById("destino").value;
+            if(!origen || !destino) { alert("Completa origen y destino"); return; }
+            const k = parseFloat(km.value) || 0;
+            const l = parseFloat(kml.value) || 0;
+            const v = parseFloat(valLitro.value) || 0;
+            const costoFinal = l > 0 ? ((k / l) * v).toFixed(2) : "0.00";
+
+            await addDoc(collection(db, "combustible_recorridos"), {
+                origen, destino, kilometros: k, valor_litro: v, territorio: terr.value, costoFinal, timestamp: Date.now()
+            });
+            alert("Guardado con éxito");
+        });
+
+        onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
+            const tbody = document.getElementById("historial-combustible-body");
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const item = d.data();
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="p-3">${item.origen} &rarr; ${item.destino}</td>
+                    <td class="p-3">${item.kilometros} km</td>
+                    <td class="p-3">${item.territorio}</td>
+                    <td class="p-3 text-brasil-green font-bold">${item.territorio === 'BRA' ? 'R$' : '$'} ${item.costoFinal}</td>
+                    <td class="p-3 text-center"><button onclick="window.del('${d.id}')" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
             });
         });
 
-        function calcularCostoPreview() {
-            const dist = parseFloat(distanciaInput.value) || 0;
-            const rend = parseFloat(rendimientoInput.value) || 1;
-            const prec = parseFloat(precioInput.value) || 0;
-            const terr = territorioSelect.value;
-            const sim = terr === 'BRA' ? 'R$' : '$';
-            const total = (dist / (rend > 0 ? rend : 1)) * prec;
-            previewCosto.textContent = `${sim} ${total.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
-        }
-
-        [distanciaInput, rendimientoInput, precioInput, territorioSelect].forEach(el => {
-            el.addEventListener("input", calcularCostoPreview);
-        });
-
-        btnGuardar.addEventListener("click", async () => {
-            const id = tramoIdInput.value;
-            const origen = origenInput.value.trim();
-            const destino = destinoInput.value.trim();
-            const distancia = parseFloat(distanciaInput.value) || 0;
-            const rendimiento = parseFloat(rendimientoInput.value) || 1;
-            const precio = parseFloat(precioInput.value) || 0;
-            const territorio = territorioSelect.value;
-
-            if (!origen || !destino) { alert("Ingresa origen y destino"); return; }
-            if (distancia <= 0) { alert("Ingresa una distancia válida"); return; }
-            if (precio <= 0) { alert("Ingresa un precio válido"); return; }
-
-            const costoFinal = (distancia / rendimiento) * precio;
-
-            const data = {
-                origen,
-                destino,
-                distancia,
-                rendimiento,
-                precio,
-                territorio,
-                costoFinal: costoFinal.toFixed(2),
-                timestamp: Date.now()
-            };
-
-            try {
-                if (id) {
-                    await updateDoc(doc(db, "combustible_recorridos", id), data);
-                    alert("Tramo actualizado con éxito");
-                } else {
-                    await addDoc(collection(db, "combustible_recorridos"), data);
-                    alert("Tramo guardado con éxito");
-                }
-                resetForm();
-            } catch (e) {
-                alert("Error al guardar: " + e.message);
-            }
-        });
-
-        function resetForm() {
-            tramoIdInput.value = "";
-            origenInput.value = "";
-            destinoInput.value = "";
-            distanciaInput.value = "";
-            precioInput.value = "";
-            territorioSelect.value = "ARG";
-            previewCosto.textContent = "$ 0.00";
-            btnCancelar.classList.add("hidden");
-            btnGuardar.textContent = "Guardar Tramo";
-        }
-
-        btnCancelar.addEventListener("click", resetForm);
-
-        onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
-            historialBody.innerHTML = "";
-            let tramosCache = [];
-            if (!snap.empty) {
-                snap.forEach(d => tramosCache.push({ id: d.id, ...d.data() }));
-                tramosCache.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-                tramosCache.forEach((item, index) => {
-                    const terr = item.territorio || 'ARG';
-                    const sim = terr === 'BRA' ? 'R$' : '$';
-                    const monto = parseFloat(item.costoFinal) || 0;
-
-                    // Si es el primer elemento, mostrarlo en el mapa de Google por defecto
-                    if (index === 0) {
-                        actualizarMapaGoogle(item.origen, item.destino);
-                    }
-
-                    const tr = document.createElement("tr");
-                    tr.className = "border-b border-white/5 hover:bg-slate-900/40 transition cursor-pointer";
-                    tr.innerHTML = `
-                        <td class="p-3 font-semibold text-white">${item.origen} → ${item.destino}</td>
-                        <td class="p-3 text-xs">${item.distancia} km <span class="text-slate-400 block">(${item.rendimiento} km/L)</span></td>
-                        <td class="p-3 font-bold">${terr}</td>
-                        <td class="p-3 font-cinzel font-bold text-brasil-green">${sim} ${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td>
-                        <td class="p-3 text-center space-x-2">
-                            <button type="button" class="text-blue-400 cursor-pointer btn-edit"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" class="text-red-400 cursor-pointer btn-del"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    `;
-
-                    // Al hacer clic en la fila del historial, se muestra ese tramo en Google Maps
-                    tr.addEventListener("click", (e) => {
-                        if (!e.target.closest('button')) {
-                            actualizarMapaGoogle(item.origen, item.destino);
-                        }
-                    });
-
-                    tr.querySelector(".btn-edit").addEventListener("click", () => {
-                        tramoIdInput.value = item.id;
-                        origenInput.value = item.origen;
-                        destinoInput.value = item.destino;
-                        distanciaInput.value = item.distancia;
-                        rendimientoInput.value = item.rendimiento;
-                        precioInput.value = item.precio;
-                        territorioSelect.value = terr;
-                        calcularCostoPreview();
-                        actualizarMapaGoogle(item.origen, item.destino);
-                        btnCancelar.classList.remove("hidden");
-                        btnGuardar.textContent = "Actualizar Tramo";
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    });
-
-                    tr.querySelector(".btn-del").addEventListener("click", async () => {
-                        if (confirm("¿Eliminar este tramo?")) {
-                            await deleteDoc(doc(db, "combustible_recorridos", item.id));
-                        }
-                    });
-
-                    historialBody.appendChild(tr);
-                });
-            } else {
-                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin tramos registrados.</td></tr>`;
-                actualizarMapaGoogle("Cordoba", "Sao Gabriel");
-            }
-        });
+        window.del = async (id) => { await deleteDoc(doc(db, "combustible_recorridos", id)); };
     </script>
 </body>
 </html>
