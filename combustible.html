@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <!-- RESULTADO Y MAPA INCORPORADO EN EL FORMULARIO -->
+                <!-- RESULTADO Y MAPA INCORPORADO -->
                 <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div>
@@ -180,9 +180,7 @@
             const origen = encodeURIComponent(origenInput.value.trim());
             const destino = encodeURIComponent(destinoInput.value.trim());
             
-            // Actualizar el mapa embebido dentro del formulario de manera automática
             if (origen && destino) {
-                // Usamos la URL de inserción de Google Maps para direcciones (modo embed estándar sin requerir clave de API de pago obligatoria para vistas básicas, o interfaz de consulta pública)
                 mapIframe.src = `https://www.google.com/maps?saddr=${origen}&daddr=${destino}&output=embed`;
             } else {
                 mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
@@ -193,7 +191,7 @@
             if (input) input.addEventListener("input", calcularCostoCombustible);
         });
 
-        // Guardar o Actualizar
+        // Guardar o Actualizar con manejo de errores visible
         combustibleForm.addEventListener("submit", (e) => {
             e.preventDefault();
             const id = combustibleIdInput.value;
@@ -219,10 +217,14 @@
 
             if (id) {
                 const itemRef = ref(db, `combustible_recorridos/${id}`);
-                update(itemRef, recorridoData).then(() => resetForm());
+                update(itemRef, recorridoData)
+                    .then(() => resetForm())
+                    .catch((err) => alert("Error al actualizar en Firebase: " + err.message));
             } else {
                 const nuevoRef = push(dbRef);
-                set(nuevoRef, recorridoData).then(() => resetForm());
+                set(nuevoRef, recorridoData)
+                    .then(() => resetForm())
+                    .catch((err) => alert("Error al guardar en Firebase: " + err.message));
             }
         });
 
@@ -237,7 +239,7 @@
             mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
         }
 
-        // Cargar en Tiempo Real desde Firebase
+        // Cargar en Tiempo Real desde Firebase con manejo de errores
         const dbRef = ref(db, "combustible_recorridos");
         onValue(dbRef, (snapshot) => {
             if (!historialBody) return;
@@ -254,10 +256,10 @@
                         <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
                         <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="window.editarRecorrido('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
+                            <button type="button" onclick="window.editarRecorrido('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button onclick="window.eliminarRecorrido('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
+                            <button type="button" onclick="window.eliminarRecorrido('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -267,6 +269,9 @@
             } else {
                 historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">No hay recorridos registrados todavía.</td></tr>`;
             }
+        }, (error) => {
+            console.error("Error al leer de Firebase:", error);
+            historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400 italic">Error de conexión con la base de datos: ${error.message}</td></tr>`;
         });
 
         window.editarRecorrido = function(id, origen, destino, km, kmLitro, valorLitro) {
@@ -286,7 +291,7 @@
         window.eliminarRecorrido = function(id) {
             if (confirm("¿Estás seguro de eliminar este registro de combustible?")) {
                 const itemRef = ref(db, `combustible_recorridos/${id}`);
-                remove(itemRef);
+                remove(itemRef).catch((err) => alert("Error al eliminar: " + err.message));
             }
         };
     </script>
