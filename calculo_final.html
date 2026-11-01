@@ -56,19 +56,16 @@
             <div class="glass-panel p-6 rounded-3xl border border-blue-500/30 bg-blue-950/20 space-y-2">
                 <span class="text-xs uppercase tracking-wider text-blue-300 font-bold block"><i class="fa-solid fa-peso-sign mr-1"></i> Total en Pesos ($)</span>
                 <div id="display-total-ars" class="font-cinzel text-3xl font-black text-blue-400">$ 0.00</div>
-                <p class="text-[11px] text-slate-400">Combustibles en ARS + Hoteles en Pesos.</p>
             </div>
 
             <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 bg-amber-950/20 space-y-2">
                 <span class="text-xs uppercase tracking-wider text-amber-300 font-bold block"><i class="fa-solid fa-brazilian-real-sign mr-1"></i> Total en Reales (R$)</span>
                 <div id="display-total-brl" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                <p class="text-[11px] text-slate-400">Playa + Comidas (Alimentos) + Combustible Brasil.</p>
             </div>
 
             <div class="glass-panel p-6 rounded-3xl border border-brasil-green/40 bg-emerald-950/30 space-y-2 shadow-xl">
                 <span class="text-xs uppercase tracking-wider text-emerald-300 font-bold block"><i class="fa-solid fa-wallet mr-1"></i> Costo Total Consolidado ($ ARS)</span>
                 <div id="display-total-consolidado" class="font-cinzel text-3xl font-black text-brasil-green">$ 0.00</div>
-                <p class="text-[11px] text-slate-300">Total Pesos + (Total Reales × Cotización).</p>
             </div>
         </div>
 
@@ -101,7 +98,7 @@
                 </div>
             </div>
 
-            <!-- Hoteles (hoteles_reservas -> costoPesos) -->
+            <!-- Hoteles -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Hoteles</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
@@ -114,7 +111,7 @@
                 </div>
             </div>
 
-            <!-- Alimentos (menu_comidas -> reales) -->
+            <!-- Alimentos -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos (Menú)</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
@@ -156,7 +153,7 @@
             const tbComb = document.getElementById("tabla-combustible");
             tbComb.innerHTML = "";
             cache.combustible.forEach(item => {
-                const c = parseFloat(item.costoFinal) || 0;
+                const c = parseFloat(item.costoFinal || item.costo || item.total) || 0;
                 if (item.territorio === 'BRA') totalBRL += c; else totalARS += c;
                 tbComb.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${item.origen || ''} → ${item.destino || ''}</td><td class="p-2.5 font-bold">${item.territorio || 'ARG'}</td><td class="p-2.5 text-right">${item.territorio === 'BRA' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
             });
@@ -166,7 +163,7 @@
             const tbPlaya = document.getElementById("tabla-playa");
             tbPlaya.innerHTML = "";
             cache.playa.forEach(item => {
-                const c = parseFloat(item.costoTotal) || 0;
+                const c = parseFloat(item.costoTotal || item.total) || 0;
                 totalBRL += c;
                 tbPlaya.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-bold">${item.cantidad_dias || 1} días</td><td class="p-2.5">R$ ${item.costoDia || 0}</td><td class="p-2.5 text-right text-cyan-400">R$ ${c.toFixed(2)}</td></tr>`;
             });
@@ -176,9 +173,9 @@
             const tbHot = document.getElementById("tabla-hoteles");
             tbHot.innerHTML = "";
             cache.hoteles.forEach(item => {
-                const c = parseFloat(item.costoPesos) || 0;
-                totalARS += c; // Los hoteles se guardan en pesos en este proyecto
-                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'}<br><span class="text-[10px] text-cyan-300">${item.lugar || ''}</span></td><td class="p-2.5">${item.noches || 1} noches</td><td class="p-2.5 text-right font-semibold text-brasil-green">$ ${c.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td></tr>`;
+                const c = parseFloat(item.costoPesos || item.total || item.costo) || 0;
+                totalARS += c; 
+                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.nombre || item.hotel || 'Hotel'}<br><span class="text-[10px] text-cyan-300">${item.lugar || ''}</span></td><td class="p-2.5">${item.noches || item.cantidad_noches || 1} noches</td><td class="p-2.5 text-right font-semibold text-brasil-green">$ ${c.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td></tr>`;
             });
             if (!cache.hoteles.length) tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
@@ -186,9 +183,9 @@
             const tbAli = document.getElementById("tabla-alimentos");
             tbAli.innerHTML = "";
             cache.alimentos.forEach(item => {
-                const c = parseFloat(item.reales) || 0;
-                totalBRL += c; // Las comidas se guardan en reales
-                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.mes || 'Mes'} <span class="text-[10px] text-slate-400">(${item.desde || ''} al ${item.hasta || ''})</span></td><td class="p-2.5">${item.dias || 1} días</td><td class="p-2.5 text-right font-semibold text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
+                const c = parseFloat(item.reales || item.total || item.costo) || 0;
+                totalBRL += c; 
+                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.mes || item.detalle || 'Mes'} <span class="text-[10px] text-slate-400">(${item.desde || ''} al ${item.hasta || ''})</span></td><td class="p-2.5">${item.dias || item.cantidad || 1} días</td><td class="p-2.5 text-right font-semibold text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
             });
             if (!cache.alimentos.length) tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
@@ -203,7 +200,6 @@
 
         cotizacionInput.addEventListener("input", calcular);
 
-        // Conexión exacta a las colecciones reales
         onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
             cache.combustible = [];
             snap.forEach(d => cache.combustible.push(d.data()));
