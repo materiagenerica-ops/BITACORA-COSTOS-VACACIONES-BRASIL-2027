@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo Final y Consolidado - Bitácora Brasil 2027</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,17 +33,16 @@
 
     <div class="max-w-6xl mx-auto space-y-8 pb-12">
         
-        <!-- ENCABEZADO -->
+        <!-- ENCABEZADO Y COTIZACIÓN -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
                 <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                    <i class="fa-solid fa-calculator mr-3 text-brasil-green"></i> Cálculo Final y Consolidado de Gastos
+                    <i class="fa-solid fa-calculator mr-3 text-brasil-green"></i> Cálculo Final y Consolidado
                 </h3>
-                <p class="text-slate-300 text-sm">Resumen general de todos los módulos, conversión de moneda y total unificado.</p>
+                <p class="text-slate-300 text-sm">Resumen general, conversión de moneda y total unificado.</p>
             </div>
-            <!-- CONFIGURACIÓN DE COTIZACIÓN -->
             <div class="w-full md:w-auto p-4 rounded-2xl bg-slate-900/80 border border-amber-400/30 space-y-2">
-                <label class="block text-[11px] font-bold uppercase tracking-wider text-amber-300">Cotización: ¿Cuánto vale 1 Real (R$) en Pesos ($)?</label>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-amber-300">Cotización: 1 Real (R$) en Pesos ($)</label>
                 <div class="flex items-center space-x-2">
                     <span class="text-xs text-slate-400">1 R$ =</span>
                     <input type="number" id="cotizacion_real" class="glass-input w-32 px-3 py-2 rounded-xl text-sm font-bold text-amber-400" value="250" min="0.01" step="0.01">
@@ -55,101 +53,71 @@
 
         <!-- TARJETAS DE TOTALES -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Total en Pesos -->
             <div class="glass-panel p-6 rounded-3xl border border-blue-500/30 bg-blue-950/20 space-y-2">
-                <span class="text-xs uppercase tracking-wider text-blue-300 font-bold block"><i class="fa-solid fa-peso-sign mr-1"></i> Total Gastado en Pesos ($)</span>
+                <span class="text-xs uppercase tracking-wider text-blue-300 font-bold block"><i class="fa-solid fa-peso-sign mr-1"></i> Total en Pesos ($)</span>
                 <div id="display-total-ars" class="font-cinzel text-3xl font-black text-blue-400">$ 0.00</div>
-                <p class="text-[11px] text-slate-400">Suma directa de combustibles y alojamientos cotizados en ARS.</p>
             </div>
 
-            <!-- Total en Reales -->
             <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 bg-amber-950/20 space-y-2">
-                <span class="text-xs uppercase tracking-wider text-amber-300 font-bold block"><i class="fa-solid fa-brazilian-real-sign mr-1"></i> Total Gastado en Reales (R$)</span>
+                <span class="text-xs uppercase tracking-wider text-amber-300 font-bold block"><i class="fa-solid fa-brazilian-real-sign mr-1"></i> Total en Reales (R$)</span>
                 <div id="display-total-brl" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                <p class="text-[11px] text-slate-400">Suma directa de playa, hoteles, alimentos y combustible en Brasil.</p>
             </div>
 
-            <!-- Costo Total Consolidado en Pesos -->
-            <div class="glass-panel p-6 rounded-3xl border border-brasil-green/40 bg-emerald-950/30 space-y-2 shadow-xl shadow-emerald-950/50">
+            <div class="glass-panel p-6 rounded-3xl border border-brasil-green/40 bg-emerald-950/30 space-y-2 shadow-xl">
                 <span class="text-xs uppercase tracking-wider text-emerald-300 font-bold block"><i class="fa-solid fa-wallet mr-1"></i> Costo Total Consolidado ($ ARS)</span>
                 <div id="display-total-consolidado" class="font-cinzel text-3xl font-black text-brasil-green">$ 0.00</div>
-                <p class="text-[11px] text-slate-300">Total en Pesos + (Total en Reales convertidos a Pesos).</p>
             </div>
         </div>
 
-        <!-- HISTORIALES DETALLADOS POR MÓDULO -->
+        <!-- TABLAS DE HISTORIALES -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- 1. COMBUSTIBLE -->
+            <!-- Combustible -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-amber-400 flex items-center">
-                    <i class="fa-solid fa-gas-pump mr-2"></i> Combustible
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-amber-400"><i class="fa-solid fa-gas-pump mr-2"></i> Combustible</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Trayecto</th>
-                                <th class="p-2.5">Moneda</th>
-                                <th class="p-2.5 text-right">Costo</th>
-                            </tr>
+                            <tr><th class="p-2.5">Trayecto</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Costo</th></tr>
                         </thead>
                         <tbody id="tabla-combustible" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 2. PLAYA -->
+            <!-- Playa -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center">
-                    <i class="fa-solid fa-umbrella-beach mr-2"></i> Playa y Parador (R$)
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-cyan-400"><i class="fa-solid fa-umbrella-beach mr-2"></i> Playa</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Días</th>
-                                <th class="p-2.5">Costo Día</th>
-                                <th class="p-2.5 text-right">Total Opción</th>
-                            </tr>
+                            <tr><th class="p-2.5">Días</th><th class="p-2.5">Costo Día</th><th class="p-2.5 text-right">Total</th></tr>
                         </thead>
                         <tbody id="tabla-playa" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 3. HOTELES -->
+            <!-- Hoteles (hoteles_reservas) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-purple-400 flex items-center">
-                    <i class="fa-solid fa-hotel mr-2"></i> Hoteles y Alojamiento
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Hoteles</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Hotel</th>
-                                <th class="p-2.5">Moneda</th>
-                                <th class="p-2.5 text-right">Total Estancia</th>
-                            </tr>
+                            <tr><th class="p-2.5">Hotel</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Total</th></tr>
                         </thead>
                         <tbody id="tabla-hoteles" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 4. ALIMENTOS -->
+            <!-- Alimentos (menu_comidas) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-orange-400 flex items-center">
-                    <i class="fa-solid fa-utensils mr-2"></i> Costos Alimentos (R$)
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Detalle / Ítem</th>
-                                <th class="p-2.5">Cant / Días</th>
-                                <th class="p-2.5 text-right">Total</th>
-                            </tr>
+                            <tr><th class="p-2.5">Detalle</th><th class="p-2.5">Cantidad</th><th class="p-2.5 text-right">Total</th></tr>
                         </thead>
                         <tbody id="tabla-alimentos" class="divide-y divide-white/5"></tbody>
                     </table>
@@ -160,7 +128,7 @@
 
     </div>
 
-    <!-- SCRIPT DE CÁLCULO Y FIRESTORE -->
+    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -174,138 +142,87 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        let datosGlobales = {
-            combustible: [],
-            playa: [],
-            hoteles: [],
-            alimentos: []
-        };
-
+        let cache = { combustible: [], playa: [], hoteles: [], alimentos: [] };
         const cotizacionInput = document.getElementById("cotizacion_real");
 
-        function realizarCalculosGenerales() {
-            let totalARS = 0;
-            let totalBRL = 0;
-            const cotizacion = parseFloat(cotizacionInput.value) || 1;
+        function calcular() {
+            let totalARS = 0, totalBRL = 0;
+            const cotiz = parseFloat(cotizacionInput.value) || 1;
 
-            // 1. Procesar Combustible
-            const tbodyCombustible = document.getElementById("tabla-combustible");
-            tbodyCombustible.innerHTML = "";
-            if (datosGlobales.combustible.length > 0) {
-                datosGlobales.combustible.forEach(item => {
-                    const costo = parseFloat(item.costoFinal) || 0;
-                    if (item.territorio === 'BRA') {
-                        totalBRL += costo;
-                    } else {
-                        totalARS += costo;
-                    }
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td class="p-2.5">${item.origen || 'Origen'} &rarr; ${item.destino || 'Destino'}</td>
-                        <td class="p-2.5 font-bold">${item.territorio || 'ARG'}</td>
-                        <td class="p-2.5 text-right font-semibold">${item.territorio === 'BRA' ? 'R$' : '$'} ${costo.toFixed(2)}</td>
-                    `;
-                    tbodyCombustible.appendChild(tr);
-                });
-            } else {
-                tbodyCombustible.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros.</td></tr>`;
-            }
+            // Combustible
+            const tbComb = document.getElementById("tabla-combustible");
+            tbComb.innerHTML = "";
+            cache.combustible.forEach(item => {
+                const c = parseFloat(item.costoFinal) || 0;
+                if (item.territorio === 'BRA') totalBRL += c; else totalARS += c;
+                tbComb.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${item.origen || ''} → ${item.destino || ''}</td><td class="p-2.5 font-bold">${item.territorio || 'ARG'}</td><td class="p-2.5 text-right">${item.territorio === 'BRA' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
+            });
+            if (!cache.combustible.length) tbComb.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // 2. Procesar Playa (Siempre en R$)
-            const tbodyPlaya = document.getElementById("tabla-playa");
-            tbodyPlaya.innerHTML = "";
-            if (datosGlobales.playa.length > 0) {
-                datosGlobales.playa.forEach(item => {
-                    const costoTotal = parseFloat(item.costoTotal) || 0;
-                    totalBRL += costoTotal;
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td class="p-2.5 font-bold">${item.cantidad_dias || 1} días</td>
-                        <td class="p-2.5">R$ ${item.costoDia || '0.00'}</td>
-                        <td class="p-2.5 text-right font-semibold text-cyan-400">R$ ${costoTotal.toFixed(2)}</td>
-                    `;
-                    tbodyPlaya.appendChild(tr);
-                });
-            } else {
-                tbodyPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros.</td></tr>`;
-            }
+            // Playa
+            const tbPlaya = document.getElementById("tabla-playa");
+            tbPlaya.innerHTML = "";
+            cache.playa.forEach(item => {
+                const c = parseFloat(item.costoTotal) || 0;
+                totalBRL += c;
+                tbPlaya.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-bold">${item.cantidad_dias || 1} días</td><td class="p-2.5">R$ ${item.costoDia || 0}</td><td class="p-2.5 text-right text-cyan-400">R$ ${c.toFixed(2)}</td></tr>`;
+            });
+            if (!cache.playa.length) tbPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // 3. Procesar Hoteles (Pueden estar en BRL o ARS)
-            const tbodyHoteles = document.getElementById("tabla-hoteles");
-            tbodyHoteles.innerHTML = "";
-            if (datosGlobales.hoteles.length > 0) {
-                datosGlobales.hoteles.forEach(item => {
-                    const total = parseFloat(item.total) || 0;
-                    if (item.moneda === 'BRL') {
-                        totalBRL += total;
-                    } else {
-                        totalARS += total;
-                    }
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'}</td>
-                        <td class="p-2.5 font-bold">${item.moneda || 'BRL'}</td>
-                        <td class="p-2.5 text-right font-semibold text-purple-400">${item.moneda === 'BRL' ? 'R$' : '$'} ${total.toFixed(2)}</td>
-                    `;
-                    tbodyHoteles.appendChild(tr);
-                });
-            } else {
-                tbodyHoteles.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros.</td></tr>`;
-            }
+            // Hoteles (hoteles_reservas)
+            const tbHot = document.getElementById("tabla-hoteles");
+            tbHot.innerHTML = "";
+            cache.hoteles.forEach(item => {
+                const c = parseFloat(item.total) || 0;
+                const m = (item.moneda || 'BRL').toUpperCase();
+                if (m === 'BRL') totalBRL += c; else totalARS += c;
+                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'}</td><td class="p-2.5 font-bold">${m}</td><td class="p-2.5 text-right text-purple-400">${m === 'BRL' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
+            });
+            if (!cache.hoteles.length) tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // 4. Procesar Alimentos (Siempre en R$)
-            const tbodyAlimentos = document.getElementById("tabla-alimentos");
-            tbodyAlimentos.innerHTML = "";
-            if (datosGlobales.alimentos.length > 0) {
-                datosGlobales.alimentos.forEach(item => {
-                    const total = parseFloat(item.total) || parseFloat(item.costoTotal) || 0;
-                    totalBRL += total;
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td class="p-2.5">${item.detalle || item.nombre || 'Consumo'}</td>
-                        <td class="p-2.5">${item.cantidad || item.dias || 1}</td>
-                        <td class="p-2.5 text-right font-semibold text-orange-400">R$ ${total.toFixed(2)}</td>
-                    `;
-                    tbodyAlimentos.appendChild(tr);
-                });
-            } else {
-                tbodyAlimentos.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros.</td></tr>`;
-            }
+            // Alimentos (menu_comidas)
+            const tbAli = document.getElementById("tabla-alimentos");
+            tbAli.innerHTML = "";
+            cache.alimentos.forEach(item => {
+                const c = parseFloat(item.total) || 0;
+                totalBRL += c;
+                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${item.detalle || 'Consumo'}</td><td class="p-2.5">${item.cantidad || 1}</td><td class="p-2.5 text-right text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
+            });
+            if (!cache.alimentos.length) tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // --- CÁLCULO Y CONVERSIÓN CONSOLIDADA FINAL ---
-            const realesConvertidosAPesos = totalBRL * cotizacion;
-            const costoTotalConsolidado = totalARS + realesConvertidosAPesos;
+            // Consolidado final
+            const brlEnPesos = totalBRL * cotiz;
+            const consolidado = totalARS + brlEnPesos;
 
             document.getElementById("display-total-ars").textContent = `$ ${totalARS.toFixed(2)}`;
             document.getElementById("display-total-brl").textContent = `R$ ${totalBRL.toFixed(2)}`;
-            document.getElementById("display-total-consolidado").textContent = `$ ${costoTotalConsolidado.toFixed(2)}`;
+            document.getElementById("display-total-consolidado").textContent = `$ ${consolidado.toFixed(2)}`;
         }
 
-        cotizacionInput.addEventListener("input", realizarCalculosGenerales);
+        cotizacionInput.addEventListener("input", calcular);
 
-        // Escuchar colecciones en tiempo real de Firestore
         onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
-            datosGlobales.combustible = [];
-            snap.forEach(d => datosGlobales.combustible.push(d.data()));
-            realizarCalculosGenerales();
+            cache.combustible = [];
+            snap.forEach(d => cache.combustible.push(d.data()));
+            calcular();
         });
 
         onSnapshot(collection(db, "playa_opciones"), (snap) => {
-            datosGlobales.playa = [];
-            snap.forEach(d => datosGlobales.playa.push(d.data()));
-            realizarCalculosGenerales();
+            cache.playa = [];
+            snap.forEach(d => cache.playa.push(d.data()));
+            calcular();
         });
 
-        onSnapshot(collection(db, "hoteles_alojamiento"), (snap) => {
-            datosGlobales.hoteles = [];
-            snap.forEach(d => datosGlobales.hoteles.push(d.data()));
-            realizarCalculosGenerales();
+        onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
+            cache.hoteles = [];
+            snap.forEach(d => cache.hoteles.push(d.data()));
+            calcular();
         });
 
-        onSnapshot(collection(db, "alimentos_gastos"), (snap) => {
-            datosGlobales.alimentos = [];
-            snap.forEach(d => datosGlobales.alimentos.push(d.data()));
-            realizarCalculosGenerales();
+        onSnapshot(collection(db, "menu_comidas"), (snap) => {
+            cache.alimentos = [];
+            snap.forEach(d => cache.alimentos.push(d.data()));
+            calcular();
         });
     </script>
 </body>
