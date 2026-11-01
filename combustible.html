@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combustible - Bitácora Brasil 2027 v3</title>
+    <title>Combustible - Bitácora Brasil 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -38,9 +38,9 @@
         <!-- ENCABEZADO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible (Firestore v3)
+                <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible Multi-Moneda
             </h3>
-            <p class="text-slate-300 text-sm">Versión actualizada lista para registrar y sincronizar con Firestore.</p>
+            <p class="text-slate-300 text-sm">Calcula trayectos detectando automáticamente si circulas en Argentina ($ ARS) o Brasil (R$).</p>
         </div>
 
         <!-- FORMULARIO -->
@@ -49,11 +49,11 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde:</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde (Origen):</label>
                     <input type="text" id="origen" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta:</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta (Destino):</label>
                     <input type="text" id="destino" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
                 </div>
             </div>
@@ -64,26 +64,39 @@
                     <input type="text" inputmode="decimal" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro:</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Rendimiento (Km/L):</label>
                     <input type="text" inputmode="decimal" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro ($ Reales):</label>
-                    <input type="text" inputmode="decimal" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 6.29">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Territorio / Moneda:</label>
+                    <select id="territorio" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300">
+                        <option value="ARG">🇦🇷 Argentina (Precio en $ ARS)</option>
+                        <option value="BRA">🇧🇷 Brasil (Precio en R$ Reales)</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- RESULTADO Y MAPA -->
-            <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
-                        <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-valor-litro">
+                        Valor Litro Nafta ($ ARS):
+                    </label>
+                    <input type="text" inputmode="decimal" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 1150.00">
+                </div>
+                <div class="flex items-end">
+                    <div class="w-full p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider text-amber-300/80 font-bold block">Costo Final Estimado:</span>
+                            <div id="costo-final-display" class="font-cinzel text-2xl font-black text-amber-400">$ 0.00</div>
+                        </div>
+                        <div id="moneda-sufijo" class="text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded">ARS</div>
                     </div>
                 </div>
-                <div class="w-full h-72 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
-                    <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar"></iframe>
-                </div>
+            </div>
+
+            <!-- MAPA -->
+            <div class="w-full h-64 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
+                <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar"></iframe>
             </div>
 
             <!-- BOTONES -->
@@ -99,14 +112,14 @@
 
         <!-- HISTORIAL -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Recorridos</h4>
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Recorridos y Consumos</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
                             <th class="p-3">Trayecto</th>
-                            <th class="p-3">Km</th>
-                            <th class="p-3">Rendimiento</th>
+                            <th class="p-3">Km / Rend</th>
+                            <th class="p-3">Territorio</th>
                             <th class="p-3">Valor Litro</th>
                             <th class="p-3 text-brasil-green">Costo Final</th>
                             <th class="p-3 text-center">Acciones</th>
@@ -121,7 +134,7 @@
 
     </div>
 
-    <!-- SCRIPT DE FIRESTORE -->
+    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -142,43 +155,84 @@
         const destinoInput = document.getElementById("destino");
         const kmInput = document.getElementById("kilometros");
         const kmLitroInput = document.getElementById("km_litro");
+        const territorioSelect = document.getElementById("territorio");
         const valorLitroInput = document.getElementById("valor_litro");
+        const labelValorLitro = document.getElementById("label-valor-litro");
         const costoFinalDisplay = document.getElementById("costo-final-display");
+        const monedaSufijo = document.getElementById("moneda-sufijo");
         const mapIframe = document.getElementById("map-iframe");
         const historialBody = document.getElementById("historial-combustible-body");
         const combustibleIdInput = document.getElementById("combustible-id");
         const btnCancelar = document.getElementById("btn-cancelar-edicion");
-        const btnGuardar = document.getElementById("btn-guardar-combustible");
+        const btnGuardar = document.querySelector("button[onclick='window.intentarGuardar()']");
 
         function parsearNumero(valor) {
             if (!valor) return 0;
             return parseFloat(valor.toString().replace(',', '.')) || 0;
         }
 
+        // Detección automática de territorio basada en las palabras ingresadas en destino u origen
+        function actualizarTerritorioAutomatico() {
+            const dest = destinoInput.value.toLowerCase();
+            const orig = origenInput.value.toLowerCase();
+            
+            // Palabras clave de Brasil
+            const palabrasBrasil = ["torres", "capao", "capão", "florianopolis", "gramado", "osorio", "porto alegre", "brasil", "tramandai"];
+            
+            const esBrasil = palabrasBrasil.some(p => dest.includes(p) || orig.includes(p));
+            
+            if (esBrasil) {
+                territorioSelect.value = "BRA";
+            } else {
+                territorioSelect.value = "ARG";
+            }
+            actualizarEtiquetasMoneda();
+        }
+
+        function actualizarEtiquetasMoneda() {
+            const territorio = territorioSelect.value;
+            if (territorio === "BRA") {
+                labelValorLitro.textContent = "Valor Litro Nafta (R$ Reales):";
+                monedaSufijo.textContent = "BRL";
+            } else {
+                labelValorLitro.textContent = "Valor Litro Nafta ($ ARS):";
+                monedaSufijo.textContent = "ARS";
+            }
+            calcularCostoCombustible();
+        }
+
         function calcularCostoCombustible() {
             const km = parsearNumero(kmInput.value);
             const kmLitro = parsearNumero(kmLitroInput.value);
             const valorLitro = parsearNumero(valorLitroInput.value);
+            const territorio = territorioSelect.value;
 
             let costoFinal = 0;
             if (kmLitro > 0) {
                 costoFinal = (km / kmLitro) * valorLitro;
             }
 
-            costoFinalDisplay.textContent = `R$ ${costoFinal.toFixed(2)}`;
+            const simbolo = territorio === "BRA" ? "R$" : "$";
+            costoFinalDisplay.textContent = `${simbolo} ${costoFinal.toFixed(2)}`;
 
             const origen = origenInput.value.trim();
             const destino = destinoInput.value.trim();
             
             if (origen && destino) {
                 mapIframe.src = `https://www.google.com/maps?q=${encodeURIComponent(origen)}+a+${encodeURIComponent(destino)}&output=embed`;
-            } else if (origen) {
-                mapIframe.src = `https://www.google.com/maps?q=${encodeURIComponent(origen)}&output=embed`;
             }
         }
 
-        [origenInput, destinoInput, kmInput, kmLitroInput, valorLitroInput].forEach(input => {
-            if (input) input.addEventListener("input", calcularCostoCombustible);
+        destinoInput.addEventListener("input", () => {
+            actualizarTerritorioAutomatico();
+        });
+        origenInput.addEventListener("input", () => {
+            actualizarTerritorioAutomatico();
+        });
+        territorioSelect.addEventListener("change", actualizarEtiquetasMoneda);
+
+        [kmInput, kmLitroInput, valorLitroInput].forEach(input => {
+            if(input) input.addEventListener("input", calcularCostoCombustible);
         });
 
         window.intentarGuardar = async function() {
@@ -188,6 +242,7 @@
             const kilometros = parsearNumero(kmInput.value);
             const kmLitro = parsearNumero(kmLitroInput.value);
             const valorLitro = parsearNumero(valorLitroInput.value);
+            const territorio = territorioSelect.value;
             
             if (!origen || !destino) {
                 alert("Completa 'Desde' y 'Hasta'.");
@@ -205,6 +260,7 @@
                 destino,
                 kilometros,
                 kmLitro,
+                territorio,
                 valor_litro: valorLitro,
                 costoFinal,
                 timestamp: Date.now()
@@ -213,14 +269,14 @@
             try {
                 if (id) {
                     await updateDoc(doc(db, "combustible_recorridos", id), recorridoData);
-                    alert("¡Actualizado en Firestore con éxito!");
+                    alert("¡Recorrido actualizado con éxito!");
                 } else {
                     await addDoc(collection(db, "combustible_recorridos"), recorridoData);
-                    alert("¡Guardado en Firestore con éxito!");
+                    alert("¡Recorrido guardado con éxito!");
                 }
                 window.cancelarEdicion();
             } catch (err) {
-                alert("Error al guardar en Firestore: " + err.message);
+                alert("Error en Firestore: " + err.message);
             }
         };
 
@@ -230,13 +286,16 @@
             kmInput.value = "";
             kmLitroInput.value = "";
             valorLitroInput.value = "";
+            territorioSelect.value = "ARG";
             combustibleIdInput.value = "";
             if (btnCancelar) btnCancelar.classList.add("hidden");
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
-            costoFinalDisplay.textContent = `R$ 0.00`;
+            costoFinalDisplay.textContent = `$ 0.00`;
+            actualizarEtiquetasMoneda();
             mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3484.0!2d-50.122!3d-30.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDIwJzEzLjIiUyA1MMKwMDcnMTkuMiJX!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar`;
         };
 
+        // Historial
         onSnapshot(collection(db, "combustible_recorridos"), (snapshot) => {
             if (!historialBody) return;
             historialBody.innerHTML = "";
@@ -248,43 +307,49 @@
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 docs.forEach(item => {
+                    const esBrasil = item.territorio === "BRA";
+                    const monedaSimbolo = esBrasil ? "R$" : "$";
+                    const badgeTerritorio = esBrasil 
+                        ? `<span class="px-2 py-0.5 rounded bg-blue-900/50 text-blue-300 text-[10px] font-bold">Brasil (BRL)</span>` 
+                        : `<span class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-[10px] font-bold">Argentina (ARS)</span>`;
+
                     const tr = document.createElement("tr");
                     tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
                     tr.innerHTML = `
                         <td class="p-3 font-semibold text-white"><i class="fa-solid fa-route mr-2 text-amber-400"></i>${item.origen} &rarr; ${item.destino}</td>
-                        <td class="p-3">${item.kilometros} km</td>
-                        <td class="p-3">${item.kmLitro} km/L</td>
-                        <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
-                        <td class="p-3 font-cinzel font-bold text-amber-400 text-base">R$ ${item.costoFinal}</td>
+                        <td class="p-3 text-xs">${item.kilometros} km <span class="text-slate-500">(${item.kmLitro} km/L)</span></td>
+                        <td class="p-3">${badgeTerritorio}</td>
+                        <td class="p-3">${monedaSimbolo} ${parseFloat(item.valor_litro).toFixed(2)}</td>
+                        <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">${monedaSimbolo} ${item.costoFinal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editar('${item.id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" onclick="window.eliminar('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" onclick="window.editarRecorrido('${item.id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, '${item.territorio || 'ARG'}', ${item.valor_litro})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="window.eliminarRecorrido('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
             } else {
-                historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">Sin registros en Cloud Firestore.</td></tr>`;
+                historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">Sin recorridos de combustible registrados.</td></tr>`;
             }
-        }, (error) => {
-            alert("Error de lectura en Firestore: " + error.message);
         });
 
-        window.editar = function(id, origen, destino, km, kmLitro, valor) {
+        window.editarRecorrido = function(id, origen, destino, km, kmLitro, territorio, valorLitro) {
             combustibleIdInput.value = id;
             origenInput.value = origen;
             destinoInput.value = destino;
             kmInput.value = km;
             kmLitroInput.value = kmLitro;
-            valorLitroInput.value = valor;
-            calcularCostoCombustible();
+            territorioSelect.value = territorio;
+            valorLitroInput.value = valorLitro;
+            actualizarEtiquetasMoneda();
+
             if (btnCancelar) btnCancelar.classList.remove("hidden");
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Recorrido`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.eliminar = async function(id) {
-            if (confirm("¿Eliminar registro de Firestore?")) {
+        window.eliminarRecorrido = async function(id) {
+            if (confirm("¿Estás seguro de eliminar este registro?")) {
                 try {
                     await deleteDoc(doc(db, "combustible_recorridos", id));
                     alert("Eliminado correctamente");
