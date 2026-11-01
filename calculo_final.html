@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo Final y Consolidado - Bitácora Brasil 2027</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -42,7 +41,7 @@
                 <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                     <i class="fa-solid fa-calculator mr-3 text-brasil-green"></i> Cálculo Final y Consolidado
                 </h3>
-                <p class="text-slate-300 text-sm">Resumen de historiales y operación manual mediante botones.</p>
+                <p class="text-slate-300 text-sm">Operación manual por botones e importación de bases de datos.</p>
             </div>
             
             <div class="w-full md:w-auto p-4 rounded-2xl bg-slate-900/80 border border-amber-400/30 space-y-2">
@@ -95,76 +94,52 @@
         <!-- TABLAS DE HISTORIALES -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- 1. Hoteles -->
+            <!-- Hoteles -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-purple-400 flex items-center">
-                    <i class="fa-solid fa-hotel mr-2"></i> Historial Hoteles
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Historial Hoteles</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Hotel / Lugar</th>
-                                <th class="p-2.5">Noches</th>
-                                <th class="p-2.5 text-right">Monto ($ Pesos)</th>
-                            </tr>
+                            <tr><th class="p-2.5">Hotel / Lugar</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Monto</th></tr>
                         </thead>
                         <tbody id="tabla-hoteles" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 2. Alimentos -->
+            <!-- Alimentos -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-orange-400 flex items-center">
-                    <i class="fa-solid fa-utensils mr-2"></i> Historial Alimentos
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Historial Alimentos</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Mes / Período</th>
-                                <th class="p-2.5">Días</th>
-                                <th class="p-2.5 text-right">Monto (R$ Reales)</th>
-                            </tr>
+                            <tr><th class="p-2.5">Mes / Período</th><th class="p-2.5">Días</th><th class="p-2.5 text-right">Monto</th></tr>
                         </thead>
                         <tbody id="tabla-alimentos" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 3. Combustibles -->
+            <!-- Combustible -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-amber-400 flex items-center">
-                    <i class="fa-solid fa-gas-pump mr-2"></i> Historial Combustible
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-amber-400"><i class="fa-solid fa-gas-pump mr-2"></i> Historial Combustible</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Trayecto</th>
-                                <th class="p-2.5">Moneda</th>
-                                <th class="p-2.5 text-right">Monto</th>
-                            </tr>
+                            <tr><th class="p-2.5">Trayecto</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Monto</th></tr>
                         </thead>
                         <tbody id="tabla-combustible" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 4. Playa -->
+            <!-- Playa -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center">
-                    <i class="fa-solid fa-umbrella-beach mr-2"></i> Historial Playa
-                </h4>
+                <h4 class="font-cinzel text-base font-bold text-cyan-400"><i class="fa-solid fa-umbrella-beach mr-2"></i> Historial Playa</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr>
-                                <th class="p-2.5">Días</th>
-                                <th class="p-2.5">Costo Día</th>
-                                <th class="p-2.5 text-right">Monto (R$ Reales)</th>
-                            </tr>
+                            <tr><th class="p-2.5">Días</th><th class="p-2.5">Costo Día</th><th class="p-2.5 text-right">Monto</th></tr>
                         </thead>
                         <tbody id="tabla-playa" class="divide-y divide-white/5"></tbody>
                     </table>
@@ -175,7 +150,6 @@
 
     </div>
 
-    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -189,157 +163,98 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        let cache = {
-            hoteles: [],
-            alimentos: [],
-            combustible: [],
-            playa: []
-        };
+        let cache = { hoteles: [], alimentos: [], combustible: [], playa: [] };
 
         const cotizacionInput = document.getElementById("cotizacion_real");
         const btnCalcularPesos = document.getElementById("btn-calcular-pesos");
         const btnCalcularReales = document.getElementById("btn-calcular-reales");
 
-        function renderizarHistoriales() {
-            // 1. Hoteles (hoteles_reservas)
+        function renderizar() {
+            // Hoteles
             const tbHot = document.getElementById("tabla-hoteles");
             tbHot.innerHTML = "";
-            if (cache.hoteles.length > 0) {
-                cache.hoteles.forEach(item => {
-                    const monto = parseFloat(item.costoPesos) || 0;
-                    tbHot.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'} <span class="text-[10px] text-cyan-300 block">${item.lugar || ''}</span></td>
-                            <td class="p-2.5">${item.noches || 1} noches</td>
-                            <td class="p-2.5 text-right font-semibold text-brasil-green">$ ${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})} ARS</td>
-                        </tr>`;
+            if (cache.hoteles.length) {
+                cache.hoteles.forEach(i => {
+                    const m = parseFloat(i.costo || i.costoPesos) || 0;
+                    const mon = (i.moneda || 'ARS').toUpperCase();
+                    tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${i.nombre}</td><td class="p-2.5 font-bold">${mon}</td><td class="p-2.5 text-right text-brasil-green">${mon === 'BRL' ? 'R$' : '$'} ${m.toFixed(2)}</td></tr>`;
                 });
-            } else {
-                tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
-            }
+            } else { tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`; }
 
-            // 2. Alimentos (menu_comidas)
+            // Alimentos
             const tbAli = document.getElementById("tabla-alimentos");
             tbAli.innerHTML = "";
-            if (cache.alimentos.length > 0) {
-                cache.alimentos.forEach(item => {
-                    const monto = parseFloat(item.reales) || 0;
-                    tbAli.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="p-2.5 font-semibold text-white">${item.mes || 'Mes'} <span class="text-[10px] text-slate-400 block">${item.desde || ''} al ${item.hasta || ''}</span></td>
-                            <td class="p-2.5">${item.dias || 1} días</td>
-                            <td class="p-2.5 text-right font-semibold text-orange-400">R$ ${monto.toFixed(2)} BRL</td>
-                        </tr>`;
+            if (cache.alimentos.length) {
+                cache.alimentos.forEach(i => {
+                    const m = parseFloat(i.reales) || 0;
+                    tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${i.mes}</td><td class="p-2.5">${i.dias} días</td><td class="p-2.5 text-right text-orange-400">R$ ${m.toFixed(2)}</td></tr>`;
                 });
-            } else {
-                tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
-            }
+            } else { tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`; }
 
-            // 3. Combustible (combustible_recorridos)
+            // Combustible
             const tbComb = document.getElementById("tabla-combustible");
             tbComb.innerHTML = "";
-            if (cache.combustible.length > 0) {
-                cache.combustible.forEach(item => {
-                    const monto = parseFloat(item.costoFinal) || 0;
-                    const terr = item.territorio || 'ARG';
-                    const sufijo = terr === 'BRA' ? 'BRL' : 'ARS';
-                    const sim = terr === 'BRA' ? 'R$' : '$';
-                    tbComb.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="p-2.5">${item.origen || ''} → ${item.destino || ''}</td>
-                            <td class="p-2.5 font-bold">${terr}</td>
-                            <td class="p-2.5 text-right font-semibold">${sim} ${monto.toFixed(2)} ${sufijo}</td>
-                        </tr>`;
+            if (cache.combustible.length) {
+                cache.combustible.forEach(i => {
+                    const m = parseFloat(i.costoFinal) || 0;
+                    const terr = i.territorio || 'ARG';
+                    tbComb.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${i.origen} → ${i.destino}</td><td class="p-2.5 font-bold">${terr}</td><td class="p-2.5 text-right">${terr === 'BRA' ? 'R$' : '$'} ${m.toFixed(2)}</td></tr>`;
                 });
-            } else {
-                tbComb.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
-            }
+            } else { tbComb.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`; }
 
-            // 4. Playa (playa_opciones)
+            // Playa
             const tbPlaya = document.getElementById("tabla-playa");
             tbPlaya.innerHTML = "";
-            if (cache.playa.length > 0) {
-                cache.playa.forEach(item => {
-                    const monto = parseFloat(item.costoTotal) || 0;
-                    tbPlaya.innerHTML += `
-                        <tr class="border-b border-white/5">
-                            <td class="p-2.5 font-bold">${item.cantidad_dias || 1} días</td>
-                            <td class="p-2.5 text-slate-400">R$ ${item.costoDia || 0} /día</td>
-                            <td class="p-2.5 text-right font-semibold text-cyan-400">R$ ${monto.toFixed(2)} BRL</td>
-                        </tr>`;
+            if (cache.playa.length) {
+                cache.playa.forEach(i => {
+                    const m = parseFloat(i.costoTotal) || 0;
+                    tbPlaya.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${i.cantidad_dias} días</td><td class="p-2.5">R$ ${i.costoDia}</td><td class="p-2.5 text-right text-cyan-400">R$ ${m.toFixed(2)}</td></tr>`;
                 });
-            } else {
-                tbPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Sin registros guardados.</td></tr>`;
-            }
+            } else { tbPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`; }
         }
 
-        // Función para calcular la suma total en Pesos mediante el botón
+        // Botón Calcular Pesos
         btnCalcularPesos.addEventListener("click", () => {
             let totalARS = 0;
-            cache.hoteles.forEach(item => totalARS += parseFloat(item.costoPesos) || 0);
-            cache.combustible.forEach(item => {
-                if (item.territorio !== 'BRA') totalARS += parseFloat(item.costoFinal) || 0;
-            });
+            cache.hoteles.forEach(i => { if ((i.moneda || 'ARS') === 'ARS') totalARS += parseFloat(i.costo || i.costoPesos) || 0; });
+            cache.combustible.forEach(i => { if (i.territorio !== 'BRA') totalARS += parseFloat(i.costoFinal) || 0; });
             document.getElementById("display-total-ars").textContent = `$ ${totalARS.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
             actualizarConsolidado();
         });
 
-        // Función para calcular la suma total en Reales mediante el botón
+        // Botón Calcular Reales
         btnCalcularReales.addEventListener("click", () => {
             let totalBRL = 0;
-            cache.alimentos.forEach(item => totalBRL += parseFloat(item.reales) || 0);
-            cache.combustible.forEach(item => {
-                if (item.territorio === 'BRA') totalBRL += parseFloat(item.costoFinal) || 0;
-            });
-            cache.playa.forEach(item => totalBRL += parseFloat(item.costoTotal) || 0);
+            cache.hoteles.forEach(i => { if (i.moneda === 'BRL') totalBRL += parseFloat(i.costo) || 0; });
+            cache.alimentos.forEach(i => totalBRL += parseFloat(i.reales) || 0);
+            cache.combustible.forEach(i => { if (i.territorio === 'BRA') totalBRL += parseFloat(i.costoFinal) || 0; });
+            cache.playa.forEach(i => totalBRL += parseFloat(i.costoTotal) || 0);
             document.getElementById("display-total-brl").textContent = `R$ ${totalBRL.toFixed(2)}`;
             actualizarConsolidado();
         });
 
-        // Cálculo Final Consolidado (Suma pesos + reales convertidos según los totales operados)
         function actualizarConsolidado() {
             let totalARS = 0;
-            cache.hoteles.forEach(item => totalARS += parseFloat(item.costoPesos) || 0);
-            cache.combustible.forEach(item => { if (item.territorio !== 'BRA') totalARS += parseFloat(item.costoFinal) || 0; });
+            cache.hoteles.forEach(i => { if ((i.moneda || 'ARS') === 'ARS') totalARS += parseFloat(i.costo || i.costoPesos) || 0; });
+            cache.combustible.forEach(i => { if (i.territorio !== 'BRA') totalARS += parseFloat(i.costoFinal) || 0; });
 
             let totalBRL = 0;
-            cache.alimentos.forEach(item => totalBRL += parseFloat(item.reales) || 0);
-            cache.combustible.forEach(item => { if (item.territorio === 'BRA') totalBRL += parseFloat(item.costoFinal) || 0; });
-            cache.playa.forEach(item => totalBRL += parseFloat(item.costoTotal) || 0);
+            cache.hoteles.forEach(i => { if (i.moneda === 'BRL') totalBRL += parseFloat(i.costo) || 0; });
+            cache.alimentos.forEach(i => totalBRL += parseFloat(i.reales) || 0);
+            cache.combustible.forEach(i => { if (i.territorio === 'BRA') totalBRL += parseFloat(i.costoFinal) || 0; });
+            cache.playa.forEach(i => totalBRL += parseFloat(i.costoTotal) || 0);
 
             const cotiz = parseFloat(cotizacionInput.value) || 0;
-            const realesEnPesos = totalBRL * cotiz;
-            const costoFinalTotal = totalARS + realesEnPesos;
-
-            document.getElementById("display-total-consolidado").textContent = `$ ${costoFinalTotal.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
+            const final = totalARS + (totalBRL * cotiz);
+            document.getElementById("display-total-consolidado").textContent = `$ ${final.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
         }
 
         cotizacionInput.addEventListener("input", actualizarConsolidado);
 
-        // Conexiones en tiempo real a las colecciones exactas de Firestore
-        onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
-            cache.hoteles = [];
-            snap.forEach(d => cache.hoteles.push(d.data()));
-            renderizarHistoriales();
-        });
-
-        onSnapshot(collection(db, "menu_comidas"), (snap) => {
-            cache.alimentos = [];
-            snap.forEach(d => cache.alimentos.push(d.data()));
-            renderizarHistoriales();
-        });
-
-        onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
-            cache.combustible = [];
-            snap.forEach(d => cache.combustible.push(d.data()));
-            renderizarHistoriales();
-        });
-
-        onSnapshot(collection(db, "playa_opciones"), (snap) => {
-            cache.playa = [];
-            snap.forEach(d => cache.playa.push(d.data()));
-            renderizarHistoriales();
-        });
+        onSnapshot(collection(db, "hoteles_reservas"), (s) => { cache.hoteles = []; s.forEach(d => cache.hoteles.push(d.data())); renderizar(); });
+        onSnapshot(collection(db, "menu_comidas"), (s) => { cache.alimentos = []; s.forEach(d => cache.alimentos.push(d.data())); renderizar(); });
+        onSnapshot(collection(db, "combustible_recorridos"), (s) => { cache.combustible = []; s.forEach(d => cache.combustible.push(d.data())); renderizar(); });
+        onSnapshot(collection(db, "playa_opciones"), (s) => { cache.playa = []; s.forEach(d => cache.playa.push(d.data())); renderizar(); });
     </script>
 </body>
 </html>
