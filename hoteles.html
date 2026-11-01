@@ -40,7 +40,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, noches y elige con total claridad si pagas en Pesos o Reales.</p>
+            <p class="text-slate-300 text-sm">Registro de reservas de hospedaje con selección obligatoria y directa de moneda (Pesos o Reales).</p>
         </div>
 
         <!-- FORMULARIO -->
@@ -77,25 +77,21 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Personas:</label>
                     <input type="number" id="cantidad_personas" class="glass-input w-full px-4 py-3 rounded-xl text-sm" value="2" min="1">
                 </div>
-                
-                <!-- SECCIÓN DE MONEDA Y COSTO BIEN CLARA -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Moneda:</label>
-                        <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
-                            <option value="ARS">Pesos ($ ARS)</option>
-                            <option value="BRL">Reales (R$)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-brasil-green mb-2" id="label-costo">Costo Total:</label>
-                        <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Monto" step="any">
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Moneda de Pago:</label>
+                    <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                        <option value="ARS">🇦🇷 Pesos ($ ARS)</option>
+                        <option value="BRL">🇧🇷 Reales (R$)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brasil-green mb-2" id="label-costo">Costo Total:</label>
+                    <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Monto" step="any">
                 </div>
             </div>
 
@@ -125,6 +121,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -152,6 +149,7 @@
         const btnCancelar = document.getElementById("btn-cancelar");
         const historialBody = document.getElementById("historial-hoteles-body");
 
+        // Control dinámico de la etiqueta según moneda seleccionada
         monedaSelect.addEventListener("change", () => {
             if (monedaSelect.value === 'BRL') {
                 labelCosto.textContent = "Costo en Reales (R$):";
