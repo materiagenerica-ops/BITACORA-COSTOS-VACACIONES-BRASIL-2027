@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitácora General de Gastos - Brasil 2027</title>
-    <!-- Tailwind CSS para diseño moderno cinemático -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Cinzel & Plus Jakarta Sans -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome para iconos -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -42,12 +42,12 @@
             box-shadow: 0 0 40px rgba(0, 155, 58, 0.15), 0 0 80px rgba(254, 223, 0, 0.08);
         }
         .glass-panel {
-            background: rgba(10, 22, 40, 0.75);
+            background: rgba(10, 22, 40, 0.85);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(254, 223, 0, 0.15);
         }
         .glass-input {
-            background: rgba(5, 11, 20, 0.6);
+            background: rgba(5, 11, 20, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .glass-input:focus {
@@ -70,30 +70,27 @@
         .immersive-btn:hover::after {
             left: 100%;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #050b14; }
         ::-webkit-scrollbar-thumb { background: #002776; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #009b3a; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-brasil-dark to-black">
 
-    <!-- BACKGROUND CINEMATIC LIGHTS -->
+    <!-- FONDO CINEMÁTICO -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
         <div class="absolute -top-40 -left-40 w-96 h-96 bg-brasil-green rounded-full blur-[120px]"></div>
         <div class="absolute top-1/2 -right-40 w-96 h-96 bg-brasil-blue rounded-full blur-[140px]"></div>
         <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-brasil-yellow rounded-full blur-[160px] opacity-20"></div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
+    <!-- CONTENEDOR GENERAL -->
     <div id="app-container" class="relative z-10 flex-1 flex flex-col justify-between">
         
         <!-- ================= PANTALLA DE LOGIN ================= -->
         <div id="login-view" class="flex-1 flex items-center justify-center p-4">
             <div class="glass-panel p-8 md:p-12 rounded-3xl w-full max-w-lg cinematic-glow border border-brasil-yellow/20 relative">
                 
-                <!-- Logo & Header -->
                 <div class="text-center mb-8">
                     <div class="inline-block p-1 rounded-2xl bg-gradient-to-tr from-brasil-green via-brasil-yellow to-brasil-blue mb-4 shadow-lg shadow-brasil-green/20">
                         <img id="logotipo_bitacora" src="logotipo_bitacora.jpg" alt="Bitácora Logo" class="w-20 h-20 object-cover rounded-xl bg-slate-900" onerror="this.src='https://images.unsplash.com/photo-1483445057712-659a76d73f18?w=150&auto=format&fit=crop&q=80'">
@@ -106,7 +103,6 @@
                     </p>
                 </div>
 
-                <!-- Formulario Login -->
                 <form id="login-form" class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Usuario</label>
@@ -129,21 +125,21 @@
                     </div>
 
                     <div id="login-error" class="hidden text-red-400 text-xs text-center font-semibold bg-red-950/40 p-3 rounded-xl border border-red-500/30">
-                        Credenciales incorrectas. Verifique Usuario y Contraseña.
+                        Usuario o contraseña incorrectos.
                     </div>
 
-                    <button type="submit" class="immersive-btn w-full py-4 rounded-xl bg-gradient-to-r from-brasil-green via-emerald-600 to-brasil-blue text-white font-bold tracking-wider uppercase text-sm shadow-lg shadow-brasil-green/30 hover:shadow-brasil-green/50 active:scale-[0.98]">
+                    <button type="submit" class="immersive-btn w-full py-4 rounded-xl bg-gradient-to-r from-brasil-green via-emerald-600 to-brasil-blue text-white font-bold tracking-wider uppercase text-sm shadow-lg shadow-brasil-green/30 active:scale-[0.98]">
                         <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Ingresar al Sistema
                     </button>
                 </form>
 
                 <div class="mt-8 text-center text-xs text-slate-500">
-                    Sistema de Control Financiero Seguro &bull; Firebase Connected
+                    Control Financiero Seguro &bull; Conectado a Firebase Firestore
                 </div>
             </div>
         </div>
 
-        <!-- ================= CENTRAL DASHBOARD (CENTRAL.HTML / APP VIEW) ================= -->
+        <!-- ================= PANTALLA CENTRAL (DASHBOARD) ================= -->
         <div id="central-view" class="hidden flex-1 flex flex-col h-screen overflow-hidden">
             
             <!-- ENCABEZADO SUPERIOR -->
@@ -160,7 +156,6 @@
                     </div>
                 </div>
 
-                <!-- Botón Salir Margen Superior Derecho -->
                 <button id="btn-salir" class="immersive-btn px-4 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/40 border border-red-500/40 text-red-300 font-semibold text-xs tracking-wider uppercase transition flex items-center space-x-2">
                     <i class="fa-solid fa-power-off"></i>
                     <span class="hidden md:inline">Salir</span>
@@ -172,11 +167,11 @@
                 <iframe id="content-iframe" name="content-iframe" src="menu.html" class="w-full h-full border-0"></iframe>
             </main>
 
-            <!-- BARRA DE MENÚ INFERIOR CON BOTONES INMERSIVOS -->
+            <!-- BARRA DE MENÚ INFERIOR -->
             <nav class="glass-panel border-t border-white/10 px-4 py-3 z-20 shadow-2xl">
                 <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2 md:gap-4">
                     
-                    <button onclick="loadModule('menu.html', this)" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-brasil-blue/40 hover:bg-brasil-blue/80 border border-blue-400/30 text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2 transition shadow-md active:scale-95">
+                    <button onclick="loadModule('menu.html', this)" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-brasil-blue/80 border border-blue-400/50 text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2 transition shadow-lg active:scale-95">
                         <i class="fa-solid fa-house text-brasil-yellow"></i>
                         <span>Menú</span>
                     </button>
@@ -208,7 +203,7 @@
 
     </div>
 
-    <!-- ARCHIVO LÓGICO Y FIREBASE -->
+    <!-- SCRIPT PRINCIPAL -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
