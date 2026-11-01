@@ -199,7 +199,7 @@
                 <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-3">
                     <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Día de Playa:</span>
                     <div id="costo-dia-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                    <button type="button" onclick="window.calcularDiaPlaya()" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-wider transition">
+                    <button type="button" id="btn-calcular-dia" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-wider transition cursor-pointer">
                         <i class="fa-solid fa-calculator mr-2"></i> Calcular Costo Día de Playa
                     </button>
                 </div>
@@ -220,10 +220,10 @@
 
             <!-- BOTONES DE ACCIÓN -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar-playa" onclick="window.guardarOpcionPlaya()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
+                <button type="button" id="btn-guardar-playa" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)
                 </button>
-                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionPlaya()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
+                <button type="button" id="btn-cancelar-edicion" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
                     Cancelar Edición
                 </button>
             </div>
@@ -284,8 +284,9 @@
         const costoDiaDisplay = document.getElementById("costo-dia-display");
         const costoOpcionDisplay = document.getElementById("costo-opcion-display");
         const playaIdInput = document.getElementById("playa-id");
-        const btnCancelar = document.getElementById("btn-cancelar-edicion");
+        const btnCalcularDia = document.getElementById("btn-calcular-dia");
         const btnGuardar = document.getElementById("btn-guardar-playa");
+        const btnCancelar = document.getElementById("btn-cancelar-edicion");
         const historialBody = document.getElementById("historial-playa-body");
 
         function parsearNumero(valor) {
@@ -293,7 +294,7 @@
             return parseFloat(valor.toString().replace(',', '.')) || 0;
         }
 
-        window.calcularDiaPlaya = function() {
+        function calcularDiaPlaya() {
             let costoDia = 0;
             itemsConfig.forEach(item => {
                 const cant = parsearNumero(document.getElementById(item.cantId).value);
@@ -308,14 +309,18 @@
             costoOpcionDisplay.textContent = `R$ ${costoTotal.toFixed(2)}`;
 
             return { costoDia, costoTotal, dias };
-        };
+        }
 
-        // Recalcular automáticamente al escribir en cualquier input
+        // Eventos en vivo
+        if (btnCalcularDia) {
+            btnCalcularDia.addEventListener("click", calcularDiaPlaya);
+        }
+
         document.querySelectorAll(".item-calc").forEach(input => {
-            input.addEventListener("input", window.calcularDiaPlaya);
+            input.addEventListener("input", calcularDiaPlaya);
         });
 
-        window.guardarOpcionPlaya = async function() {
+        async function guardarOpcionPlaya() {
             const id = playaIdInput.value;
             const dias = parsearNumero(diasInput.value);
 
@@ -324,7 +329,7 @@
                 return;
             }
 
-            const { costoDia, costoTotal } = window.calcularDiaPlaya();
+            const { costoDia, costoTotal } = calcularDiaPlaya();
 
             let playaData = {
                 cantidad_dias: dias,
@@ -346,13 +351,17 @@
                     await addDoc(collection(db, "playa_opciones"), playaData);
                     alert("¡Opción de playa guardada con éxito!");
                 }
-                window.cancelarEdicionPlaya();
+                cancelarEdicionPlaya();
             } catch (err) {
                 alert("Error al guardar en Firestore: " + err.message);
             }
-        };
+        }
 
-        window.cancelarEdicionPlaya = function() {
+        if (btnGuardar) {
+            btnGuardar.addEventListener("click", guardarOpcionPlaya);
+        }
+
+        function cancelarEdicionPlaya() {
             itemsConfig.forEach(item => {
                 document.getElementById(item.cantId).value = "0";
                 document.getElementById(item.precioId).value = "";
@@ -363,7 +372,11 @@
             costoOpcionDisplay.textContent = "R$ 0.00";
             if (btnCancelar) btnCancelar.classList.add("hidden");
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)`;
-        };
+        }
+
+        if (btnCancelar) {
+            btnCancelar.addEventListener("click", cancelarEdicionPlaya);
+        }
 
         // Escuchar datos en tiempo real desde Firestore
         onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
@@ -396,53 +409,61 @@
                         <td class="p-3 font-bold text-white">${item.cantidad_dias} días</td>
                         <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">R$ ${item.costoTotal}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarPlaya('${item.id}')" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" onclick="window.eliminarPlaya('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" class="btn-editar px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" data-id="${item.id}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" class="btn-eliminar px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" data-id="${item.id}" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     tr.dataset.itemData = JSON.stringify(item);
                     historialBody.appendChild(tr);
                 });
+
+                // Asignar eventos a botones generados dinámicamente
+                document.querySelectorAll(".btn-editar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const id = btn.getAttribute("data-id");
+                        const rows = historialBody.querySelectorAll("tr");
+                        let targetData = null;
+                        rows.forEach(row => {
+                            if(row.dataset.itemData) {
+                                const parsed = JSON.parse(row.dataset.itemData);
+                                if(parsed.id === id) targetData = parsed;
+                            }
+                        });
+
+                        if(!targetData) return;
+
+                        playaIdInput.value = targetData.id;
+                        itemsConfig.forEach(item => {
+                            document.getElementById(item.cantId).value = targetData[item.cantId] || 0;
+                            document.getElementById(item.precioId).value = targetData[item.precioId] || "";
+                        });
+                        diasInput.value = targetData.cantidad_dias || 1;
+                        calcularDiaPlaya();
+
+                        if (btnCancelar) btnCancelar.classList.remove("hidden");
+                        if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Opción Playa`;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                document.querySelectorAll(".btn-eliminar").forEach(btn => {
+                    btn.addEventListener("click", async () => {
+                        const id = btn.getAttribute("data-id");
+                        if (confirm("¿Estás seguro de eliminar este registro de playa?")) {
+                            try {
+                                await deleteDoc(doc(db, "playa_opciones", id));
+                                alert("Eliminado correctamente");
+                            } catch (err) {
+                                alert("Error al eliminar: " + err.message);
+                            }
+                        }
+                    });
+                });
+
             } else {
                 historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa todavía.</td></tr>`;
             }
         });
-
-        window.editarPlaya = function(id) {
-            const rows = historialBody.querySelectorAll("tr");
-            let targetData = null;
-            rows.forEach(row => {
-                if(row.dataset.itemData) {
-                    const parsed = JSON.parse(row.dataset.itemData);
-                    if(parsed.id === id) targetData = parsed;
-                }
-            });
-
-            if(!targetData) return;
-
-            playaIdInput.value = targetData.id;
-            itemsConfig.forEach(item => {
-                document.getElementById(item.cantId).value = targetData[item.cantId] || 0;
-                document.getElementById(item.precioId).value = targetData[item.precioId] || "";
-            });
-            diasInput.value = targetData.cantidad_dias || 1;
-            window.calcularDiaPlaya();
-
-            if (btnCancelar) btnCancelar.classList.remove("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Opción Playa`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.eliminarPlaya = async function(id) {
-            if (confirm("¿Estás seguro de eliminar este registro de playa?")) {
-                try {
-                    await deleteDoc(doc(db, "playa_opciones", id));
-                    alert("Eliminado correctamente");
-                } catch (err) {
-                    alert("Error al eliminar: " + err.message);
-                }
-            }
-        };
     </script>
 </body>
 </html>
