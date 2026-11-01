@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitácora General de Gastos - Brasil 2027</title>
+    <link rel="icon" href="data:,">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -28,22 +29,15 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050b14; color: #f8fafc; overflow: hidden; margin: 0; }
         .cinematic-glow { box-shadow: 0 0 50px rgba(0, 155, 58, 0.2), 0 0 100px rgba(254, 223, 0, 0.1); }
-        .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
-        .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
+        .glass-panel { background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
+        .glass-input { background: rgba(5, 11, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
         .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
         .immersive-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: 0.5s; }
         .immersive-btn:hover::after { left: 100%; }
-        .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 155, 58, 0.4); }
     </style>
 </head>
 <body class="w-screen h-screen flex flex-col bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-brasil-dark to-black">
-
-    <!-- LUCES DE FONDO CINEMÁTICO -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
-        <div class="absolute -top-40 -left-40 w-[500px] h-[500px] bg-brasil-green rounded-full blur-[140px]"></div>
-        <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-brasil-blue rounded-full blur-[160px]"></div>
-    </div>
 
     <!-- CONTENEDOR APP -->
     <div class="relative z-10 w-full h-full flex flex-col">
@@ -96,7 +90,7 @@
             </div>
         </div>
 
-        <!-- ================= FORMULARIO CENTRAL / DASHBOARD ================= -->
+        <!-- ================= PANTALLA CENTRAL / DASHBOARD ================= -->
         <div id="central-view" class="hidden w-full h-full flex flex-col">
             
             <!-- ENCABEZADO SUPERIOR -->
