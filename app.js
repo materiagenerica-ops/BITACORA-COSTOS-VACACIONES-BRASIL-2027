@@ -67,34 +67,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Navegación interna entre secciones desde la barra superior de menú
-    const navButtons = document.querySelectorAll(".nav-btn");
-    const sections = document.querySelectorAll(".app-section");
-
-    navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const targetId = btn.getAttribute("data-target");
-
-            // Ocultar todas las secciones
-            sections.forEach(sec => sec.classList.add("hidden"));
-
-            // Mostrar la sección seleccionada
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-                targetSection.classList.remove("hidden");
-            }
-
-            // Actualizar estilos activos de los botones
-            navButtons.forEach(b => {
-                b.classList.remove("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
-                b.classList.add("bg-slate-800/70");
-            });
-            btn.classList.remove("bg-slate-800/70");
-            btn.classList.add("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
+    // Función global para abrir cada archivo html independiente en el iframe y gestionar estilos de la barra
+    window.loadModule = function(page, btnElement) {
+        const iframe = document.getElementById("content-iframe");
+        if (iframe) {
+            iframe.src = page;
+        }
+        document.querySelectorAll(".nav-btn").forEach(b => {
+            b.classList.remove("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
+            b.classList.add("bg-slate-800/70");
         });
-    });
+        if (btnElement) {
+            btnElement.classList.remove("bg-slate-800/70");
+            btnElement.classList.add("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
+        }
+    };
 
-    // Exponer la base de datos y métodos globalmente para los submódulos
+    // Exponer la base de datos y métodos globalmente para los futuros archivos html independientes
     window.firebaseDB = {
         db,
         ref,
