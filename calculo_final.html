@@ -100,7 +100,7 @@
 
             <!-- Hoteles (hoteles_reservas) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Hoteles</h4>
+                <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Hoteles (hoteles_reservas)</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
@@ -113,7 +113,7 @@
 
             <!-- Alimentos (menu_comidas) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos</h4>
+                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos (menu_comidas)</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
@@ -124,6 +124,12 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- PANEL DE DEPURACIÓN (DEBUG) PARA VER QUÉ DEVUELVE FIRESTORE -->
+        <div class="glass-panel p-4 rounded-2xl border border-red-500/30 text-xs font-mono text-slate-400 space-y-1">
+            <span class="text-amber-400 font-bold">Estado de Conexión Firestore:</span>
+            <div id="debug-status">Conectando a Firebase...</div>
         </div>
 
     </div>
@@ -144,6 +150,7 @@
 
         let cache = { combustible: [], playa: [], hoteles: [], alimentos: [] };
         const cotizacionInput = document.getElementById("cotizacion_real");
+        const debugDiv = document.getElementById("debug-status");
 
         function calcular() {
             let totalARS = 0, totalBRL = 0;
@@ -169,26 +176,29 @@
             });
             if (!cache.playa.length) tbPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // Hoteles (hoteles_reservas)
+            // Hoteles (Buscando cualquier propiedad para el nombre y el total)
             const tbHot = document.getElementById("tabla-hoteles");
             tbHot.innerHTML = "";
             cache.hoteles.forEach(item => {
-                const c = parseFloat(item.total) || 0;
-                const m = (item.moneda || 'BRL').toUpperCase();
-                if (m === 'BRL') totalBRL += c; else totalARS += c;
-                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'}</td><td class="p-2.5 font-bold">${m}</td><td class="p-2.5 text-right text-purple-400">${m === 'BRL' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
+                const c = parseFloat(item.total || item.costo_noche || item.costoTotal || 0) || 0;
+                const m = (item.moneda || item.moneda_hotel || 'BRL').toUpperCase();
+                const nombre = item.nombre || item.nombre_hotel || item.hotel || 'Hotel';
+                if (m === 'BRL' || m === 'BRA') totalBRL += c; else totalARS += c;
+                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${nombre}</td><td class="p-2.5 font-bold">${m}</td><td class="p-2.5 text-right text-purple-400">${m === 'BRL' || m === 'BRA' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
             });
-            if (!cache.hoteles.length) tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
+            if (!cache.hoteles.length) tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Colección vacía o sin documentos.</td></tr>`;
 
-            // Alimentos (menu_comidas)
+            // Alimentos (Buscando cualquier propiedad de detalle y total)
             const tbAli = document.getElementById("tabla-alimentos");
             tbAli.innerHTML = "";
             cache.alimentos.forEach(item => {
-                const c = parseFloat(item.total) || 0;
+                const c = parseFloat(item.total || item.costoTotal || item.precio || 0) || 0;
+                const detalle = item.detalle || item.nombre || item.item || 'Consumo';
+                const cant = item.cantidad || item.dias || 1;
                 totalBRL += c;
-                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${item.detalle || 'Consumo'}</td><td class="p-2.5">${item.cantidad || 1}</td><td class="p-2.5 text-right text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
+                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${detalle}</td><td class="p-2.5">${cant}</td><td class="p-2.5 text-right text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
             });
-            if (!cache.alimentos.length) tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
+            if (!cache.alimentos.length) tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Colección vacía o sin documentos.</td></tr>`;
 
             // Consolidado final
             const brlEnPesos = totalBRL * cotiz;
@@ -197,6 +207,9 @@
             document.getElementById("display-total-ars").textContent = `$ ${totalARS.toFixed(2)}`;
             document.getElementById("display-total-brl").textContent = `R$ ${totalBRL.toFixed(2)}`;
             document.getElementById("display-total-consolidado").textContent = `$ ${consolidado.toFixed(2)}`;
+
+            // Actualizar panel de depuración visual
+            debugDiv.innerHTML = `Hoteles docs: ${cache.hoteles.length} | Alimentos docs: ${cache.alimentos.length} | Conectado OK`;
         }
 
         cotizacionInput.addEventListener("input", calcular);
@@ -205,25 +218,25 @@
             cache.combustible = [];
             snap.forEach(d => cache.combustible.push(d.data()));
             calcular();
-        });
+        }, (err) => { debugDiv.innerHTML = `Error en combustible: ${err.message}`; });
 
         onSnapshot(collection(db, "playa_opciones"), (snap) => {
             cache.playa = [];
             snap.forEach(d => cache.playa.push(d.data()));
             calcular();
-        });
+        }, (err) => { debugDiv.innerHTML = `Error en playa: ${err.message}`; });
 
         onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
             cache.hoteles = [];
             snap.forEach(d => cache.hoteles.push(d.data()));
             calcular();
-        });
+        }, (err) => { debugDiv.innerHTML = `Error en hoteles_reservas: ${err.message}`; });
 
         onSnapshot(collection(db, "menu_comidas"), (snap) => {
             cache.alimentos = [];
             snap.forEach(d => cache.alimentos.push(d.data()));
             calcular();
-        });
+        }, (err) => { debugDiv.innerHTML = `Error en menu_comidas: ${err.message}`; });
     </script>
 </body>
 </html>
