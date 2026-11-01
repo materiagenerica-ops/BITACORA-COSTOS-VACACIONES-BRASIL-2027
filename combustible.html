@@ -52,66 +52,64 @@
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <div id="combustible-form" class="space-y-6">
-                <input type="hidden" id="combustible-id">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
+            <input type="hidden" id="combustible-id">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde:</label>
+                    <input type="text" id="origen" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta:</label>
+                    <input type="text" id="destino" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Kilómetros:</label>
+                    <input type="text" inputmode="decimal" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro (Rendimiento):</label>
+                    <input type="text" inputmode="decimal" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5 o 12,5">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro Nafta/Gasolina ($ Reales):</label>
+                    <input type="text" inputmode="decimal" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 6.29 o 6,29">
+                </div>
+            </div>
+
+            <!-- RESULTADO Y MAPA INCORPORADO -->
+            <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde:</label>
-                        <input type="text" id="origen" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
+                        <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
+                        <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta:</label>
-                        <input type="text" id="destino" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
+                    <div class="text-right text-xs text-slate-400">
+                        <i class="fa-solid fa-map-location-dot text-cyan-400 mr-1"></i> Visualización de ruta en vivo
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Kilómetros:</label>
-                        <input type="text" inputmode="decimal" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro (Rendimiento):</label>
-                        <input type="text" inputmode="decimal" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5 o 12,5">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro Nafta/Gasolina ($ Reales):</label>
-                        <input type="text" inputmode="decimal" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 6.29 o 6,29">
-                    </div>
+                <!-- Contenedor del Mapa Embebido -->
+                <div class="w-full h-72 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
+                    <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7"></iframe>
                 </div>
+            </div>
 
-                <!-- RESULTADO Y MAPA INCORPORADO -->
-                <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
-                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div>
-                            <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
-                            <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                        </div>
-                        <div class="text-right text-xs text-slate-400">
-                            <i class="fa-solid fa-map-location-dot text-cyan-400 mr-1"></i> Visualización de ruta en vivo
-                        </div>
-                    </div>
+            <!-- MENSAJE DE ESTADO / ALERTA -->
+            <div id="form-status" class="hidden p-3 rounded-xl text-xs font-semibold text-center"></div>
 
-                    <!-- Contenedor del Mapa Embebido -->
-                    <div class="w-full h-72 rounded-xl overflow-hidden border border-white/10 bg-slate-950">
-                        <iframe id="map-iframe" width="100%" height="100%" style="border:0;" loading="lazy" src="https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7"></iframe>
-                    </div>
-                </div>
-
-                <!-- MENSAJE DE ESTADO / ALERTA -->
-                <div id="form-status" class="hidden p-3 rounded-xl text-xs font-semibold text-center"></div>
-
-                <!-- BOTONES DE ACCIÓN -->
-                <div class="flex flex-wrap items-center gap-4 pt-2">
-                    <button type="button" id="btn-guardar-combustible" class="immersive-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-lg">
-                        <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido
-                    </button>
-                    <button type="button" id="btn-cancelar-edicion" class="hidden px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
-                        Cancelar Edición
-                    </button>
-                </div>
+            <!-- BOTONES DE ACCIÓN (FUERA DE CUALQUIER FORMULARIO, 100% INDEPENDIENTES) -->
+            <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
+                <button type="button" id="btn-guardar-combustible" onclick="window.guardarRecorrido()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido
+                </button>
+                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicion()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
+                    Cancelar Edición
+                </button>
             </div>
         </div>
 
@@ -176,7 +174,6 @@
             setTimeout(() => formStatus.classList.add("hidden"), 4000);
         }
 
-        // Función auxiliar para parsear números que acepten tanto punto como coma
         function parsearNumero(valor) {
             if (!valor) return 0;
             return parseFloat(valor.toString().replace(',', '.')) || 0;
@@ -208,8 +205,8 @@
             if (input) input.addEventListener("input", calcularCostoCombustible);
         });
 
-        // Evento de clic en Guardar / Actualizar (sin bloqueos de HTML5 submit)
-        btnGuardar.addEventListener("click", () => {
+        // Función global expuesta para el botón fuera del form
+        window.guardarRecorrido = function() {
             const id = combustibleIdInput.value;
             const origen = origenInput.value.trim();
             const destino = destinoInput.value.trim();
@@ -245,7 +242,7 @@
                 update(itemRef, recorridoData)
                     .then(() => {
                         mostrarMensaje("¡Recorrido actualizado con éxito!");
-                        resetForm();
+                        window.cancelarEdicion();
                     })
                     .catch((err) => mostrarMensaje("Error al actualizar: " + err.message, true));
             } else {
@@ -253,19 +250,67 @@
                 set(nuevoRef, recorridoData)
                     .then(() => {
                         mostrarMensaje("¡Recorrido guardado con éxito!");
-                        resetForm();
+                        window.cancelarEdicion();
                     })
                     .catch((err) => mostrarMensaje("Error al guardar: " + err.message, true));
             }
-        });
+        };
 
-        btnCancelarEdicion.addEventListener("click", () => resetForm());
-
-        function resetForm() {
+        window.cancelarEdicion = function() {
             origenInput.value = "";
             destinoInput.value = "";
             kmInput.value = "";
             kmLitroInput.value = "";
             valorLitroInput.value = "";
             combustibleIdInput.value = "";
-            btnCancelarEd
+            btnCancelarEdicion.classList.add("hidden");
+            btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
+            costoFinalDisplay.textContent = "R$ 0.00";
+            mapIframe.src = `https://www.google.com/maps/embed/v1/view?key=&center=-30.337,-50.122&zoom=7`;
+        };
+
+        // Cargar en Tiempo Real desde Firebase
+        const dbRef = ref(db, "combustible_recorridos");
+        onValue(dbRef, (snapshot) => {
+            if (!historialBody) return;
+            historialBody.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                Object.entries(data).reverse().forEach(([id, item]) => {
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white"><i class="fa-solid fa-route mr-2 text-amber-400"></i>${item.origen} &rarr; ${item.destino}</td>
+                        <td class="p-3">${item.kilometros} km</td>
+                        <td class="p-3">${item.kmLitro} km/L</td>
+                        <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
+                        <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button type="button" class="btn-editar px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" data-id="${id}" data-origen="${item.origen}" data-destino="${item.destino}" data-km="${item.kilometros}" data-kmlitro="${item.kmLitro}" data-valor="${item.valor_litro}" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button type="button" class="btn-eliminar px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" data-id="${id}" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    historialBody.appendChild(tr);
+                });
+
+                document.querySelectorAll(".btn-editar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        window.editarRecorrido(
+                            btn.getAttribute("data-id"),
+                            btn.getAttribute("data-origen"),
+                            btn.getAttribute("data-destino"),
+                            btn.getAttribute("data-km"),
+                            btn.getAttribute("data-kmlitro"),
+                            btn.getAttribute("data-valor")
+                        );
+                    });
+                });
+
+                document.querySelectorAll(".btn-eliminar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        window.eliminarRecorrido(btn.getAttribute("data-id"));
+                    });
