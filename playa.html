@@ -39,63 +39,158 @@
 </head>
 <body class="min-h-screen">
 
-    <div class="max-w-5xl mx-auto space-y-8 pb-12">
+    <div class="max-w-6xl mx-auto space-y-8 pb-12">
         
         <!-- ENCABEZADO DE MÓDULO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-umbrella-beach mr-3 text-amber-400"></i> Gastos de Playa y Parador
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el costo diario por servicios de playa y gastronomía, multiplícalo por la cantidad de días y guárdalo en la base de datos.</p>
+            <p class="text-slate-300 text-sm">Indica la cantidad y precio unitario de cada consumo, calcula el costo del día, multiplícalo por la cantidad de días y guárdalo en la base de datos.</p>
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
             <input type="hidden" id="playa-id">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
                 <!-- Reposera -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-chair text-amber-400 mr-2"></i> Reposera de playa ($ R):
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-chair text-amber-400 mr-1.5"></i> Reposera de playa
                     </label>
-                    <input type="text" inputmode="decimal" id="reposera" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 30">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
+
                 <!-- Toldo gacebo -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-tent text-cyan-400 mr-2"></i> Toldo gacebo ($ R):
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-tent text-cyan-400 mr-1.5"></i> Toldo gacebo
                     </label>
-                    <input type="text" inputmode="decimal" id="gacebo" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 100">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
+
                 <!-- Papas fritas -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-utensils text-yellow-400 mr-2"></i> Porción Papas fritas ($ R):
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-utensils text-yellow-400 mr-1.5"></i> Papas fritas
                     </label>
-                    <input type="text" inputmode="decimal" id="papas" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 45">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
+
                 <!-- Rabas -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-fish text-emerald-400 mr-2"></i> Porción de Rabas ($ R):
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-fish text-emerald-400 mr-1.5"></i> Porción de Rabas
                     </label>
-                    <input type="text" inputmode="decimal" id="rabas" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 80">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
+
                 <!-- Pastel -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-cookie-bite text-orange-400 mr-2"></i> Pastel ($ R):
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-cookie-bite text-orange-400 mr-1.5"></i> Pastel
                     </label>
-                    <input type="text" inputmode="decimal" id="pastel" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 20">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
-                <!-- Caipirnha -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-glass-citrus text-lime-400 mr-2"></i> Caipirinha ($ R):
+
+                <!-- Caipirinha -->
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-glass-citrus text-lime-400 mr-1.5"></i> Caipirinha
                     </label>
-                    <input type="text" inputmode="decimal" id="caipirinha" class="glass-input w-full px-4 py-3 rounded-xl text-sm item-cost" placeholder="Ej: 25">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Milho con manteca -->
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-seedling text-amber-200 mr-1.5"></i> Milho con manteca
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frango asado -->
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <i class="fa-solid fa-drumstick-bite text-amber-600 mr-1.5"></i> Frango asado
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
+                            <input type="text" inputmode="numeric" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
+                            <input type="text" inputmode="decimal" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- PANEL DE CÁLCULOS -->
@@ -112,7 +207,7 @@
                 <!-- Cantidad de Días y Costo Opción -->
                 <div class="p-5 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-3">
                     <label class="block text-xs uppercase tracking-wider text-blue-300/80 font-bold">Cantidad de Días:</label>
-                    <input type="text" inputmode="numeric" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" value="1" placeholder="Ej: 7">
+                    <input type="text" inputmode="numeric" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm item-calc" value="1" placeholder="Ej: 7">
                     
                     <div class="flex items-center justify-between pt-1">
                         <div>
@@ -141,7 +236,7 @@
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
-                            <th class="p-3">Detalle Consumos</th>
+                            <th class="p-3">Detalle Consumos (Cant x Precio)</th>
                             <th class="p-3">Costo Día</th>
                             <th class="p-3">Días</th>
                             <th class="p-3 text-brasil-green">Costo Total Opción</th>
@@ -174,14 +269,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const reposeraInput = document.getElementById("reposera");
-        const gaceboInput = document.getElementById("gacebo");
-        const papasInput = document.getElementById("papas");
-        const rabasInput = document.getElementById("rabas");
-        const pastelInput = document.getElementById("pastel");
-        const caipirinhaInput = document.getElementById("caipirinha");
+        // Inputs mapeados
+        const itemsConfig = [
+            { key: 'reposera', cantId: 'cant_reposera', precioId: 'precio_reposera', label: 'Reposera' },
+            { key: 'gacebo', cantId: 'cant_gacebo', precioId: 'precio_gacebo', label: 'Gacebo' },
+            { key: 'papas', cantId: 'cant_papas', precioId: 'precio_papas', label: 'Papas' },
+            { key: 'rabas', cantId: 'cant_rabas', precioId: 'precio_rabas', label: 'Rabas' },
+            { key: 'pastel', cantId: 'cant_pastel', precioId: 'precio_pastel', label: 'Pastel' },
+            { key: 'caipirinha', cantId: 'cant_caipirinha', precioId: 'precio_caipirinha', label: 'Caipirinha' },
+            { key: 'milho', cantId: 'cant_milho', precioId: 'precio_milho', label: 'Milho' },
+            { key: 'frango', cantId: 'cant_frango', precioId: 'precio_frango', label: 'Frango' }
+        ];
+
         const diasInput = document.getElementById("cantidad_dias");
-        
         const costoDiaDisplay = document.getElementById("costo-dia-display");
         const costoOpcionDisplay = document.getElementById("costo-opcion-display");
         const playaIdInput = document.getElementById("playa-id");
@@ -195,15 +295,14 @@
         }
 
         window.calcularDiaPlaya = function() {
-            const rep = parsearNumero(reposeraInput.value);
-            const gaz = parsearNumero(gaceboInput.value);
-            const pap = parsearNumero(papasInput.value);
-            const rab = parsearNumero(rabasInput.value);
-            const pas = parsearNumero(pastelInput.value);
-            const cai = parsearNumero(caipirinhaInput.value);
-            const dias = parsearNumero(diasInput.value) || 1;
+            let costoDia = 0;
+            itemsConfig.forEach(item => {
+                const cant = parsearNumero(document.getElementById(item.cantId).value);
+                const precio = parsearNumero(document.getElementById(item.precioId).value);
+                costoDia += (cant * precio);
+            });
 
-            const costoDia = rep + gaz + pap + rab + pas + cai;
+            const dias = parsearNumero(diasInput.value) || 1;
             const costoTotal = costoDia * dias;
 
             costoDiaDisplay.textContent = `R$ ${costoDia.toFixed(2)}`;
@@ -212,133 +311,9 @@
             return { costoDia, costoTotal, dias };
         };
 
-        document.querySelectorAll(".item-cost, #cantidad_dias").forEach(input => {
+        document.querySelectorAll(".item-calc").forEach(input => {
             input.addEventListener("input", window.calcularDiaPlaya);
         });
 
         window.guardarOpcionPlaya = async function() {
-            const id = playaIdInput.value;
-            const rep = parsearNumero(reposeraInput.value);
-            const gaz = parsearNumero(gaceboInput.value);
-            const pap = parsearNumero(papasInput.value);
-            const rab = parsearNumero(rabasInput.value);
-            const pas = parsearNumero(pastelInput.value);
-            const cai = parsearNumero(caipirinhaInput.value);
-            const dias = parsearNumero(diasInput.value);
-
-            if (dias <= 0) {
-                alert("La cantidad de días debe ser mayor a 0.");
-                return;
-            }
-
-            const { costoDia, costoTotal } = window.calcularDiaPlaya();
-
-            const playaData = {
-                reposera: rep,
-                toldo_gacebo: gaz,
-                papas_fritas: pap,
-                rabas: rab,
-                pastel: pas,
-                caipirinha: cai,
-                cantidad_dias: dias,
-                costoDia: costoDia.toFixed(2),
-                costoTotal: costoTotal.toFixed(2),
-                timestamp: Date.now()
-            };
-
-            try {
-                if (id) {
-                    await updateDoc(doc(db, "playa_opciones", id), playaData);
-                    alert("¡Opción de playa actualizada con éxito!");
-                } else {
-                    await addDoc(collection(db, "playa_opciones"), playaData);
-                    alert("¡Opción de playa guardada con éxito!");
-                }
-                window.cancelarEdicionPlaya();
-            } catch (err) {
-                alert("Error al guardar en Firestore: " + err.message);
-            }
-        };
-
-        window.cancelarEdicionPlaya = function() {
-            reposeraInput.value = "";
-            gaceboInput.value = "";
-            papasInput.value = "";
-            rabasInput.value = "";
-            pastelInput.value = "";
-            caipirinhaInput.value = "";
-            diasInput.value = "1";
-            playaIdInput.value = "";
-            costoDiaDisplay.textContent = "R$ 0.00";
-            costoOpcionDisplay.textContent = "R$ 0.00";
-            if (btnCancelar) btnCancelar.classList.add("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)`;
-        };
-
-        // Escuchar datos en tiempo real
-        onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
-            if (!historialBody) return;
-            historialBody.innerHTML = "";
-            if (!snapshot.empty) {
-                let docs = [];
-                snapshot.forEach(docSnap => {
-                    docs.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-                docs.forEach(item => {
-                    const tr = document.createElement("tr");
-                    tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
-                    tr.innerHTML = `
-                        <td class="p-3 text-xs text-slate-300">
-                            <span class="text-amber-300 font-semibold">Rep:</span> R$${item.reposera} | 
-                            <span class="text-cyan-300 font-semibold">Gacebo:</span> R$${item.toldo_gacebo} | 
-                            <span class="text-yellow-300 font-semibold">Papas:</span> R$${item.papas_fritas} | 
-                            <span class="text-emerald-300 font-semibold">Rabas:</span> R$${item.rabas} | 
-                            <span class="text-orange-300 font-semibold">Pastel:</span> R$${item.pastel} | 
-                            <span class="text-lime-300 font-semibold">Caipi:</span> R$${item.caipirinha}
-                        </td>
-                        <td class="p-3">R$ ${item.costoDia}</td>
-                        <td class="p-3 font-bold text-white">${item.cantidad_dias} días</td>
-                        <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">R$ ${item.costoTotal}</td>
-                        <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarPlaya('${item.id}', ${item.reposera}, ${item.toldo_gacebo}, ${item.papas_fritas}, ${item.rabas}, ${item.pastel}, ${item.caipirinha}, ${item.cantidad_dias})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" onclick="window.eliminarPlaya('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    `;
-                    historialBody.appendChild(tr);
-                });
-            } else {
-                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa todavía.</td></tr>`;
-            }
-        });
-
-        window.editarPlaya = function(id, rep, gaz, pap, rab, pas, cai, dias) {
-            playaIdInput.value = id;
-            reposeraInput.value = rep;
-            gaceboInput.value = gaz;
-            papasInput.value = pap;
-            rabasInput.value = rab;
-            pastelInput.value = pas;
-            caipirinhaInput.value = cai;
-            diasInput.value = dias;
-            window.calcularDiaPlaya();
-
-            if (btnCancelar) btnCancelar.classList.remove("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Opción Playa`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.eliminarPlaya = async function(id) {
-            if (confirm("¿Estás seguro de eliminar este registro de playa?")) {
-                try {
-                    await deleteDoc(doc(db, "playa_opciones", id));
-                    alert("Eliminado correctamente");
-                } catch (err) {
-                    alert("Error al eliminar: " + err.message);
-                }
-            }
-        };
-    </script>
-</body>
-</html>
+            const id =
