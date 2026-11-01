@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, get, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,9 +12,9 @@ const firebaseConfig = {
   appId: "1:558877802256:web:580e6a100a17b0ba062f95"
 };
 
-// Initialize Firebase
+// Initialize Firebase & Firestore
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = getFirestore(app);
 
 // Credenciales obligatorias de acceso
 const VALID_USER = "DRPEREYRA";
@@ -81,18 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
             btnElement.classList.remove("bg-slate-800/70");
             btnElement.classList.add("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
         }
-    };
-
-    // Exponer la base de datos y métodos globalmente para los futuros archivos html independientes
-    window.firebaseDB = {
-        db,
-        ref,
-        set,
-        get,
-        push,
-        onValue,
-        remove,
-        update
     };
 });
 
