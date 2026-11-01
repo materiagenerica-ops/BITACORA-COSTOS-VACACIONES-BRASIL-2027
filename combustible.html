@@ -30,7 +30,7 @@
         .glass-panel { background: rgba(10, 22, 40, 0.90); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        #mapa-recorrido { height: 350px; width: 100%; border-radius: 1rem; z-index: 10; border: 1px solid rgba(254, 223, 0, 0.2); }
+        #mapa-recorrido { height: 380px; width: 100%; border-radius: 1rem; z-index: 10; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -42,7 +42,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-brasil-green"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza el mapa de ruta y registra los costos.</p>
+            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza la ruta exacta en el mapa y registra los costos.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -104,11 +104,11 @@
             <!-- MAPA Y VISUALIZACIÓN DE RUTA -->
             <div class="glass-panel p-6 rounded-3xl border border-brasil-yellow/20 shadow-xl space-y-4 lg:col-span-2 flex flex-col">
                 <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center justify-between">
-                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Mapa de Recorrido</span>
+                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Mapa de Recorrido de Tramos</span>
                     <button type="button" id="btn-centrar-mapa" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg cursor-pointer">Actualizar / Centrar</button>
                 </h4>
                 <div id="mapa-recorrido" class="shadow-inner"></div>
-                <p class="text-xs text-slate-400 italic">Visualización interactiva de origen y destino sobre el mapa.</p>
+                <p class="text-xs text-slate-400 italic">Los tramos guardados se conectarán y mostrarán automáticamente en este mapa.</p>
             </div>
 
         </div>
@@ -150,7 +150,7 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        // Inicializar Mapa
+        // Inicializar Mapa correctamente asegurando renderizado de contenedor
         const map = L.map('mapa-recorrido').setView([-28.5, -53.5], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -158,6 +158,10 @@
         }).addTo(map);
 
         let markerGroup = L.layerGroup().addTo(map);
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 300);
 
         document.getElementById("btn-centrar-mapa").addEventListener("click", () => {
             map.invalidateSize();
@@ -190,7 +194,7 @@
             el.addEventListener("input", calcularCostoPreview);
         });
 
-        // Diccionario completo de coordenadas para ruta Argentina - Brasil
+        // Diccionario completo de coordenadas
         const coordenadasCiudades = {
             "córdoba": [-31.4201, -64.1888], "cordoba": [-31.4201, -64.1888],
             "rosario": [-32.9468, -60.6393],
@@ -215,7 +219,6 @@
             const key = nombre.toLowerCase().trim();
             if (coordenadasCiudades[key]) return coordenadasCiudades[key];
             
-            // Coincidencia parcial si no es exacta
             for (let ciudad in coordenadasCiudades) {
                 if (key.includes(ciudad) || ciudad.includes(key)) {
                     return coordenadasCiudades[ciudad];
@@ -231,8 +234,8 @@
             tramos.forEach(t => {
                 if (!t.origen || !t.destino) return;
 
-                let coordOrig = obtenerCoordenadasLocales(t.origen) || [-31.42, -64.18]; // Fallback Córdoba
-                let coordDest = obtenerCoordenadasLocales(t.destino) || [-29.33, -49.72]; // Fallback Torres
+                let coordOrig = obtenerCoordenadasLocales(t.origen) || [-31.42, -64.18];
+                let coordDest = obtenerCoordenadasLocales(t.destino) || [-29.33, -49.72];
 
                 const mOrig = L.marker(coordOrig).bindPopup(`<b>Origen:</b> ${t.origen}`);
                 const mDest = L.marker(coordDest).bindPopup(`<b>Destino:</b> ${t.destino}`);
@@ -246,8 +249,9 @@
                 latLngs.push(coordDest);
             });
 
+            map.invalidateSize();
             if (latLngs.length > 0) {
-                map.fitBounds(L.latLngBounds(latLngs), { padding: [50, 50] });
+                map.fitBounds(L.latLngBounds(latLngs), { padding: [60, 60], maxZoom: 12 });
             }
         }
 
