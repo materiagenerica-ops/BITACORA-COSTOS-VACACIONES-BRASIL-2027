@@ -46,7 +46,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje en Torres o Capão da Canoa, controla las noches, ocupantes y costos en pesos.</p>
+            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches, ocupantes y costos en pesos.</p>
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
@@ -65,9 +65,9 @@
                         <i class="fa-solid fa-map-pin text-cyan-400 mr-1.5"></i> Lugar:
                     </label>
                     <select id="hotel_lugar" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        <option value="Torres">Torres</option>
+                        <option value="Sao Gabriel">Sao Gabriel</option>
                         <option value="Capão da Canoa">Capão da Canoa</option>
-                        <option value="Otro">Otro en el trayecto</option>
+                        <option value="Torres">Torres</option>
                     </select>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                         <i class="fa-solid fa-moon text-yellow-400 mr-1.5"></i> Cantidad de Noches:
                     </label>
-                    <input type="text" id="cantidad_noches" class="glass-input w-full px-4 py-3 rounded-xl text-sm bg-slate-900/50 font-bold text-amber-300" readonly value="0">
+                    <input type="text" inputmode="numeric" id="cantidad_noches" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300" value="1" placeholder="Ej: 2">
                 </div>
             </div>
 
@@ -146,3 +146,184 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
+          authDomain: "bitacora-costos-brasil.firebaseapp.com",
+          projectId: "bitacora-costos-brasil",
+          storageBucket: "bitacora-costos-brasil.firebasestorage.app",
+          messagingSenderId: "558877802256",
+          appId: "1:558877802256:web:580e6a100a17b0ba062f95"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const hotelNombreInput = document.getElementById("hotel_nombre");
+        const hotelLugarInput = document.getElementById("hotel_lugar");
+        const checkInInput = document.getElementById("check_in");
+        const checkOutInput = document.getElementById("check_out");
+        const cantidadNochesInput = document.getElementById("cantidad_noches");
+        const cantidadPersonasInput = document.getElementById("cantidad_personas");
+        const costoPesosInput = document.getElementById("costo_pesos");
+        const hotelIdInput = document.getElementById("hotel-id");
+        const btnCancelar = document.getElementById("btn-cancelar-edicion");
+        const btnGuardar = document.querySelector("button[onclick='window.guardarHotel()']");
+        const historialBody = document.getElementById("historial-hoteles-body");
+
+        function parsearNumero(valor) {
+            if (!valor) return 0;
+            return parseFloat(valor.toString().replace(',', '.')) || 0;
+        }
+
+        // Sugerir cálculo de noches automáticamente al cambiar fechas, pero permitiendo modificarlo libremente
+        function calcularNoches() {
+            const checkInVal = checkInInput.value;
+            const checkOutVal = checkOutInput.value;
+
+            if (checkInVal && checkOutVal) {
+                const fechaIn = new Date(checkInVal);
+                const fechaOut = new Date(checkOutVal);
+                const diferenciaTiempo = fechaOut - fechaIn;
+                const dias = Math.round(diferenciaTiempo / (1000 * 60 * 60 * 24));
+
+                if (dias > 0) {
+                    cantidadNochesInput.value = dias;
+                }
+            }
+        }
+
+        checkInInput.addEventListener("change", calcularNoches);
+        checkOutInput.addEventListener("change", calcularNoches);
+
+        window.guardarHotel = async function() {
+            const id = hotelIdInput.value;
+            const nombre = hotelNombreInput.value.trim();
+            const lugar = hotelLugarInput.value;
+            const checkIn = checkInInput.value;
+            const checkOut = checkOutInput.value;
+            const noches = parseInt(cantidadNochesInput.value) || 0;
+            const personas = parseInt(cantidadPersonasInput.value) || 0;
+            const costoPesos = parsearNumero(costoPesosInput.value);
+
+            if (!nombre) {
+                alert("Por favor ingresa el nombre del hotel.");
+                return;
+            }
+            if (noches <= 0) {
+                alert("La cantidad de noches debe ser mayor a 0.");
+                return;
+            }
+            if (costoPesos <= 0) {
+                alert("Ingresa un costo válido en pesos mayor a 0.");
+                return;
+            }
+
+            const hotelData = {
+                nombre,
+                lugar,
+                checkIn: checkIn || "Sin especificar",
+                checkOut: checkOut || "Sin especificar",
+                noches,
+                personas,
+                costoPesos: costoPesos.toFixed(2),
+                timestamp: Date.now()
+            };
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "hoteles_reservas", id), hotelData);
+                    alert("¡Reserva de hotel actualizada con éxito!");
+                } else {
+                    await addDoc(collection(db, "hoteles_reservas"), hotelData);
+                    alert("¡Reserva de hotel guardada con éxito!");
+                }
+                window.cancelarEdicionHotel();
+            } catch (err) {
+                alert("Error al guardar en Firestore: " + err.message);
+            }
+        };
+
+        window.cancelarEdicionHotel = function() {
+            hotelNombreInput.value = "";
+            hotelLugarInput.value = "Sao Gabriel";
+            checkInInput.value = "";
+            checkOutInput.value = "";
+            cantidadNochesInput.value = "1";
+            cantidadPersonasInput.value = "2";
+            costoPesosInput.value = "";
+            hotelIdInput.value = "";
+            if (btnCancelar) btnCancelar.classList.add("hidden");
+            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Hotel`;
+        };
+
+        // Escuchar datos en tiempo real
+        onSnapshot(collection(db, "hoteles_reservas"), (snapshot) => {
+            if (!historialBody) return;
+            historialBody.innerHTML = "";
+            if (!snapshot.empty) {
+                let docs = [];
+                snapshot.forEach(docSnap => {
+                    docs.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                docs.forEach(item => {
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
+                    tr.innerHTML = `
+                        <td class="p-3">
+                            <div class="font-semibold text-white"><i class="fa-solid fa-hotel mr-2 text-amber-400"></i>${item.nombre}</div>
+                            <div class="text-xs text-cyan-300 mt-0.5"><i class="fa-solid fa-map-pin mr-1"></i>${item.lugar}</div>
+                        </td>
+                        <td class="p-3 text-xs text-slate-300">
+                            <div><span class="text-emerald-400">In:</span> ${item.checkIn}</div>
+                            <div><span class="text-rose-400">Out:</span> ${item.checkOut}</div>
+                        </td>
+                        <td class="p-3 text-xs text-slate-300">
+                            <div><span class="text-yellow-400 font-semibold">${item.noches}</span> noches</div>
+                            <div><span class="text-blue-400 font-semibold">${item.personas}</span> pax</div>
+                        </td>
+                        <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">
+                            $ ${Number(item.costoPesos).toLocaleString('es-AR')} ARS
+                        </td>
+                        <td class="p-3 text-center space-x-2">
+                            <button type="button" onclick="window.editarHotel('${item.id}', '${item.nombre}', '${item.lugar}', '${item.checkIn}', '${item.checkOut}', ${item.noches}, ${item.personas}, ${item.costoPesos})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="window.eliminarHotel('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+                    historialBody.appendChild(tr);
+                });
+            } else {
+                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin reservas de hoteles registradas.</td></tr>`;
+            }
+        });
+
+        window.editarHotel = function(id, nombre, lugar, checkIn, checkOut, noches, personas, costoPesos) {
+            hotelIdInput.value = id;
+            hotelNombreInput.value = nombre;
+            hotelLugarInput.value = lugar;
+            checkInInput.value = checkIn !== "Sin especificar" ? checkIn : "";
+            checkOutInput.value = checkOut !== "Sin especificar" ? checkOut : "";
+            cantidadNochesInput.value = noches;
+            cantidadPersonasInput.value = personas;
+            costoPesosInput.value = costoPesos;
+
+            if (btnCancelar) btnCancelar.classList.remove("hidden");
+            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Hotel`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.eliminarHotel = async function(id) {
+            if (confirm("¿Estás seguro de eliminar esta reserva de hotel?")) {
+                try {
+                    await deleteDoc(doc(db, "hoteles_reservas", id));
+                    alert("Reserva eliminada correctamente");
+                } catch (err) {
+                    alert("Error al eliminar: " + err.message);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
