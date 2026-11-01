@@ -8,8 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script>
         tailwind.config = {
             theme: {
@@ -30,7 +28,7 @@
         .glass-panel { background: rgba(10, 22, 40, 0.90); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        #mapa-recorrido { height: 380px; width: 100%; border-radius: 1rem; z-index: 10; border: 1px solid rgba(254, 223, 0, 0.2); }
+        #mapa-recorrido { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -42,7 +40,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-brasil-green"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza la ruta exacta en el mapa y registra los costos.</p>
+            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza el mapa oficial de Google Maps y registra los costos.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -101,14 +99,13 @@
                 </div>
             </div>
 
-            <!-- MAPA Y VISUALIZACIÓN DE RUTA -->
+            <!-- MAPA DE GOOGLE MAPS -->
             <div class="glass-panel p-6 rounded-3xl border border-brasil-yellow/20 shadow-xl space-y-4 lg:col-span-2 flex flex-col">
                 <h4 class="font-cinzel text-base font-bold text-cyan-400 flex items-center justify-between">
-                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Mapa de Recorrido de Tramos</span>
-                    <button type="button" id="btn-centrar-mapa" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg cursor-pointer">Actualizar / Centrar</button>
+                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Google Maps - Ruta de Recorrido</span>
                 </h4>
-                <div id="mapa-recorrido" class="shadow-inner"></div>
-                <p class="text-xs text-slate-400 italic">Los tramos guardados se conectarán y mostrarán automáticamente en este mapa.</p>
+                <iframe id="mapa-recorrido" src="https://maps.google.com/maps?q=Cordoba+to+Sao+Gabriel&output=embed" allowfullscreen="" loading="lazy"></iframe>
+                <p class="text-xs text-slate-400 italic">El mapa de Google se actualiza automáticamente con el origen y destino ingresados.</p>
             </div>
 
         </div>
@@ -134,9 +131,7 @@
 
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
+    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -150,24 +145,6 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        // Inicializar Mapa correctamente asegurando renderizado de contenedor
-        const map = L.map('mapa-recorrido').setView([-28.5, -53.5], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-
-        let markerGroup = L.layerGroup().addTo(map);
-
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 300);
-
-        document.getElementById("btn-centrar-mapa").addEventListener("click", () => {
-            map.invalidateSize();
-            map.setView([-28.5, -53.5], 6);
-        });
-
         const origenInput = document.getElementById("origen");
         const destinoInput = document.getElementById("destino");
         const distanciaInput = document.getElementById("distancia");
@@ -179,6 +156,23 @@
         const btnGuardar = document.getElementById("btn-guardar");
         const btnCancelar = document.getElementById("btn-cancelar");
         const historialBody = document.getElementById("historial-combustible-body");
+        const mapaIframe = document.getElementById("mapa-recorrido");
+
+        function actualizarMapaGoogle(origen, destino) {
+            const orig = origen || "Cordoba";
+            const dest = destino || "Sao Gabriel";
+            const query = encodeURIComponent(`${orig} to ${dest}`);
+            mapaIframe.src = `https://maps.google.com/maps?q=${query}&output=embed`;
+        }
+
+        // Actualizar mapa al escribir en origen o destino
+        [origenInput, destinoInput].forEach(input => {
+            input.addEventListener("blur", () => {
+                if (origenInput.value && destinoInput.value) {
+                    actualizarMapaGoogle(origenInput.value, destinoInput.value);
+                }
+            });
+        });
 
         function calcularCostoPreview() {
             const dist = parseFloat(distanciaInput.value) || 0;
@@ -193,67 +187,6 @@
         [distanciaInput, rendimientoInput, precioInput, territorioSelect].forEach(el => {
             el.addEventListener("input", calcularCostoPreview);
         });
-
-        // Diccionario completo de coordenadas
-        const coordenadasCiudades = {
-            "córdoba": [-31.4201, -64.1888], "cordoba": [-31.4201, -64.1888],
-            "rosario": [-32.9468, -60.6393],
-            "santa fe": [-31.6333, -60.7000],
-            "paraná": [-31.7333, -60.5333], "parana": [-31.7333, -60.5333],
-            "buenos aires": [-34.6037, -58.3816],
-            "gualeguaychú": [-33.0094, -58.5172], "gualeguaychu": [-33.0094, -58.5172],
-            "concordia": [-31.3934, -58.0209],
-            "paso de los libres": [-29.7167, -57.0833],
-            "uruguaiana": [-29.7547, -57.0883],
-            "sao gabriel": [-30.3358, -54.3219],
-            "porto alegre": [-30.0346, -51.2177],
-            "capão da canoa": [-29.7458, -50.1331], "capao da canoa": [-29.7458, -50.1331],
-            "torres": [-29.3353, -49.7264],
-            "florianópolis": [-27.5954, -48.5480], "florianopolis": [-27.5954, -48.5480],
-            "curitiba": [-25.4284, -49.2733],
-            "são paulo": [-23.5505, -46.6333], "sao paulo": [-23.5505, -46.6333]
-        };
-
-        function obtenerCoordenadasLocales(nombre) {
-            if (!nombre) return null;
-            const key = nombre.toLowerCase().trim();
-            if (coordenadasCiudades[key]) return coordenadasCiudades[key];
-            
-            for (let ciudad in coordenadasCiudades) {
-                if (key.includes(ciudad) || ciudad.includes(key)) {
-                    return coordenadasCiudades[ciudad];
-                }
-            }
-            return null;
-        }
-
-        function actualizarMapaTramos(tramos) {
-            markerGroup.clearLayers();
-            let latLngs = [];
-
-            tramos.forEach(t => {
-                if (!t.origen || !t.destino) return;
-
-                let coordOrig = obtenerCoordenadasLocales(t.origen) || [-31.42, -64.18];
-                let coordDest = obtenerCoordenadasLocales(t.destino) || [-29.33, -49.72];
-
-                const mOrig = L.marker(coordOrig).bindPopup(`<b>Origen:</b> ${t.origen}`);
-                const mDest = L.marker(coordDest).bindPopup(`<b>Destino:</b> ${t.destino}`);
-                markerGroup.addLayer(mOrig);
-                markerGroup.addLayer(mDest);
-
-                const polyline = L.polyline([coordOrig, coordDest], {color: '#fedf00', weight: 4, opacity: 0.8});
-                markerGroup.addLayer(polyline);
-
-                latLngs.push(coordOrig);
-                latLngs.push(coordDest);
-            });
-
-            map.invalidateSize();
-            if (latLngs.length > 0) {
-                map.fitBounds(L.latLngBounds(latLngs), { padding: [60, 60], maxZoom: 12 });
-            }
-        }
 
         btnGuardar.addEventListener("click", async () => {
             const id = tramoIdInput.value;
@@ -316,13 +249,18 @@
                 snap.forEach(d => tramosCache.push({ id: d.id, ...d.data() }));
                 tramosCache.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-                tramosCache.forEach(item => {
+                tramosCache.forEach((item, index) => {
                     const terr = item.territorio || 'ARG';
                     const sim = terr === 'BRA' ? 'R$' : '$';
                     const monto = parseFloat(item.costoFinal) || 0;
 
+                    // Si es el primer elemento, mostrarlo en el mapa de Google por defecto
+                    if (index === 0) {
+                        actualizarMapaGoogle(item.origen, item.destino);
+                    }
+
                     const tr = document.createElement("tr");
-                    tr.className = "border-b border-white/5 hover:bg-slate-900/40 transition";
+                    tr.className = "border-b border-white/5 hover:bg-slate-900/40 transition cursor-pointer";
                     tr.innerHTML = `
                         <td class="p-3 font-semibold text-white">${item.origen} → ${item.destino}</td>
                         <td class="p-3 text-xs">${item.distancia} km <span class="text-slate-400 block">(${item.rendimiento} km/L)</span></td>
@@ -334,6 +272,13 @@
                         </td>
                     `;
 
+                    // Al hacer clic en la fila del historial, se muestra ese tramo en Google Maps
+                    tr.addEventListener("click", (e) => {
+                        if (!e.target.closest('button')) {
+                            actualizarMapaGoogle(item.origen, item.destino);
+                        }
+                    });
+
                     tr.querySelector(".btn-edit").addEventListener("click", () => {
                         tramoIdInput.value = item.id;
                         origenInput.value = item.origen;
@@ -343,6 +288,7 @@
                         precioInput.value = item.precio;
                         territorioSelect.value = terr;
                         calcularCostoPreview();
+                        actualizarMapaGoogle(item.origen, item.destino);
                         btnCancelar.classList.remove("hidden");
                         btnGuardar.textContent = "Actualizar Tramo";
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -356,11 +302,9 @@
 
                     historialBody.appendChild(tr);
                 });
-
-                actualizarMapaTramos(tramosCache);
             } else {
                 historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin tramos registrados.</td></tr>`;
-                actualizarMapaTramos([]);
+                actualizarMapaGoogle("Cordoba", "Sao Gabriel");
             }
         });
     </script>
