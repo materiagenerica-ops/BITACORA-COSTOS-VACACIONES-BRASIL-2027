@@ -187,7 +187,6 @@
             return parseFloat(valor.toString().replace(',', '.')) || 0;
         }
 
-        // Actualizar etiqueta del input según la moneda seleccionada
         function actualizarLabelMoneda() {
             const moneda = monedaHotelSelect.value;
             if (moneda === 'BRL') {
@@ -285,7 +284,6 @@
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Hotel`;
         };
 
-        // Escuchar datos en tiempo real
         onSnapshot(collection(db, "hoteles_reservas"), (snapshot) => {
             if (!historialBody) return;
             historialBody.innerHTML = "";
@@ -297,7 +295,6 @@
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 docs.forEach(item => {
-                    // Compatibilidad con registros antiguos que usaban costoPesos
                     const monto = parseFloat(item.costo || item.costoPesos) || 0;
                     const moneda = (item.moneda || 'ARS').toUpperCase();
                     const sim = moneda === 'BRL' ? 'R$' : '$';
