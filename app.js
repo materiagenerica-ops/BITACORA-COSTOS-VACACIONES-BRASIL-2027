@@ -1,8 +1,8 @@
-// Importar Firebase Realtime Database SDK
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, get, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Configuración Firebase
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
   authDomain: "bitacora-costos-brasil.firebaseapp.com",
@@ -12,9 +12,11 @@ const firebaseConfig = {
   appId: "1:558877802256:web:580e6a100a17b0ba062f95"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// Credenciales obligatorias de acceso
 const VALID_USER = "DRPEREYRA";
 const VALID_PASS = "235689";
 
@@ -26,12 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginError = document.getElementById("login-error");
     const iframe = document.getElementById("content-iframe");
 
-    // Comprobar sesión guardada
+    // Verificar si ya hay una sesión activa previa
     if (localStorage.getItem("brasil_session") === "active") {
-        activateDashboard();
+        showCentralDashboard();
     }
 
-    // Evento de Login
+    // Lógica del Login
     if (loginForm) {
         loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -41,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userInput === VALID_USER && passInput === VALID_PASS) {
                 localStorage.setItem("brasil_session", "active");
                 if (loginError) loginError.classList.add("hidden");
-                activateDashboard();
+                showCentralDashboard();
             } else {
                 if (loginError) loginError.classList.remove("hidden");
                 loginForm.classList.add("animate-pulse");
@@ -54,13 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnSalir) {
         btnSalir.addEventListener("click", () => {
             localStorage.removeItem("brasil_session");
-            if (centralView) centralView.classList.add("hidden");
-            if (loginView) loginView.classList.remove("hidden");
+            if (centralView) {
+                centralView.classList.add("hidden");
+                centralView.style.display = "none";
+            }
+            if (loginView) {
+                loginView.classList.remove("hidden");
+                loginView.style.display = "flex";
+            }
             if (loginForm) loginForm.reset();
         });
     }
 
-    // Manejo de botones de la barra inferior con delegación de eventos limpia
+    // Navegación por iframe de los botones inferiores
     const navButtons = document.querySelectorAll(".nav-btn");
     navButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -68,21 +76,30 @@ document.addEventListener("DOMContentLoaded", () => {
             if (iframe && page) {
                 iframe.src = page;
             }
-            // Actualizar estilos activos
+            // Cambiar estilos activos de los botones
             navButtons.forEach(b => {
                 b.classList.remove("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
-                b.classList.add("bg-slate-800/60");
+                b.classList.add("bg-slate-800/70");
             });
-            btn.classList.remove("bg-slate-800/60");
+            btn.classList.remove("bg-slate-800/70");
             btn.classList.add("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
         });
     });
 
-    // Exponer herramientas de base de datos globalmente para los submódulos
-    window.firebaseDB = { db, ref, set, get, push, onValue, remove, update };
+    // Exponer la base de datos y métodos globalmente para los futuros submódulos
+    window.firebaseDB = {
+        db,
+        ref,
+        set,
+        get,
+        push,
+        onValue,
+        remove,
+        update
+    };
 });
 
-function activateDashboard() {
+function showCentralDashboard() {
     const loginView = document.getElementById("login-view");
     const centralView = document.getElementById("central-view");
 
