@@ -28,7 +28,7 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050b14; color: #f8fafc; overflow: hidden; margin: 0; }
         .cinematic-glow { box-shadow: 0 0 50px rgba(0, 155, 58, 0.2), 0 0 100px rgba(254, 223, 0, 0.1); }
-        .glass-panel { background: rgba(10, 22, 40, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
+        .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
         .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <!-- ================= FORMULARIO CENTRAL (CENTRAL.HTML / DASHBOARD) ================= -->
+        <!-- ================= FORMULARIO CENTRAL (DASHBOARD) ================= -->
         <div id="central-view" class="hidden w-full h-full flex flex-col">
             
             <!-- ENCABEZADO SUPERIOR -->
@@ -120,36 +120,107 @@
                 </div>
             </header>
 
-            <!-- CONTENEDOR IFRAME CENTRAL -->
-            <main class="flex-1 relative bg-slate-950/70 overflow-hidden">
-                <iframe id="content-iframe" name="content-iframe" src="menu.html" class="w-full h-full border-0"></iframe>
+            <!-- CONTENEDOR DE SECCIONES (DINÁMICO DENTRO DE INDEX) -->
+            <main class="flex-1 relative bg-slate-950/70 overflow-y-auto p-4 md:p-8">
+                
+                <!-- SECCIÓN: MENÚ -->
+                <section id="section-menu" class="app-section max-w-4xl mx-auto text-center py-12">
+                    <div class="glass-panel p-8 md:p-12 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+                        <div class="inline-flex p-4 rounded-2xl bg-brasil-blue/40 text-brasil-yellow mb-6 border border-blue-500/30">
+                            <i class="fa-solid fa-house-chimney text-4xl"></i>
+                        </div>
+                        <h3 class="font-cinzel text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brasil-yellow via-white to-brasil-green mb-4">
+                            Panel Principal de Control
+                        </h3>
+                        <p class="text-slate-300 text-sm md:text-base max-w-xl mx-auto mb-6">
+                            Bienvenido a la bitácora financiera. Utiliza la barra de menú inferior para navegar entre los cálculos finales, combustible, playa y hoteles.
+                        </p>
+                        <div class="inline-block px-4 py-2 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                            <i class="fa-solid fa-circle-check mr-2"></i> Base de Datos Sincronizada
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: CÁLCULO FINAL -->
+                <section id="section-calculo_final" class="app-section max-w-4xl mx-auto hidden">
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+                        <h3 class="font-cinzel text-xl font-bold text-brasil-yellow mb-4 flex items-center">
+                            <i class="fa-solid fa-calculator mr-3 text-brasil-green"></i> Cálculo Final de Gastos
+                        </h3>
+                        <p class="text-slate-300 text-sm mb-6">Resumen consolidado de todos los gastos de las vacaciones.</p>
+                        <!-- Formulario / Contenido se completará aquí -->
+                        <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/10 text-slate-400 text-sm">
+                            Módulo listo para recibir información de costos.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: COMBUSTIBLE -->
+                <section id="section-combustible" class="app-section max-w-4xl mx-auto hidden">
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+                        <h3 class="font-cinzel text-xl font-bold text-amber-400 mb-4 flex items-center">
+                            <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible
+                        </h3>
+                        <p class="text-slate-300 text-sm mb-6">Registro de cargas, consumos y peajes.</p>
+                        <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/10 text-slate-400 text-sm">
+                            Módulo listo para recibir información de combustible.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: PLAYA -->
+                <section id="section-playa" class="app-section max-w-4xl mx-auto hidden">
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+                        <h3 class="font-cinzel text-xl font-bold text-cyan-400 mb-4 flex items-center">
+                            <i class="fa-solid fa-umbrella-beach mr-3 text-cyan-400"></i> Gastos de Playa & Actividades
+                        </h3>
+                        <p class="text-slate-300 text-sm mb-6">Control de gastos en Torres y Capão da Canoa.</p>
+                        <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/10 text-slate-400 text-sm">
+                            Módulo listo para recibir información de playa.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: HOTELES -->
+                <section id="section-hoteles" class="app-section max-w-4xl mx-auto hidden">
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+                        <h3 class="font-cinzel text-xl font-bold text-purple-400 mb-4 flex items-center">
+                            <i class="fa-solid fa-hotel mr-3 text-purple-400"></i> Alojamientos y Hoteles
+                        </h3>
+                        <p class="text-slate-300 text-sm mb-6">Gestión de reservas y costos de hospedaje.</p>
+                        <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/10 text-slate-400 text-sm">
+                            Módulo listo para recibir información de hoteles.
+                        </div>
+                    </div>
+                </section>
+
             </main>
 
             <!-- BARRA DE MENÚ INFERIOR CON BOTONES INMERSIVOS -->
             <nav class="glass-panel border-t border-white/10 px-4 py-3 z-20 shadow-2xl shrink-0">
                 <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2 md:gap-3">
                     
-                    <button data-page="menu.html" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-brasil-blue/80 border border-blue-400/50 text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2 shadow-lg">
+                    <button data-target="section-menu" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-brasil-blue/80 border border-blue-400/50 text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2 shadow-lg">
                         <i class="fa-solid fa-house text-brasil-yellow"></i>
                         <span>Menú</span>
                     </button>
 
-                    <button data-page="calculo_final.html" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-brasil-green/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
+                    <button data-target="section-calculo_final" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-brasil-green/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
                         <i class="fa-solid fa-calculator text-brasil-green"></i>
                         <span>Cálculo Final</span>
                     </button>
 
-                    <button data-page="combustible.html" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-brasil-yellow/30 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
+                    <button data-target="section-combustible" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-brasil-yellow/30 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
                         <i class="fa-solid fa-gas-pump text-amber-400"></i>
                         <span>Combustible</span>
                     </button>
 
-                    <button data-page="playa.html" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-cyan-600/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
+                    <button data-target="section-playa" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-cyan-600/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
                         <i class="fa-solid fa-umbrella-beach text-cyan-400"></i>
                         <span>Playa</span>
                     </button>
 
-                    <button data-page="hoteles.html" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-purple-600/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
+                    <button data-target="section-hoteles" class="nav-btn immersive-btn px-4 py-2.5 rounded-xl bg-slate-800/70 hover:bg-purple-600/40 border border-white/10 text-slate-200 hover:text-white font-semibold text-xs md:text-sm tracking-wide uppercase flex items-center space-x-2">
                         <i class="fa-solid fa-hotel text-purple-400"></i>
                         <span>Hoteles</span>
                     </button>
