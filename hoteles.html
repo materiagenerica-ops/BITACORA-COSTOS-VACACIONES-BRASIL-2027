@@ -46,7 +46,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches, ocupantes y costos en pesos.</p>
+            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches, ocupantes y costos en Pesos o Reales.</p>
         </div>
 
         <!-- FORMULARIO DE INGRESO -->
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                         <i class="fa-solid fa-users text-blue-400 mr-1.5"></i> Cantidad de Personas:
@@ -102,9 +102,18 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        <i class="fa-solid fa-money-bill-wave text-brasil-green mr-1.5"></i> Costo en Pesos ($ ARS):
+                        <i class="fa-solid fa-coins text-brasil-green mr-1.5"></i> Moneda del Costo:
                     </label>
-                    <input type="text" inputmode="decimal" id="costo_pesos" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 350000">
+                    <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-yellow bg-slate-900">
+                        <option value="ARS">🇦🇷 Pesos Argentinos ($ ARS)</option>
+                        <option value="BRL">🇧🇷 Reales (R$)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-costo-hotel">
+                        <i class="fa-solid fa-money-bill-wave text-brasil-green mr-1.5"></i> Costo Total:
+                    </label>
+                    <input type="text" inputmode="decimal" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Ej: 350000">
                 </div>
             </div>
 
@@ -129,7 +138,7 @@
                             <th class="p-3">Hotel / Lugar</th>
                             <th class="p-3">Fechas (Check-in / Out)</th>
                             <th class="p-3">Noches / Pax</th>
-                            <th class="p-3 text-brasil-green">Costo en Pesos</th>
+                            <th class="p-3 text-brasil-green">Costo Total</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -165,7 +174,9 @@
         const checkOutInput = document.getElementById("check_out");
         const cantidadNochesInput = document.getElementById("cantidad_noches");
         const cantidadPersonasInput = document.getElementById("cantidad_personas");
-        const costoPesosInput = document.getElementById("costo_pesos");
+        const monedaHotelSelect = document.getElementById("moneda_hotel");
+        const costoHotelInput = document.getElementById("costo_hotel");
+        const labelCostoHotel = document.getElementById("label-costo-hotel");
         const hotelIdInput = document.getElementById("hotel-id");
         const btnCancelar = document.getElementById("btn-cancelar-edicion");
         const btnGuardar = document.querySelector("button[onclick='window.guardarHotel()']");
@@ -176,7 +187,20 @@
             return parseFloat(valor.toString().replace(',', '.')) || 0;
         }
 
-        // Sugerir cálculo de noches automáticamente al cambiar fechas, pero permitiendo modificarlo libremente
+        // Actualizar etiqueta del input según la moneda seleccionada
+        function actualizarLabelMoneda() {
+            const moneda = monedaHotelSelect.value;
+            if (moneda === 'BRL') {
+                labelCostoHotel.innerHTML = `<i class="fa-solid fa-money-bill-wave text-brasil-green mr-1.5"></i> Costo en Reales (R$):`;
+                costoHotelInput.placeholder = "Ej: 1200.00";
+            } else {
+                labelCostoHotel.innerHTML = `<i class="fa-solid fa-money-bill-wave text-brasil-green mr-1.5"></i> Costo en Pesos ($ ARS):`;
+                costoHotelInput.placeholder = "Ej: 350000";
+            }
+        }
+
+        monedaHotelSelect.addEventListener("change", actualizarLabelMoneda);
+
         function calcularNoches() {
             const checkInVal = checkInInput.value;
             const checkOutVal = checkOutInput.value;
@@ -204,7 +228,8 @@
             const checkOut = checkOutInput.value;
             const noches = parseInt(cantidadNochesInput.value) || 0;
             const personas = parseInt(cantidadPersonasInput.value) || 0;
-            const costoPesos = parsearNumero(costoPesosInput.value);
+            const moneda = monedaHotelSelect.value;
+            const costo = parsearNumero(costoHotelInput.value);
 
             if (!nombre) {
                 alert("Por favor ingresa el nombre del hotel.");
@@ -214,8 +239,8 @@
                 alert("La cantidad de noches debe ser mayor a 0.");
                 return;
             }
-            if (costoPesos <= 0) {
-                alert("Ingresa un costo válido en pesos mayor a 0.");
+            if (costo <= 0) {
+                alert("Ingresa un costo válido mayor a 0.");
                 return;
             }
 
@@ -226,7 +251,8 @@
                 checkOut: checkOut || "Sin especificar",
                 noches,
                 personas,
-                costoPesos: costoPesos.toFixed(2),
+                moneda,
+                costo: costo.toFixed(2),
                 timestamp: Date.now()
             };
 
@@ -251,8 +277,10 @@
             checkOutInput.value = "";
             cantidadNochesInput.value = "1";
             cantidadPersonasInput.value = "2";
-            costoPesosInput.value = "";
+            monedaHotelSelect.value = "ARS";
+            costoHotelInput.value = "";
             hotelIdInput.value = "";
+            actualizarLabelMoneda();
             if (btnCancelar) btnCancelar.classList.add("hidden");
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Hotel`;
         };
@@ -269,6 +297,12 @@
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 docs.forEach(item => {
+                    // Compatibilidad con registros antiguos que usaban costoPesos
+                    const monto = parseFloat(item.costo || item.costoPesos) || 0;
+                    const moneda = (item.moneda || 'ARS').toUpperCase();
+                    const sim = moneda === 'BRL' ? 'R$' : '$';
+                    const sufijo = moneda === 'BRL' ? 'BRL' : 'ARS';
+
                     const tr = document.createElement("tr");
                     tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
                     tr.innerHTML = `
@@ -285,10 +319,10 @@
                             <div><span class="text-blue-400 font-semibold">${item.personas}</span> pax</div>
                         </td>
                         <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">
-                            $ ${Number(item.costoPesos).toLocaleString('es-AR')} ARS
+                            ${sim} ${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})} ${sufijo}
                         </td>
                         <td class="p-3 text-center space-x-2">
-                            <button type="button" onclick="window.editarHotel('${item.id}', '${item.nombre}', '${item.lugar}', '${item.checkIn}', '${item.checkOut}', ${item.noches}, ${item.personas}, ${item.costoPesos})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="window.editarHotel('${item.id}', '${item.nombre}', '${item.lugar}', '${item.checkIn}', '${item.checkOut}', ${item.noches}, ${item.personas}, '${moneda}', ${monto})" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs" title="Editar"><i class="fa-solid fa-pen"></i></button>
                             <button type="button" onclick="window.eliminarHotel('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
@@ -299,7 +333,7 @@
             }
         });
 
-        window.editarHotel = function(id, nombre, lugar, checkIn, checkOut, noches, personas, costoPesos) {
+        window.editarHotel = function(id, nombre, lugar, checkIn, checkOut, noches, personas, moneda, costo) {
             hotelIdInput.value = id;
             hotelNombreInput.value = nombre;
             hotelLugarInput.value = lugar;
@@ -307,7 +341,9 @@
             checkOutInput.value = checkOut !== "Sin especificar" ? checkOut : "";
             cantidadNochesInput.value = noches;
             cantidadPersonasInput.value = personas;
-            costoPesosInput.value = costoPesos;
+            monedaHotelSelect.value = moneda || 'ARS';
+            costoHotelInput.value = costo;
+            actualizarLabelMoneda();
 
             if (btnCancelar) btnCancelar.classList.remove("hidden");
             if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Hotel`;
@@ -324,6 +360,8 @@
                 }
             }
         };
+
+        actualizarLabelMoneda();
     </script>
 </body>
 </html>
