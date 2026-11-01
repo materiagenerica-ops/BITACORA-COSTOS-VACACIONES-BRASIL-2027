@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combustible - Bitácora Brasil 2027</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brasil: { green: '#009b3a', yellow: '#fedf00', blue: '#002776', dark: '#050b14', card: '#0a1628' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050b14; color: #f8fafc; margin: 0; padding: 20px; }
+        .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
+        .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
+        .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
+        .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .immersive-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: 0.5s; }
+        .immersive-btn:hover::after { left: 100%; }
+        .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(254, 223, 0, 0.3); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #050b14; }
+        ::-webkit-scrollbar-thumb { background: #002776; border-radius: 3px; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="max-w-5xl mx-auto space-y-8 pb-12">
+        
+        <!-- ENCABEZADO DE MÓDULO -->
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+            <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
+                <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible y Recorridos
+            </h3>
+            <p class="text-slate-300 text-sm">Gestiona los trayectos, calcula costos en Reales y visualiza las rutas directamente en Google Maps.</p>
+        </div>
+
+        <!-- FORMULARIO DE INGRESO -->
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+            <form id="combustible-form" class="space-y-6">
+                <input type="hidden" id="combustible-id">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde:</label>
+                        <input type="text" id="origen" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta:</label>
+                        <input type="text" id="destino" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Kilómetros:</label>
+                        <input type="number" step="0.1" id="kilometros" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Km por Litro (Rendimiento):</label>
+                        <input type="number" step="0.1" id="km_litro" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Litro Nafta/Gasolina ($ Reales):</label>
+                        <input type="number" step="0.01" id="valor_litro" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 6.29">
+                    </div>
+                </div>
+
+                <!-- RESULTADO Y GOOGLE MAPS -->
+                <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Final Recorrido:</span>
+                        <div id="costo-final-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
+                    </div>
+                    <div id="map-link-container">
+                        <a id="btn-ver-maps" href="https://maps.google.com" target="_blank" class="immersive-btn px-5 py-3 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 border border-blue-400/40 text-blue-200 font-bold text-xs uppercase tracking-wider flex items-center space-x-2">
+                            <i class="fa-solid fa-map-location-dot text-cyan-400 text-base"></i>
+                            <span>Mostrar Recorrido en Google Maps</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE ACCIÓN -->
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <button type="submit" id="btn-guardar-combustible" class="immersive-btn px-6 py-3.5 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-lg">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido
+                    </button>
+                    <button type="button" id="btn-cancelar-edicion" class="hidden px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs">
+                        Cancelar Edición
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- HISTORIAL DE RECORRIDOS -->
+        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Recorridos Registrados</h4>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
+                        <tr>
+                            <th class="p-3">Trayecto</th>
+                            <th class="p-3">Km</th>
+                            <th class="p-3">Rendimiento</th>
+                            <th class="p-3">Valor Litro</th>
+                            <th class="p-3 text-brasil-green">Costo Final</th>
+                            <th class="p-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historial-combustible-body" class="divide-y divide-white/5">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT DE CONEXIÓN CON FIREBASE (HEREDADO DE PARENT WINDOW) -->
+    <script type="module">
+        // Importar Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
+          authDomain: "bitacora-costos-brasil.firebaseapp.com",
+          projectId: "bitacora-costos-brasil",
+          storageBucket: "bitacora-costos-brasil.firebasestorage.app",
+          messagingSenderId: "558877802256",
+          appId: "1:558877802256:web:580e6a100a17b0ba062f95"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const combustibleForm = document.getElementById("combustible-form");
+        const origenInput = document.getElementById("origen");
+        const destinoInput = document.getElementById("destino");
+        const kmInput = document.getElementById("kilometros");
+        const kmLitroInput = document.getElementById("km_litro");
+        const valorLitroInput = document.getElementById("valor_litro");
+        const costoFinalDisplay = document.getElementById("costo-final-display");
+        const btnVerMaps = document.getElementById("btn-ver-maps");
+        const historialBody = document.getElementById("historial-combustible-body");
+        const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+        const combustibleIdInput = document.getElementById("combustible-id");
+
+        function calcularCostoCombustible() {
+            const km = parseFloat(kmInput.value) || 0;
+            const kmLitro = parseFloat(kmLitroInput.value) || 0;
+            const valorLitro = parseFloat(valorLitroInput.value) || 0;
+
+            let costoFinal = 0;
+            if (kmLitro > 0) {
+                costoFinal = (km / kmLitro) * valorLitro;
+            }
+
+            costoFinalDisplay.textContent = `R$ ${costoFinal.toFixed(2)}`;
+
+            const origen = encodeURIComponent(origenInput.value.trim());
+            const destino = encodeURIComponent(destinoInput.value.trim());
+            if (origen && destino) {
+                btnVerMaps.href = `https://www.google.com/maps/dir/?api=1&origin=${origen}&destination=${destino}&travelmode=driving`;
+            } else {
+                btnVerMaps.href = "https://maps.google.com";
+            }
+        }
+
+        [origenInput, destinoInput, kmInput, kmLitroInput, valorLitroInput].forEach(input => {
+            if (input) input.addEventListener("input", calcularCostoCombustible);
+        });
+
+        // Guardar o Actualizar
+        combustibleForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const id = combustibleIdInput.value;
+            const origen = origenInput.value.trim();
+            const destino = destinoInput.value.trim();
+            const kilometros = parseFloat(kmInput.value);
+            const kmLitro = parseFloat(kmLitroInput.value);
+            const valorLitro = parseFloat(valorLitroInput.value);
+            
+            const costoFinal = ((kilometros / (kmLitro > 0 ? kmLitro : 1)) * valorLitro).toFixed(2);
+
+            const recorridoData = {
+                origen,
+                destino,
+                kilometros,
+                kmLitro,
+                valor_litro: valorLitro,
+                costoFinal,
+                timestamp: Date.now()
+            };
+
+            const dbRef = ref(db, "combustible_recorridos");
+
+            if (id) {
+                const itemRef = ref(db, `combustible_recorridos/${id}`);
+                update(itemRef, recorridoData).then(() => resetForm());
+            } else {
+                const nuevoRef = push(dbRef);
+                set(nuevoRef, recorridoData).then(() => resetForm());
+            }
+        });
+
+        btnCancelarEdicion.addEventListener("click", () => resetForm());
+
+        function resetForm() {
+            combustibleForm.reset();
+            combustibleIdInput.value = "";
+            btnCancelarEdicion.classList.add("hidden");
+            document.getElementById("btn-guardar-combustible").innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Recorrido`;
+            costoFinalDisplay.textContent = "R$ 0.00";
+        }
+
+        // Cargar en Tiempo Real desde Firebase
+        const dbRef = ref(db, "combustible_recorridos");
+        onValue(dbRef, (snapshot) => {
+            if (!historialBody) return;
+            historialBody.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                Object.entries(data).reverse().forEach(([id, item]) => {
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white"><i class="fa-solid fa-route mr-2 text-amber-400"></i>${item.origen} &rarr; ${item.destino}</td>
+                        <td class="p-3">${item.kilometros} km</td>
+                        <td class="p-3">${item.kmLitro} km/L</td>
+                        <td class="p-3">R$ ${parseFloat(item.valor_litro).toFixed(2)}</td>
+                        <td class="p-3 font-cinzel font-bold text-amber-400 text-base bg-amber-950/20 rounded">R$ ${item.costoFinal}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="window.editarRecorrido('${id}', '${item.origen}', '${item.destino}', ${item.kilometros}, ${item.kmLitro}, ${item.valor_litro})" class="px-2.5 py-1.5 rounded-lg bg-blue-600/35 hover:bg-blue-600/60 text-blue-300 text-xs transition" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="window.eliminarRecorrido('${id}')" class="px-2.5 py-1.5 rounded-lg bg-red-600/35 hover:bg-red-600/60 text-red-300 text-xs transition" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    historialBody.appendChild(tr);
+                });
+            } else {
+                historialBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">No hay recorridos registrados todavía.</td></tr>`;
+            }
+        });
+
+        // Funciones globales para la tabla
+        window.editarRecorrido = function(id, origen, destino, km, kmLitro, valorLitro) {
+            combustibleIdInput.value = id;
+            origenInput.value = origen;
+            destinoInput.value = destino;
+            kmInput.value = km;
+            kmLitroInput.value = kmLitro;
+            valorLitroInput.value = valorLitro;
+            calcularCostoCombustible();
+
+            btnCancelarEdicion.classList.remove("hidden");
+            document.getElementById("btn-guardar-combustible").innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Recorrido`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.eliminarRecorrido = function(id) {
+            if (confirm("¿Estás seguro de eliminar este registro de combustible?")) {
+                const itemRef = ref(db, `combustible_recorridos/${id}`);
+                remove(itemRef);
+            }
+        };
+    </script>
+</body>
+</html>
