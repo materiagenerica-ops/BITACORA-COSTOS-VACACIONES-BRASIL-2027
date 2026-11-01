@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playa y Parador - Bitácora Brasil 2027</title>
+    <title>Hoteles y Alojamiento - Bitácora Brasil 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,140 +33,85 @@
 </head>
 <body class="min-h-screen">
 
-    <div class="max-w-6xl mx-auto space-y-8 pb-12">
+    <div class="max-w-5xl mx-auto space-y-8 pb-12">
         
         <!-- ENCABEZADO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                <i class="fa-solid fa-umbrella-beach mr-3 text-amber-400"></i> Gastos de Playa y Parador
+                <i class="fa-solid fa-hotel mr-3 text-purple-400"></i> Control de Hoteles y Alojamiento
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el costo diario de consumos en la playa, multiplícalo por los días y guárdalo.</p>
+            <p class="text-slate-300 text-sm">Gestiona los costos de hospedaje por noches, desayuno y tarifas en Reales o Pesos.</p>
         </div>
 
         <!-- FORMULARIO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
-            <input type="hidden" id="playa-id">
+            <input type="hidden" id="hotel-id">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Reposera -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-chair text-amber-400 mr-1.5"></i> Reposera</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nombre del Hotel / Destino:</label>
+                    <input type="text" id="nombre_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Hotel Torres Praia">
                 </div>
-                <!-- Gacebo -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-tent text-cyan-400 mr-1.5"></i> Gacebo</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Moneda:</label>
+                    <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                        <option value="BRL">🇧🇷 Reales (R$)</option>
+                        <option value="ARS">🇦🇷 Pesos Argentinos ($ ARS)</option>
+                    </select>
                 </div>
-                <!-- Papas -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-utensils text-yellow-400 mr-1.5"></i> Papas Fritas</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cantidad de Noches:</label>
+                    <input type="number" id="noches" class="glass-input w-full px-4 py-3 rounded-xl text-sm" value="1" min="1">
                 </div>
-                <!-- Rabas -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-fish text-emerald-400 mr-1.5"></i> Rabas</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Costo por Noche:</label>
+                    <input type="number" id="costo_noche" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="0" value="0" step="0.01">
                 </div>
-                <!-- Pastel -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-cookie-bite text-orange-400 mr-1.5"></i> Pastel</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
-                </div>
-                <!-- Caipirinha -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-glass-citrus text-lime-400 mr-1.5"></i> Caipirinha</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
-                </div>
-                <!-- Milho -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-seedling text-amber-200 mr-1.5"></i> Milho</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
-                    </div>
-                </div>
-                <!-- Frango -->
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-drumstick-bite text-amber-600 mr-1.5"></i> Frango</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="number" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0"></div>
-                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="number" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm calc-trigger" value="0" min="0" step="0.01"></div>
+                <div class="flex items-end">
+                    <div class="w-full p-3 rounded-xl bg-purple-950/30 border border-purple-500/30 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider text-purple-300/80 font-bold block">Total Estancia:</span>
+                            <div id="costo-total-hotel" class="font-cinzel text-xl font-black text-purple-300">0.00</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CÁLCULOS -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
-                <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-3">
-                    <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Día de Playa:</span>
-                    <div id="costo-dia-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                    <button type="button" id="btn-calcular" class="immersive-btn w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-wider cursor-pointer">
-                        <i class="fa-solid fa-calculator mr-2"></i> Recalcular Día
-                    </button>
-                </div>
-
-                <div class="p-5 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-3">
-                    <label class="block text-xs uppercase tracking-wider text-blue-300/80 font-bold">Cantidad de Días:</label>
-                    <input type="number" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm calc-trigger" value="1" min="1">
-                    <div>
-                        <span class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">Costo Total Opción:</span>
-                        <div id="costo-opcion-display" class="font-cinzel text-2xl font-black text-cyan-400">R$ 0.00</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BOTONES -->
-            <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Opción en Base de Datos
+            <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                <button type="button" id="btn-guardar-hotel" class="immersive-btn px-8 py-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Alojamiento
                 </button>
-                <button type="button" id="btn-cancelar" class="immersive-btn hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs cursor-pointer">
-                    Cancelar Edición
+                <button type="button" id="btn-cancelar-hotel" class="immersive-btn hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs cursor-pointer">
+                    Cancelar
                 </button>
             </div>
         </div>
 
         <!-- HISTORIAL -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Opciones de Playa</h4>
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Alojamientos</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
-                            <th class="p-3">Detalle Consumos</th>
-                            <th class="p-3">Costo Día</th>
-                            <th class="p-3">Días</th>
-                            <th class="p-3 text-brasil-green">Costo Total Opción</th>
+                            <th class="p-3">Hotel</th>
+                            <th class="p-3">Noches / Tarifa</th>
+                            <th class="p-3">Moneda</th>
+                            <th class="p-3 text-purple-400">Total Estancia</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="historial-playa-body" class="divide-y divide-white/5"></tbody>
+                    <tbody id="historial-hoteles-body" class="divide-y divide-white/5"></tbody>
                 </table>
             </div>
         </div>
 
     </div>
 
-    <!-- SCRIPT DE FIRESTORE Y CÁLCULOS -->
+    <!-- SCRIPT DE FIRESTORE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -180,157 +125,124 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        const items = [
-            { id: 'reposera', label: 'Reposera' },
-            { id: 'gacebo', label: 'Gacebo' },
-            { id: 'papas', label: 'Papas Fritas' },
-            { id: 'rabas', label: 'Rabas' },
-            { id: 'pastel', label: 'Pastel' },
-            { id: 'caipirinha', label: 'Caipirinha' },
-            { id: 'milho', label: 'Milho' },
-            { id: 'frango', label: 'Frango' }
-        ];
+        const nochesInput = document.getElementById("noches");
+        const costoNocheInput = document.getElementById("costo_noche");
+        const totalDisplay = document.getElementById("costo-total-hotel");
+        const monedaSelect = document.getElementById("moneda_hotel");
+        const nombreInput = document.getElementById("nombre_hotel");
+        const hotelIdInput = document.getElementById("hotel-id");
+        const btnGuardar = document.getElementById("btn-guardar-hotel");
+        const btnCancelar = document.getElementById("btn-cancelar-hotel");
+        const historialBody = document.getElementById("historial-hoteles-body");
 
-        function getVal(id) {
-            const el = document.getElementById(id);
-            return el ? parseFloat(el.value) || 0 : 0;
+        function calcularHotel() {
+            const noches = parseFloat(nochesInput.value) || 0;
+            const costoNoche = parseFloat(costoNocheInput.value) || 0;
+            const total = noches * costoNoche;
+            const sim = monedaSelect.value === 'BRL' ? 'R$' : '$';
+            totalDisplay.textContent = `${sim} ${total.toFixed(2)}`;
+            return total;
         }
 
-        function calcularCostosPlaya() {
-            let costoDia = 0;
-            items.forEach(i => {
-                const cant = getVal(`cant_${i.id}`);
-                const prec = getVal(`precio_${i.id}`);
-                costoDia += (cant * prec);
-            });
-
-            const dias = getVal("cantidad_dias") || 1;
-            const costoTotal = costoDia * dias;
-
-            document.getElementById("costo-dia-display").textContent = `R$ ${costoDia.toFixed(2)}`;
-            document.getElementById("costo-opcion-display").textContent = `R$ ${costoTotal.toFixed(2)}`;
-
-            return { costoDia, costoTotal, dias };
-        }
-
-        document.querySelectorAll(".calc-trigger").forEach(el => {
-            el.addEventListener("input", calcularCostosPlaya);
+        [nochesInput, costoNocheInput, monedaSelect].forEach(el => {
+            el.addEventListener("input", calcularHotel);
+            el.addEventListener("change", calcularHotel);
         });
 
-        document.getElementById("btn-calcular").addEventListener("click", calcularCostosPlaya);
+        btnGuardar.addEventListener("click", async () => {
+            const id = hotelIdInput.value;
+            const nombre = nombreInput.value.trim();
+            const noches = parseFloat(nochesInput.value) || 0;
+            const costoNoche = parseFloat(costoNocheInput.value) || 0;
+            const moneda = monedaSelect.value;
 
-        document.getElementById("btn-guardar").addEventListener("click", async () => {
-            const id = document.getElementById("playa-id").value;
-            const dias = getVal("cantidad_dias");
-
-            if (dias <= 0) {
-                alert("La cantidad de días debe ser mayor a 0.");
+            if (!nombre) {
+                alert("Indica el nombre del hotel.");
+                return;
+            }
+            if (noches <= 0 || costoNoche <= 0) {
+                alert("Verifica que las noches y el costo sean mayores a 0.");
                 return;
             }
 
-            const { costoDia, costoTotal } = calcularCostosPlaya();
-            let data = {
-                cantidad_dias: dias,
-                costoDia: costoDia.toFixed(2),
-                costoTotal: costoTotal.toFixed(2),
-                timestamp: Date.now()
-            };
-
-            items.forEach(i => {
-                data[`cant_${i.id}`] = getVal(`cant_${i.id}`);
-                data[`precio_${i.id}`] = getVal(`precio_${i.id}`);
-            });
+            const total = (noches * costoNoche).toFixed(2);
+            const data = { nombre, noches, costoNoche, moneda, total, timestamp: Date.now() };
 
             try {
                 if (id) {
-                    await updateDoc(doc(db, "playa_opciones", id), data);
-                    alert("¡Opción de playa actualizada con éxito!");
+                    await updateDoc(doc(db, "hoteles_alojamiento", id), data);
+                    alert("¡Hotel actualizado con éxito!");
                 } else {
-                    await addDoc(collection(db, "playa_opciones"), data);
-                    alert("¡Opción de playa guardada en Firestore!");
+                    await addDoc(collection(db, "hoteles_alojamiento"), data);
+                    alert("¡Hotel guardado con éxito!");
                 }
-                resetPlayaForm();
+                resetForm();
             } catch (err) {
-                alert("Error al guardar: " + err.message);
+                alert("Error en Firestore: " + err.message);
             }
         });
 
-        function resetPlayaForm() {
-            document.getElementById("playa-id").value = "";
-            document.getElementById("cantidad_dias").value = "1";
-            items.forEach(i => {
-                document.getElementById(`cant_${i.id}`).value = "0";
-                document.getElementById(`precio_${i.id}`).value = "0";
-            });
-            calcularCostosPlaya();
-            document.getElementById("btn-cancelar").classList.add("hidden");
-            document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Opción en Base de Datos`;
+        function resetForm() {
+            hotelIdInput.value = "";
+            nombreInput.value = "";
+            nochesInput.value = "1";
+            costoNocheInput.value = "0";
+            monedaSelect.value = "BRL";
+            calcularHotel();
+            btnCancelar.classList.add("hidden");
+            btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Alojamiento`;
         }
 
-        document.getElementById("btn-cancelar").addEventListener("click", resetPlayaForm);
+        btnCancelar.addEventListener("click", resetForm);
 
-        onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
-            const tbody = document.getElementById("historial-playa-body");
-            tbody.innerHTML = "";
-            
+        onSnapshot(collection(db, "hoteles_alojamiento"), (snapshot) => {
+            historialBody.innerHTML = "";
             if (!snapshot.empty) {
                 let docs = [];
                 snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 docs.forEach(item => {
-                    let detalle = [];
-                    items.forEach(i => {
-                        const cant = item[`cant_${i.id}`] || 0;
-                        const prec = item[`precio_${i.id}`] || 0;
-                        if (cant > 0) detalle.push(`${i.label}: ${cant}x R$${prec}`);
-                    });
-
+                    const sim = item.moneda === 'BRL' ? 'R$' : '$';
                     const tr = document.createElement("tr");
                     tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
                     tr.innerHTML = `
-                        <td class="p-3 text-xs text-slate-300">${detalle.length ? detalle.join(' | ') : 'Sin consumos detallados'}</td>
-                        <td class="p-3">R$ ${item.costoDia}</td>
-                        <td class="p-3 font-bold text-white">${item.cantidad_dias} días</td>
-                        <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">R$ ${item.costoTotal}</td>
+                        <td class="p-3 font-semibold text-white"><i class="fa-solid fa-bed mr-2 text-purple-400"></i>${item.nombre}</td>
+                        <td class="p-3 text-xs">${item.noches} noches (${sim} ${item.costoNoche}/noche)</td>
+                        <td class="p-3 font-bold">${item.moneda}</td>
+                        <td class="p-3 font-cinzel font-bold text-purple-400 text-base bg-purple-950/20 rounded">${sim} ${item.total}</td>
                         <td class="p-3 text-center space-x-2">
                             <button type="button" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs btn-edit" data-json='${JSON.stringify(item)}'><i class="fa-solid fa-pen"></i></button>
                             <button type="button" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs btn-del" data-id="${item.id}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
-                    tbody.appendChild(tr);
+                    historialBody.appendChild(tr);
                 });
 
                 document.querySelectorAll(".btn-edit").forEach(btn => {
                     btn.addEventListener("click", () => {
-                        const data = JSON.parse(btn.getAttribute("data-json"));
-                        document.getElementById("playa-id").value = data.id;
-                        document.getElementById("cantidad_dias").value = data.cantidad_dias;
-                        items.forEach(i => {
-                            document.getElementById(`cant_${i.id}`).value = data[`cant_${i.id}`] || 0;
-                            document.getElementById(`precio_${i.id}`).value = data[`precio_${i.id}`] || 0;
-                        });
-                        calcularCostosPlaya();
-                        document.getElementById("btn-cancelar").classList.remove("hidden");
-                        document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Opción Playa`;
+                        const dat = JSON.parse(btn.getAttribute("data-json"));
+                        hotelIdInput.value = dat.id;
+                        nombreInput.value = dat.nombre;
+                        nochesInput.value = dat.noches;
+                        costoNocheInput.value = dat.costoNoche;
+                        monedaSelect.value = dat.moneda;
+                        calcularHotel();
+                        btnCancelar.classList.remove("hidden");
+                        btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Alojamiento`;
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 });
 
                 document.querySelectorAll(".btn-del").forEach(btn => {
                     btn.addEventListener("click", async () => {
-                        if (confirm("¿Estás seguro de eliminar este registro?")) {
-                            try {
-                                await deleteDoc(doc(db, "playa_opciones", btn.getAttribute("data-id")));
-                            } catch(e) {
-                                alert("Error al eliminar: " + e.message);
-                            }
+                        if (confirm("¿Eliminar este alojamiento?")) {
+                            await deleteDoc(doc(db, "hoteles_alojamiento", btn.getAttribute("data-id")));
                         }
                     });
                 });
-
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa guardados todavía.</td></tr>`;
+                historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin alojamientos registrados.</td></tr>`;
             }
         });
     </script>
