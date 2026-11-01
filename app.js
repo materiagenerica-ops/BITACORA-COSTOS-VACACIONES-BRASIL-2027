@@ -1,8 +1,8 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.app.js";
-import { getDatabase, ref, set, get, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.database.js";
+// Importar los módulos correctos de Firebase Realtime Database
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, set, get, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Your web app's Firebase configuration
+// Configuración de tu base de datos
 const firebaseConfig = {
   apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
   authDomain: "bitacora-costos-brasil.firebaseapp.com",
@@ -12,11 +12,11 @@ const firebaseConfig = {
   appId: "1:558877802256:web:580e6a100a17b0ba062f95"
 };
 
-// Initialize Firebase
+// Inicializar Firebase y Realtime Database
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Credenciales permitidas
+// Credenciales obligatorias
 const VALID_USER = "DRPEREYRA";
 const VALID_PASS = "235689";
 
@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSalir = document.getElementById("btn-salir");
     const loginError = document.getElementById("login-error");
 
-    // Verificar si ya hay sesión iniciada en localStorage
+    // Verificar sesión previa
     if (localStorage.getItem("brasil_session") === "active") {
         showCentralView();
     }
 
-    // Lógica de Login
+    // Lógica del Login
     if (loginForm) {
         loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 showCentralView();
             } else {
                 loginError.classList.remove("hidden");
-                // Efecto shake en error
                 loginForm.classList.add("animate-pulse");
                 setTimeout(() => loginForm.classList.remove("animate-pulse"), 500);
             }
@@ -58,17 +57,16 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem("brasil_session");
             centralView.classList.add("hidden");
             loginView.classList.remove("hidden");
-            document.getElementById("login-form").reset();
+            if (loginForm) loginForm.reset();
         });
     }
 
-    // Exponer funciones globales para la navegación por iframe y sincronización con Firebase
+    // Navegación por iframe
     window.loadModule = function(page, btnElement) {
         const iframe = document.getElementById("content-iframe");
         if (iframe) {
             iframe.src = page;
         }
-        // Actualizar estilos activos de los botones del menú
         document.querySelectorAll(".nav-btn").forEach(b => {
             b.classList.remove("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
             b.classList.add("bg-slate-800/60");
@@ -79,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Exportar herramientas de Firebase para uso en los submódulos si fuera necesario
+    // Exponer herramientas de Realtime Database para los formularios
     window.firebaseDB = {
         db,
         ref,
@@ -93,6 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showCentralView() {
-    document.getElementById("login-view").classList.add("hidden");
-    document.getElementById("central-view").classList.remove("hidden");
+    const loginView = document.getElementById("login-view");
+    const centralView = document.getElementById("central-view");
+    if (loginView) loginView.classList.add("hidden");
+    if (centralView) centralView.classList.remove("hidden");
 }
