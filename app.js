@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Navegación interna entre secciones (Menú, Cálculo Final, Combustible, Playa, Hoteles)
+    // Navegación interna entre secciones desde la barra superior de menú
     const navButtons = document.querySelectorAll(".nav-btn");
     const sections = document.querySelectorAll(".app-section");
 
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Exponer la base de datos y métodos globalmente para los futuros submódulos
+    // Exponer la base de datos y métodos globalmente para los submódulos
     window.firebaseDB = {
         db,
         ref,
