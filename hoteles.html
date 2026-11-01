@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hoteles y Alojamientos - Bitácora Brasil 2027</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,13 +35,15 @@
 
     <div class="max-w-5xl mx-auto space-y-8 pb-12">
         
+        <!-- ENCABEZADO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Control de Hoteles y Alojamientos
             </h3>
-            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, noches y costos en Pesos o Reales.</p>
+            <p class="text-slate-300 text-sm">Registra las reservas de hospedaje, controla las noches y elige si pagas en Pesos o Reales.</p>
         </div>
 
+        <!-- FORMULARIO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
             <input type="hidden" id="hotel-id">
             
@@ -88,7 +91,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-costo">Costo Total:</label>
-                    <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Ej: 350000" step="0.01">
+                    <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Ej: 350000" step="any">
                 </div>
             </div>
 
@@ -98,6 +101,7 @@
             </div>
         </div>
 
+        <!-- HISTORIAL -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Alojamientos</h4>
             <div class="overflow-x-auto">
@@ -144,6 +148,7 @@
         const btnCancelar = document.getElementById("btn-cancelar");
         const historialBody = document.getElementById("historial-hoteles-body");
 
+        // Cambiar etiqueta de texto según la moneda elegida
         monedaSelect.addEventListener("change", () => {
             if (monedaSelect.value === 'BRL') {
                 labelCosto.textContent = "Costo Total en Reales (R$):";
@@ -154,16 +159,21 @@
             }
         });
 
-        checkInInput.addEventListener("change", calcNoches);
-        checkOutInput.addEventListener("change", calcNoches);
-
-        function calcNoches() {
+        checkInInput.addEventListener("change", () => {
             if (checkInInput.value && checkOutInput.value) {
                 const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
                 const dias = Math.round(diff / (1000 * 60 * 60 * 24));
                 if (dias > 0) nochesInput.value = dias;
             }
-        }
+        });
+
+        checkOutInput.addEventListener("change", () => {
+            if (checkInInput.value && checkOutInput.value) {
+                const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
+                const dias = Math.round(diff / (1000 * 60 * 60 * 24));
+                if (dias > 0) nochesInput.value = dias;
+            }
+        });
 
         btnGuardar.addEventListener("click", async () => {
             const id = hotelIdInput.value;
@@ -179,7 +189,17 @@
             if (!nombre) { alert("Indica el nombre del hotel"); return; }
             if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
 
-            const data = { nombre, lugar, checkIn, checkOut, noches, personas, moneda, costo: costo.toFixed(2), timestamp: Date.now() };
+            const data = { 
+                nombre, 
+                lugar, 
+                checkIn, 
+                checkOut, 
+                noches, 
+                personas, 
+                moneda, 
+                costo: costo.toFixed(2), 
+                timestamp: Date.now() 
+            };
 
             try {
                 if (id) {
@@ -232,37 +252,50 @@
                         <td class="p-3 text-xs">${item.noches} noches / ${item.personas} pax</td>
                         <td class="p-3 font-cinzel font-bold text-brasil-green">${sim} ${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})} ${suf}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="window.editar('${item.id}', '${item.nombre}', '${item.lugar}', '${item.checkIn}', '${item.checkOut}', ${item.noches}, ${item.personas}, '${moneda}', ${monto})" class="text-blue-400 cursor-pointer"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="window.eliminar('${item.id}')" class="text-red-400 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" class="text-blue-400 cursor-pointer btn-edit" data-json='${JSON.stringify(item)}'><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" class="text-red-400 cursor-pointer btn-del" data-id="${item.id}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     historialBody.appendChild(tr);
                 });
+
+                document.querySelectorAll(".btn-edit").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const item = JSON.parse(btn.getAttribute("data-json"));
+                        hotelIdInput.value = item.id;
+                        nombreInput.value = item.nombre;
+                        lugarInput.value = item.lugar || "Sao Gabriel";
+                        checkInInput.value = item.checkIn !== "Sin especificar" ? item.checkIn : "";
+                        checkOutInput.value = item.checkOut !== "Sin especificar" ? item.checkOut : "";
+                        nochesInput.value = item.noches || 1;
+                        personasInput.value = item.personas || 2;
+                        monedaSelect.value = item.moneda || 'ARS';
+                        costoInput.value = item.costo || item.costoPesos || "";
+                        
+                        if (monedaSelect.value === 'BRL') {
+                            labelCosto.textContent = "Costo Total en Reales (R$):";
+                        } else {
+                            labelCosto.textContent = "Costo Total en Pesos ($ ARS):";
+                        }
+
+                        btnCancelar.classList.remove("hidden");
+                        btnGuardar.textContent = "Actualizar Hotel";
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                document.querySelectorAll(".btn-del").forEach(btn => {
+                    btn.addEventListener("click", async () => {
+                        if (confirm("¿Eliminar este hotel?")) {
+                            await deleteDoc(doc(db, "hoteles_reservas", btn.getAttribute("data-id")));
+                        }
+                    });
+                });
+
             } else {
                 historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros.</td></tr>`;
             }
         });
-
-        window.editar = (id, nombre, lugar, checkIn, checkOut, noches, personas, moneda, costo) => {
-            hotelIdInput.value = id;
-            nombreInput.value = nombre;
-            lugarInput.value = lugar;
-            checkInInput.value = checkIn !== "Sin especificar" ? checkIn : "";
-            checkOutInput.value = checkOut !== "Sin especificar" ? checkOut : "";
-            nochesInput.value = noches;
-            personasInput.value = personas;
-            monedaSelect.value = moneda;
-            costoInput.value = costo;
-            if (moneda === 'BRL') labelCosto.textContent = "Costo Total en Reales (R$):";
-            else labelCosto.textContent = "Costo Total en Pesos ($ ARS):";
-            btnCancelar.classList.remove("hidden");
-            btnGuardar.textContent = "Actualizar Hotel";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.eliminar = async (id) => {
-            if (confirm("¿Eliminar este hotel?")) await deleteDoc(doc(db, "hoteles_reservas", id));
-        };
     </script>
 </body>
 </html>
