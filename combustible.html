@@ -28,6 +28,11 @@
         .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
+        .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(254, 223, 0, 0.3); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #050b14; }
+        ::-webkit-scrollbar-thumb { background: #002776; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -165,7 +170,7 @@
 
     </div>
 
-    <!-- SCRIPT LIMPIO Y FUNCIONAL -->
+    <!-- SCRIPT DE FIREBASE Y LÓGICA INTEGRADA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -212,13 +217,14 @@
             return { costoDia, costoTotal, dias };
         }
 
-        // Asignación limpia de eventos nativos
+        // Eventos en vivo para recalcular al escribir
         document.querySelectorAll(".calc-trigger").forEach(el => {
             el.addEventListener("input", calcularCostos);
         });
 
         document.getElementById("btn-calcular").addEventListener("click", calcularCostos);
 
+        // Guardar o Actualizar registro en Firestore
         document.getElementById("btn-guardar").addEventListener("click", async () => {
             const id = document.getElementById("playa-id").value;
             const dias = getVal("cantidad_dias");
@@ -269,7 +275,7 @@
 
         document.getElementById("btn-cancelar").addEventListener("click", resetForm);
 
-        // Firestore Realtime Historial
+        // Historial en tiempo real con Firestore
         onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
             const tbody = document.getElementById("historial-playa-body");
             tbody.innerHTML = "";
@@ -302,7 +308,7 @@
                     tbody.appendChild(tr);
                 });
 
-                // Acciones de Editar
+                // Botón Editar
                 document.querySelectorAll(".btn-edit").forEach(btn => {
                     btn.addEventListener("click", () => {
                         const data = JSON.parse(btn.getAttribute("data-json"));
@@ -319,7 +325,7 @@
                     });
                 });
 
-                // Acciones de Eliminar
+                // Botón Eliminar
                 document.querySelectorAll(".btn-del").forEach(btn => {
                     btn.addEventListener("click", async () => {
                         if (confirm("¿Seguro que deseas eliminar este registro?")) {
