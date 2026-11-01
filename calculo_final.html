@@ -56,16 +56,19 @@
             <div class="glass-panel p-6 rounded-3xl border border-blue-500/30 bg-blue-950/20 space-y-2">
                 <span class="text-xs uppercase tracking-wider text-blue-300 font-bold block"><i class="fa-solid fa-peso-sign mr-1"></i> Total en Pesos ($)</span>
                 <div id="display-total-ars" class="font-cinzel text-3xl font-black text-blue-400">$ 0.00</div>
+                <p class="text-[11px] text-slate-400">Combustibles en ARS + Hoteles en Pesos.</p>
             </div>
 
             <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 bg-amber-950/20 space-y-2">
                 <span class="text-xs uppercase tracking-wider text-amber-300 font-bold block"><i class="fa-solid fa-brazilian-real-sign mr-1"></i> Total en Reales (R$)</span>
                 <div id="display-total-brl" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
+                <p class="text-[11px] text-slate-400">Playa + Comidas (Alimentos) + Combustible Brasil.</p>
             </div>
 
             <div class="glass-panel p-6 rounded-3xl border border-brasil-green/40 bg-emerald-950/30 space-y-2 shadow-xl">
                 <span class="text-xs uppercase tracking-wider text-emerald-300 font-bold block"><i class="fa-solid fa-wallet mr-1"></i> Costo Total Consolidado ($ ARS)</span>
                 <div id="display-total-consolidado" class="font-cinzel text-3xl font-black text-brasil-green">$ 0.00</div>
+                <p class="text-[11px] text-slate-300">Total Pesos + (Total Reales × Cotización).</p>
             </div>
         </div>
 
@@ -98,26 +101,26 @@
                 </div>
             </div>
 
-            <!-- Hoteles (hoteles_reservas) -->
+            <!-- Hoteles (hoteles_reservas -> costoPesos) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
                 <h4 class="font-cinzel text-base font-bold text-purple-400"><i class="fa-solid fa-hotel mr-2"></i> Hoteles</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr><th class="p-2.5">Hotel</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Total</th></tr>
+                            <tr><th class="p-2.5">Hotel / Lugar</th><th class="p-2.5">Noches</th><th class="p-2.5 text-right">Costo Pesos</th></tr>
                         </thead>
                         <tbody id="tabla-hoteles" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Alimentos (menu_comidas) -->
+            <!-- Alimentos (menu_comidas -> reales) -->
             <div class="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
-                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos</h4>
+                <h4 class="font-cinzel text-base font-bold text-orange-400"><i class="fa-solid fa-utensils mr-2"></i> Alimentos (Menú)</h4>
                 <div class="overflow-x-auto max-h-60 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-brasil-yellow tracking-wider sticky top-0">
-                            <tr><th class="p-2.5">Detalle</th><th class="p-2.5">Cantidad</th><th class="p-2.5 text-right">Total</th></tr>
+                            <tr><th class="p-2.5">Mes / Período</th><th class="p-2.5">Días</th><th class="p-2.5 text-right">Costo Reales</th></tr>
                         </thead>
                         <tbody id="tabla-alimentos" class="divide-y divide-white/5"></tbody>
                     </table>
@@ -149,7 +152,7 @@
             let totalARS = 0, totalBRL = 0;
             const cotiz = parseFloat(cotizacionInput.value) || 1;
 
-            // Combustible
+            // 1. Combustible
             const tbComb = document.getElementById("tabla-combustible");
             tbComb.innerHTML = "";
             cache.combustible.forEach(item => {
@@ -159,7 +162,7 @@
             });
             if (!cache.combustible.length) tbComb.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // Playa
+            // 2. Playa
             const tbPlaya = document.getElementById("tabla-playa");
             tbPlaya.innerHTML = "";
             cache.playa.forEach(item => {
@@ -169,49 +172,38 @@
             });
             if (!cache.playa.length) tbPlaya.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // Hoteles (hoteles_reservas) - Mapeo exacto de propiedades
+            // 3. Hoteles (hoteles_reservas -> costoPesos)
             const tbHot = document.getElementById("tabla-hoteles");
             tbHot.innerHTML = "";
             cache.hoteles.forEach(item => {
-                const c = parseFloat(item.total) || 0;
-                const m = (item.moneda || 'BRL').toUpperCase();
-                const nombre = item.nombre || 'Hotel';
-                
-                if (m === 'BRL' || m === 'BRA') {
-                    totalBRL += c;
-                } else {
-                    totalARS += c;
-                }
-
-                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${nombre}</td><td class="p-2.5 font-bold">${m}</td><td class="p-2.5 text-right text-purple-400">${m === 'BRL' || m === 'BRA' ? 'R$' : '$'} ${c.toFixed(2)}</td></tr>`;
+                const c = parseFloat(item.costoPesos) || 0;
+                totalARS += c; // Los hoteles se guardan en pesos en este proyecto
+                tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.nombre || 'Hotel'}<br><span class="text-[10px] text-cyan-300">${item.lugar || ''}</span></td><td class="p-2.5">${item.noches || 1} noches</td><td class="p-2.5 text-right font-semibold text-brasil-green">$ ${c.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td></tr>`;
             });
             if (!cache.hoteles.length) tbHot.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // Alimentos (menu_comidas) - Mapeo exacto de propiedades en reales
+            // 4. Alimentos (menu_comidas -> reales)
             const tbAli = document.getElementById("tabla-alimentos");
             tbAli.innerHTML = "";
             cache.alimentos.forEach(item => {
-                const c = parseFloat(item.total || item.costoTotal || 0) || 0;
-                const detalle = item.detalle || item.nombre || 'Consumo';
-                const cant = item.cantidad || 1;
-                
-                totalBRL += c;
-
-                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5">${detalle}</td><td class="p-2.5">${cant}</td><td class="p-2.5 text-right text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
+                const c = parseFloat(item.reales) || 0;
+                totalBRL += c; // Las comidas se guardan en reales
+                tbAli.innerHTML += `<tr class="border-b border-white/5"><td class="p-2.5 font-semibold text-white">${item.mes || 'Mes'} <span class="text-[10px] text-slate-400">(${item.desde || ''} al ${item.hasta || ''})</span></td><td class="p-2.5">${item.dias || 1} días</td><td class="p-2.5 text-right font-semibold text-orange-400">R$ ${c.toFixed(2)}</td></tr>`;
             });
             if (!cache.alimentos.length) tbAli.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
 
-            // Consolidado final
+            // --- CÁLCULO Y CONVERSIÓN CONSOLIDADA FINAL ---
             const brlEnPesos = totalBRL * cotiz;
             const consolidado = totalARS + brlEnPesos;
 
-            document.getElementById("display-total-ars").textContent = `$ ${totalARS.toFixed(2)}`;
+            document.getElementById("display-total-ars").textContent = `$ ${totalARS.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
             document.getElementById("display-total-brl").textContent = `R$ ${totalBRL.toFixed(2)}`;
-            document.getElementById("display-total-consolidado").textContent = `$ ${consolidado.toFixed(2)}`;
+            document.getElementById("display-total-consolidado").textContent = `$ ${consolidado.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
         }
 
         cotizacionInput.addEventListener("input", calcular);
 
+        // Conexión exacta a las colecciones reales
         onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
             cache.combustible = [];
             snap.forEach(d => cache.combustible.push(d.data()));
