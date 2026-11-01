@@ -42,7 +42,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-brasil-green"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza la ruta exacta en el mapa y registra los costos.</p>
+            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza el mapa de ruta y registra los costos.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -108,7 +108,7 @@
                     <button type="button" id="btn-centrar-mapa" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg cursor-pointer">Actualizar / Centrar</button>
                 </h4>
                 <div id="mapa-recorrido" class="shadow-inner"></div>
-                <p class="text-xs text-slate-400 italic">El mapa geocodifica automáticamente los puntos de origen y destino de tus tramos guardados.</p>
+                <p class="text-xs text-slate-400 italic">Visualización interactiva de origen y destino sobre el mapa.</p>
             </div>
 
         </div>
@@ -190,33 +190,49 @@
             el.addEventListener("input", calcularCostoPreview);
         });
 
-        // Función para obtener coordenadas reales mediante geocodificación automática
-        async function obtenerCoordenadas(lugar) {
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(lugar)}`);
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        // Diccionario completo de coordenadas para ruta Argentina - Brasil
+        const coordenadasCiudades = {
+            "córdoba": [-31.4201, -64.1888], "cordoba": [-31.4201, -64.1888],
+            "rosario": [-32.9468, -60.6393],
+            "santa fe": [-31.6333, -60.7000],
+            "paraná": [-31.7333, -60.5333], "parana": [-31.7333, -60.5333],
+            "buenos aires": [-34.6037, -58.3816],
+            "gualeguaychú": [-33.0094, -58.5172], "gualeguaychu": [-33.0094, -58.5172],
+            "concordia": [-31.3934, -58.0209],
+            "paso de los libres": [-29.7167, -57.0833],
+            "uruguaiana": [-29.7547, -57.0883],
+            "sao gabriel": [-30.3358, -54.3219],
+            "porto alegre": [-30.0346, -51.2177],
+            "capão da canoa": [-29.7458, -50.1331], "capao da canoa": [-29.7458, -50.1331],
+            "torres": [-29.3353, -49.7264],
+            "florianópolis": [-27.5954, -48.5480], "florianopolis": [-27.5954, -48.5480],
+            "curitiba": [-25.4284, -49.2733],
+            "são paulo": [-23.5505, -46.6333], "sao paulo": [-23.5505, -46.6333]
+        };
+
+        function obtenerCoordenadasLocales(nombre) {
+            if (!nombre) return null;
+            const key = nombre.toLowerCase().trim();
+            if (coordenadasCiudades[key]) return coordenadasCiudades[key];
+            
+            // Coincidencia parcial si no es exacta
+            for (let ciudad in coordenadasCiudades) {
+                if (key.includes(ciudad) || ciudad.includes(key)) {
+                    return coordenadasCiudades[ciudad];
                 }
-            } catch (e) {
-                console.error("Error geocodificando:", e);
             }
             return null;
         }
 
-        async function actualizarMapaTramos(tramos) {
+        function actualizarMapaTramos(tramos) {
             markerGroup.clearLayers();
             let latLngs = [];
 
-            for (let t of tramos) {
-                if (!t.origen || !t.destino) continue;
+            tramos.forEach(t => {
+                if (!t.origen || !t.destino) return;
 
-                let coordOrig = await obtenerCoordenadas(t.origen);
-                let coordDest = await obtenerCoordenadas(t.destino);
-
-                // Coordenadas fallback por defecto si falla la red
-                if (!coordOrig) coordOrig = [-31.42, -64.18];
-                if (!coordDest) coordDest = [-29.33, -49.72];
+                let coordOrig = obtenerCoordenadasLocales(t.origen) || [-31.42, -64.18]; // Fallback Córdoba
+                let coordDest = obtenerCoordenadasLocales(t.destino) || [-29.33, -49.72]; // Fallback Torres
 
                 const mOrig = L.marker(coordOrig).bindPopup(`<b>Origen:</b> ${t.origen}`);
                 const mDest = L.marker(coordDest).bindPopup(`<b>Destino:</b> ${t.destino}`);
@@ -228,7 +244,7 @@
 
                 latLngs.push(coordOrig);
                 latLngs.push(coordDest);
-            }
+            });
 
             if (latLngs.length > 0) {
                 map.fitBounds(L.latLngBounds(latLngs), { padding: [50, 50] });
