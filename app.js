@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const centralView = document.getElementById("central-view");
     const btnSalir = document.getElementById("btn-salir");
     const loginError = document.getElementById("login-error");
-    const iframe = document.getElementById("content-iframe");
 
     // Verificar si ya hay una sesión activa previa
     if (localStorage.getItem("brasil_session") === "active") {
@@ -68,15 +67,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Navegación por iframe de los botones inferiores
+    // Navegación interna entre secciones (Menú, Cálculo Final, Combustible, Playa, Hoteles)
     const navButtons = document.querySelectorAll(".nav-btn");
+    const sections = document.querySelectorAll(".app-section");
+
     navButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            const page = btn.getAttribute("data-page");
-            if (iframe && page) {
-                iframe.src = page;
+            const targetId = btn.getAttribute("data-target");
+
+            // Ocultar todas las secciones
+            sections.forEach(sec => sec.classList.add("hidden"));
+
+            // Mostrar la sección seleccionada
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.remove("hidden");
             }
-            // Cambiar estilos activos de los botones
+
+            // Actualizar estilos activos de los botones
             navButtons.forEach(b => {
                 b.classList.remove("bg-brasil-blue/80", "border-blue-400/50", "shadow-lg");
                 b.classList.add("bg-slate-800/70");
