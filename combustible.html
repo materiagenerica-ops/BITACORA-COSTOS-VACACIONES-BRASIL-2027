@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS (Mapa OpenStreetMap alternativo rápido y estable sin requerir billing key pesada) -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script>
         tailwind.config = {
@@ -42,7 +42,7 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-gas-pump mr-3 text-brasil-green"></i> Control de Combustible y Recorridos
             </h3>
-            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza el mapa de ruta y registra los costos en territorio argentino o brasileño.</p>
+            <p class="text-slate-300 text-sm">Calcula el consumo de combustible por tramos, visualiza la ruta exacta en el mapa y registra los costos.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -108,7 +108,7 @@
                     <button type="button" id="btn-centrar-mapa" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg cursor-pointer">Actualizar / Centrar</button>
                 </h4>
                 <div id="mapa-recorrido" class="shadow-inner"></div>
-                <p class="text-xs text-slate-400 italic">El mapa visualiza los puntos clave del trayecto seleccionado en la bitácora.</p>
+                <p class="text-xs text-slate-400 italic">El mapa geocodifica automáticamente los puntos de origen y destino de tus tramos guardados.</p>
             </div>
 
         </div>
@@ -137,7 +137,6 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
-    <!-- SCRIPT FIREBASE Y MAPA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -151,11 +150,11 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        // Inicializar Mapa de Recorrido (Centrado en Cono Sur / Uruguay-Brasil-Argentina)
+        // Inicializar Mapa
         const map = L.map('mapa-recorrido').setView([-28.5, -53.5], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            attribution: '&copy; OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
         let markerGroup = L.layerGroup().addTo(map);
@@ -183,10 +182,7 @@
             const prec = parseFloat(precioInput.value) || 0;
             const terr = territorioSelect.value;
             const sim = terr === 'BRA' ? 'R$' : '$';
-
-            const litros = dist / (rend > 0 ? rend : 1);
-            const total = litros * prec;
-
+            const total = (dist / (rend > 0 ? rend : 1)) * prec;
             previewCosto.textContent = `${sim} ${total.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
         }
 
@@ -194,51 +190,45 @@
             el.addEventListener("input", calcularCostoPreview);
         });
 
-        // Coordenadas aproximadas de referencia para puntos clave de la ruta a Brasil
-        const coordenadasCiudades = {
-            "córdoba": [-31.4201, -64.1888],
-            "cordoba": [-31.4201, -64.1888],
-            "santa fe": [-31.6333, -60.7],
-            "paraná": [-31.7333, -60.5333],
-            "parana": [-31.7333, -60.5333],
-            "concordia": [-31.3934, -58.0209],
-            "gualeguaychú": [-33.0094, -58.5172],
-            "gualeguaychu": [-33.0094, -58.5172],
-            "paso de los libres": [-29.7167, -57.0833],
-            "uruguaiana": [-29.7547, -57.0883],
-            "sao gabriel": [-30.3358, -54.3219],
-            "porto alegre": [-30.0346, -51.2177],
-            "capão da canoeing": [-29.7458, -50.1331],
-            "capao da canoa": [-29.7458, -50.1331],
-            "torres": [-29.3353, -49.7264],
-            "florianópolis": [-27.5954, -48.548],
-            "florianopolis": [-27.5954, -48.548]
-        };
+        // Función para obtener coordenadas reales mediante geocodificación automática
+        async function obtenerCoordenadas(lugar) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(lugar)}`);
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+                }
+            } catch (e) {
+                console.error("Error geocodificando:", e);
+            }
+            return null;
+        }
 
-        function actualizarMapaTramos(tramos) {
+        async function actualizarMapaTramos(tramos) {
             markerGroup.clearLayers();
             let latLngs = [];
 
-            tramos.forEach(t => {
-                const origKey = (t.origen || "").toLowerCase().trim();
-                const destKey = (t.destino || "").toLowerCase().trim();
+            for (let t of tramos) {
+                if (!t.origen || !t.destino) continue;
 
-                let coordOrig = coordenadasCiudades[origKey] || [-31.42, -64.18]; // Default Córdoba
-                let coordDest = coordenadasCiudades[destKey] || [-29.33, -49.72]; // Default Torres
+                let coordOrig = await obtenerCoordenadas(t.origen);
+                let coordDest = await obtenerCoordenadas(t.destino);
 
-                // Añadir marcadores
+                // Coordenadas fallback por defecto si falla la red
+                if (!coordOrig) coordOrig = [-31.42, -64.18];
+                if (!coordDest) coordDest = [-29.33, -49.72];
+
                 const mOrig = L.marker(coordOrig).bindPopup(`<b>Origen:</b> ${t.origen}`);
                 const mDest = L.marker(coordDest).bindPopup(`<b>Destino:</b> ${t.destino}`);
                 markerGroup.addLayer(mOrig);
                 markerGroup.addLayer(mDest);
 
-                // Línea de ruta
                 const polyline = L.polyline([coordOrig, coordDest], {color: '#fedf00', weight: 4, opacity: 0.8});
                 markerGroup.addLayer(polyline);
 
                 latLngs.push(coordOrig);
                 latLngs.push(coordDest);
-            });
+            }
 
             if (latLngs.length > 0) {
                 map.fitBounds(L.latLngBounds(latLngs), { padding: [50, 50] });
@@ -258,8 +248,7 @@
             if (distancia <= 0) { alert("Ingresa una distancia válida"); return; }
             if (precio <= 0) { alert("Ingresa un precio válido"); return; }
 
-            const litros = distancia / rendimiento;
-            const costoFinal = litros * precio;
+            const costoFinal = (distancia / rendimiento) * precio;
 
             const data = {
                 origen,
@@ -294,10 +283,6 @@
             precioInput.value = "";
             territorioSelect.value = "ARG";
             previewCosto.textContent = "$ 0.00";
-            btnльникаCancelar();
-        }
-
-        function btnльникаCancelar() {
             btnCancelar.classList.add("hidden");
             btnGuardar.textContent = "Guardar Tramo";
         }
