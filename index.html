@@ -7,9 +7,7 @@
     <link rel="icon" href="data:,">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -39,11 +37,11 @@
 </head>
 <body class="w-screen h-screen flex flex-col bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-brasil-dark to-black">
 
-    <!-- CONTENEDOR APP -->
+    <!-- CONTENEDOR GENERAL -->
     <div class="relative z-10 w-full h-full flex flex-col">
 
         <!-- ================= PANTALLA DE LOGIN ================= -->
-        <div id="login-view" class="w-full h-full flex items-center justify-center p-4">
+        <div id="login-view" class="w-full h-full flex items-center justify-center p-4" style="display: flex;">
             <div class="glass-panel p-8 md:p-12 rounded-3xl w-full max-w-md cinematic-glow border border-brasil-yellow/20">
                 
                 <div class="text-center mb-8">
@@ -90,8 +88,8 @@
             </div>
         </div>
 
-        <!-- ================= PANTALLA CENTRAL / DASHBOARD ================= -->
-        <div id="central-view" class="hidden w-full h-full flex flex-col">
+        <!-- ================= PANTALLA CENTRAL (DASHBOARD) ================= -->
+        <div id="central-view" class="w-full h-full flex-col" style="display: none;">
             
             <!-- ENCABEZADO SUPERIOR -->
             <header class="glass-panel border-b border-white/10 px-6 py-3.5 flex items-center justify-between z-20 shadow-2xl shrink-0">
