@@ -29,8 +29,6 @@
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
         .immersive-btn { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
-        .immersive-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: 0.5s; }
-        .immersive-btn:hover::after { left: 100%; }
         .immersive-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(254, 223, 0, 0.3); }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #050b14; }
@@ -41,7 +39,7 @@
 
     <div class="max-w-6xl mx-auto space-y-8 pb-12">
         
-        <!-- ENCABEZADO DE MÓDULO -->
+        <!-- ENCABEZADO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
                 <i class="fa-solid fa-umbrella-beach mr-3 text-amber-400"></i> Gastos de Playa y Parador
@@ -49,181 +47,103 @@
             <p class="text-slate-300 text-sm">Indica la cantidad y precio unitario de cada consumo, calcula el costo del día, multiplícalo por la cantidad de días y guárdalo en la base de datos.</p>
         </div>
 
-        <!-- FORMULARIO DE INGRESO -->
+        <!-- FORMULARIO -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
             <input type="hidden" id="playa-id">
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
                 <!-- Reposera -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-chair text-amber-400 mr-1.5"></i> Reposera de playa
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-chair text-amber-400 mr-1.5"></i> Reposera</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_reposera" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
-                <!-- Toldo gacebo -->
+                <!-- Gacebo -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-tent text-cyan-400 mr-1.5"></i> Toldo gacebo
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-tent text-cyan-400 mr-1.5"></i> Gacebo</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_gacebo" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
-                <!-- Papas fritas -->
+                <!-- Papas -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-utensils text-yellow-400 mr-1.5"></i> Papas fritas
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-utensils text-yellow-400 mr-1.5"></i> Papas Fritas</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_papas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
                 <!-- Rabas -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-fish text-emerald-400 mr-1.5"></i> Porción de Rabas
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-fish text-emerald-400 mr-1.5"></i> Rabas</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_rabas" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
                 <!-- Pastel -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-cookie-bite text-orange-400 mr-1.5"></i> Pastel
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-cookie-bite text-orange-400 mr-1.5"></i> Pastel</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_pastel" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
                 <!-- Caipirinha -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-glass-citrus text-lime-400 mr-1.5"></i> Caipirinha
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-glass-citrus text-lime-400 mr-1.5"></i> Caipirinha</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_caipirinha" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
-                <!-- Milho con manteca -->
+                <!-- Milho -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-seedling text-amber-200 mr-1.5"></i> Milho con manteca
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-seedling text-amber-200 mr-1.5"></i> Milho</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_milho" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
-                <!-- Frango asado -->
+                <!-- Frango -->
                 <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-3">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                        <i class="fa-solid fa-drumstick-bite text-amber-600 mr-1.5"></i> Frango asado
-                    </label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-drumstick-bite text-amber-600 mr-1.5"></i> Frango</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Cantidad</span>
-                            <input type="text" inputmode="numeric" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" value="0">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 block mb-1">Precio Unit. (R$)</span>
-                            <input type="text" inputmode="decimal" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm item-calc" placeholder="0">
-                        </div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Cant</span><input type="text" inputmode="numeric" id="cant_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm" value="0"></div>
+                        <div><span class="text-[10px] text-slate-400 block mb-1">Precio R$</span><input type="text" inputmode="decimal" id="precio_frango" class="glass-input w-full px-3 py-2 rounded-xl text-sm" placeholder="0"></div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- PANEL DE CÁLCULOS -->
+            <!-- CÁLCULOS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
-                <!-- Costo Día de Playa -->
                 <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-3">
                     <span class="text-xs uppercase tracking-wider text-amber-300/80 font-bold">Costo Día de Playa:</span>
                     <div id="costo-dia-display" class="font-cinzel text-3xl font-black text-amber-400">R$ 0.00</div>
-                    <button type="button" onclick="window.calcularDiaPlaya()" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-wider transition cursor-pointer">
+                    <button type="button" id="btn-calcular" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-calculator mr-2"></i> Calcular Costo Día de Playa
                     </button>
                 </div>
 
-                <!-- Cantidad de Días y Costo Opción -->
                 <div class="p-5 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-3">
                     <label class="block text-xs uppercase tracking-wider text-blue-300/80 font-bold">Cantidad de Días:</label>
-                    <input type="text" inputmode="numeric" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm item-calc" value="1" placeholder="Ej: 7">
-                    
-                    <div class="flex items-center justify-between pt-1">
-                        <div>
-                            <span class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">Costo Opción Total:</span>
-                            <div id="costo-opcion-display" class="font-cinzel text-2xl font-black text-cyan-400">R$ 0.00</div>
-                        </div>
+                    <input type="text" inputmode="numeric" id="cantidad_dias" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" value="1">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">Costo Opción Total:</span>
+                        <div id="costo-opcion-display" class="font-cinzel text-2xl font-black text-cyan-400">R$ 0.00</div>
                     </div>
                 </div>
             </div>
 
-            <!-- BOTONES DE ACCIÓN -->
+            <!-- BOTONES -->
             <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar-playa" onclick="window.guardarOpcionPlaya()" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
+                <button type="button" id="btn-guardar" class="immersive-btn px-8 py-4 rounded-xl bg-gradient-to-r from-brasil-green to-emerald-700 text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)
                 </button>
-                <button type="button" id="btn-cancelar-edicion" onclick="window.cancelarEdicionPlaya()" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs cursor-pointer">
+                <button type="button" id="btn-cancelar" class="hidden px-5 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold tracking-wider uppercase text-xs cursor-pointer">
                     Cancelar Edición
                 </button>
             </div>
@@ -236,231 +156,191 @@
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
-                            <th class="p-3">Detalle Consumos (Cant x Precio)</th>
+                            <th class="p-3">Detalle Consumos</th>
                             <th class="p-3">Costo Día</th>
                             <th class="p-3">Días</th>
                             <th class="p-3 text-brasil-green">Costo Total Opción</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="historial-playa-body" class="divide-y divide-white/5">
-                        <!-- Dinámico -->
-                    </tbody>
+                    <tbody id="historial-playa-body" class="divide-y divide-white/5"></tbody>
                 </table>
             </div>
         </div>
 
     </div>
 
-    <!-- SCRIPT DE FIRESTORE -->
+    <!-- SCRIPT DEFINITIVO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
+        const db = getFirestore(initializeApp({
           apiKey: "AIzaSyDGFHR5hzOFtg7wnM2DGJfBTxPp-h8vyp0",
           authDomain: "bitacora-costos-brasil.firebaseapp.com",
           projectId: "bitacora-costos-brasil",
           storageBucket: "bitacora-costos-brasil.firebasestorage.app",
           messagingSenderId: "558877802256",
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
-        };
+        }));
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const itemsConfig = [
-            { key: 'reposera', cantId: 'cant_reposera', precioId: 'precio_reposera', label: 'Reposera' },
-            { key: 'gacebo', cantId: 'cant_gacebo', precioId: 'precio_gacebo', label: 'Gacebo' },
-            { key: 'papas', cantId: 'cant_papas', precioId: 'precio_papas', label: 'Papas' },
-            { key: 'rabas', cantId: 'cant_rabas', precioId: 'precio_rabas', label: 'Rabas' },
-            { key: 'pastel', cantId: 'cant_pastel', precioId: 'precio_pastel', label: 'Pastel' },
-            { key: 'caipirinha', cantId: 'cant_caipirinha', precioId: 'precio_caipirinha', label: 'Caipirinha' },
-            { key: 'milho', cantId: 'cant_milho', precioId: 'precio_milho', label: 'Milho' },
-            { key: 'frango', cantId: 'cant_frango', precioId: 'precio_frango', label: 'Frango' }
+        const items = [
+            { id: 'reposera', label: 'Reposera' },
+            { id: 'gacebo', label: 'Gacebo' },
+            { id: 'papas', label: 'Papas' },
+            { id: 'rabas', label: 'Rabas' },
+            { id: 'pastel', label: 'Pastel' },
+            { id: 'caipirinha', label: 'Caipirinha' },
+            { id: 'milho', label: 'Milho' },
+            { id: 'frango', label: 'Frango' }
         ];
 
-        function parsearNumero(valor) {
-            if (!valor) return 0;
-            return parseFloat(valor.toString().replace(',', '.')) || 0;
+        function parseNum(val) {
+            return parseFloat(val ? val.toString().replace(',', '.') : 0) || 0;
         }
 
-        // Definición de funciones globales garantizadas
-        window.calcularDiaPlaya = function() {
-            const diasInput = document.getElementById("cantidad_dias");
-            const costoDiaDisplay = document.getElementById("costo-dia-display");
-            const costoOpcionDisplay = document.getElementById("costo-opcion-display");
-
+        function calcular() {
             let costoDia = 0;
-            itemsConfig.forEach(item => {
-                const cant = parsearNumero(document.getElementById(item.cantId).value);
-                const precio = parsearNumero(document.getElementById(item.precioId).value);
-                costoDia += (cant * precio);
+            items.forEach(i => {
+                const cant = parseNum(document.getElementById(`cant_${i.id}`).value);
+                const prec = parseNum(document.getElementById(`precio_${i.id}`).value);
+                costoDia += (cant * prec);
             });
 
-            const dias = parsearNumero(diasInput.value) || 1;
+            const dias = parseNum(document.getElementById("cantidad_dias").value) || 1;
             const costoTotal = costoDia * dias;
 
-            if (costoDiaDisplay) costoDiaDisplay.textContent = `R$ ${costoDia.toFixed(2)}`;
-            if (costoOpcionDisplay) costoOpcionDisplay.textContent = `R$ ${costoTotal.toFixed(2)}`;
+            document.getElementById("costo-dia-display").textContent = `R$ ${costoDia.toFixed(2)}`;
+            document.getElementById("costo-opcion-display").textContent = `R$ ${costoTotal.toFixed(2)}`;
 
             return { costoDia, costoTotal, dias };
-        };
+        }
 
-        window.guardarOpcionPlaya = async function() {
-            const playaIdInput = document.getElementById("playa-id");
-            const diasInput = document.getElementById("cantidad_dias");
-            const btnGuardar = document.getElementById("btn-guardar-playa");
-            const btnCancelar = document.getElementById("btn-cancelar-edicion");
+        // Eventos en vivo para inputs
+        document.querySelectorAll("input").forEach(input => {
+            input.addEventListener("input", calcular);
+        });
 
-            const id = playaIdInput.value;
-            const dias = parsearNumero(diasInput.value);
+        document.getElementById("btn-calcular").addEventListener("click", calcular);
+
+        // Guardar o Actualizar
+        document.getElementById("btn-guardar").addEventListener("click", async () => {
+            const id = document.getElementById("playa-id").value;
+            const dias = parseNum(document.getElementById("cantidad_dias").value);
 
             if (dias <= 0) {
                 alert("La cantidad de días debe ser mayor a 0.");
                 return;
             }
 
-            const { costoDia, costoTotal } = window.calcularDiaPlaya();
-
-            let playaData = {
+            const { costoDia, costoTotal } = calcular();
+            let data = {
                 cantidad_dias: dias,
                 costoDia: costoDia.toFixed(2),
                 costoTotal: costoTotal.toFixed(2),
                 timestamp: Date.now()
             };
 
-            itemsConfig.forEach(item => {
-                playaData[item.cantId] = parsearNumero(document.getElementById(item.cantId).value);
-                playaData[item.precioId] = parsearNumero(document.getElementById(item.precioId).value);
+            items.forEach(i => {
+                data[`cant_${i.id}`] = parseNum(document.getElementById(`cant_${i.id}`).value);
+                data[`precio_${i.id}`] = parseNum(document.getElementById(`precio_${i.id}`).value);
             });
 
             try {
                 if (id) {
-                    await updateDoc(doc(db, "playa_opciones", id), playaData);
-                    alert("¡Opción de playa actualizada con éxito!");
+                    await updateDoc(doc(db, "playa_opciones", id), data);
+                    alert("¡Actualizado con éxito!");
                 } else {
-                    await addDoc(collection(db, "playa_opciones"), playaData);
-                    alert("¡Opción de playa guardada con éxito!");
+                    await addDoc(collection(db, "playa_opciones"), data);
+                    alert("¡Guardado con éxito en Firestore!");
                 }
-                window.cancelarEdicionPlaya();
+                limpiarFormulario();
             } catch (err) {
-                alert("Error al guardar en Firestore: " + err.message);
+                alert("Error al guardar: " + err.message);
             }
-        };
-
-        window.cancelarEdicionPlaya = function() {
-            const playaIdInput = document.getElementById("playa-id");
-            const diasInput = document.getElementById("cantidad_dias");
-            const costoDiaDisplay = document.getElementById("costo-dia-display");
-            const costoOpcionDisplay = document.getElementById("costo-opcion-display");
-            const btnCancelar = document.getElementById("btn-cancelar-edicion");
-            const btnGuardar = document.getElementById("btn-guardar-playa");
-
-            itemsConfig.forEach(item => {
-                document.getElementById(item.cantId).value = "0";
-                document.getElementById(item.precioId).value = "";
-            });
-            diasInput.value = "1";
-            playaIdInput.value = "";
-            if (costoDiaDisplay) costoDiaDisplay.textContent = "R$ 0.00";
-            if (costoOpcionDisplay) costoOpcionDisplay.textContent = "R$ 0.00";
-            if (btnCancelar) btnCancelar.classList.add("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)`;
-        };
-
-        // Escuchar cambios en tiempo real
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll(".item-calc").forEach(input => {
-                input.addEventListener("input", window.calcularDiaPlaya);
-            });
-
-            onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
-                const historialBody = document.getElementById("historial-playa-body");
-                if (!historialBody) return;
-                historialBody.innerHTML = "";
-                
-                if (!snapshot.empty) {
-                    let docs = [];
-                    snapshot.forEach(docSnap => {
-                        docs.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-                    docs.forEach(item => {
-                        let detalleHtml = [];
-                        itemsConfig.forEach(cfg => {
-                            const cant = item[cfg.cantId] || 0;
-                            const prec = item[cfg.precioId] || 0;
-                            if (cant > 0) {
-                                detalleHtml.push(`<span class="text-amber-300 font-semibold">${cfg.label}:</span> ${cant}x R$${prec}`);
-                            }
-                        });
-
-                        const tr = document.createElement("tr");
-                        tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
-                        tr.innerHTML = `
-                            <td class="p-3 text-xs text-slate-300">
-                                ${detalleHtml.length > 0 ? detalleHtml.join(' | ') : '<span class="italic text-slate-500">Sin consumos detallados</span>'}
-                            </td>
-                            <td class="p-3">R$ ${item.costoDia}</td>
-                            <td class="p-3 font-bold text-white">${item.cantidad_dias} días</td>
-                            <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">R$ ${item.costoTotal}</td>
-                            <td class="p-3 text-center space-x-2">
-                                <button type="button" onclick="window.editarPlaya('${item.id}')" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs cursor-pointer" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                <button type="button" onclick="window.eliminarPlaya('${item.id}')" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        `;
-                        tr.dataset.itemData = JSON.stringify(item);
-                        historialBody.appendChild(tr);
-                    });
-                } else {
-                    historialBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa todavía.</td></tr>`;
-                }
-            });
         });
 
-        window.editarPlaya = function(id) {
-            const historialBody = document.getElementById("historial-playa-body");
-            const playaIdInput = document.getElementById("playa-id");
-            const diasInput = document.getElementById("cantidad_dias");
-            const btnCancelar = document.getElementById("btn-cancelar-edicion");
-            const btnGuardar = document.getElementById("btn-guardar-playa");
-
-            const rows = historialBody.querySelectorAll("tr");
-            let targetData = null;
-            rows.forEach(row => {
-                if(row.dataset.itemData) {
-                    const parsed = JSON.parse(row.dataset.itemData);
-                    if(parsed.id === id) targetData = parsed;
-                }
+        function limpiarFormulario() {
+            document.getElementById("playa-id").value = "";
+            document.getElementById("cantidad_dias").value = "1";
+            items.forEach(i => {
+                document.getElementById(`cant_${i.id}`).value = "0";
+                document.getElementById(`precio_${i.id}`).value = "";
             });
+            document.getElementById("costo-dia-display").textContent = "R$ 0.00";
+            document.getElementById("costo-opcion-display").textContent = "R$ 0.00";
+            document.getElementById("btn-cancelar").classList.add("hidden");
+            document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Botón Costo Opción (Guardar)`;
+        }
 
-            if(!targetData) return;
+        document.getElementById("btn-cancelar").addEventListener("click", limpiarFormulario);
 
-            playaIdInput.value = targetData.id;
-            itemsConfig.forEach(item => {
-                document.getElementById(item.cantId).value = targetData[item.cantId] || 0;
-                document.getElementById(item.precioId).value = targetData[item.precioId] || "";
-            });
-            diasInput.value = targetData.cantidad_dias || 1;
-            window.calcularDiaPlaya();
+        // Historial en tiempo real
+        onSnapshot(collection(db, "playa_opciones"), (snapshot) => {
+            const tbody = document.getElementById("historial-playa-body");
+            tbody.innerHTML = "";
+            if (!snapshot.empty) {
+                let docs = [];
+                snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
+                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-            if (btnCancelar) btnCancelar.classList.remove("hidden");
-            if (btnGuardar) btnGuardar.innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar Opción Playa`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
+                docs.forEach(item => {
+                    let detalle = [];
+                    items.forEach(i => {
+                        const cant = item[`cant_${i.id}`] || 0;
+                        const prec = item[`precio_${i.id}`] || 0;
+                        if (cant > 0) detalle.push(`${i.label}: ${cant}x R$${prec}`);
+                    });
 
-        window.eliminarPlaya = async function(id) {
-            if (confirm("¿Estás seguro de eliminar este registro de playa?")) {
-                try {
-                    await deleteDoc(doc(db, "playa_opciones", id));
-                    alert("Eliminado correctamente");
-                } catch (err) {
-                    alert("Error al eliminar: " + err.message);
-                }
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-slate-900/40 transition border-b border-white/5";
+                    tr.innerHTML = `
+                        <td class="p-3 text-xs text-slate-300">${detalle.length ? detalle.join(' | ') : 'Sin detalle'}</td>
+                        <td class="p-3">R$ ${item.costoDia}</td>
+                        <td class="p-3 font-bold text-white">${item.cantidad_dias} días</td>
+                        <td class="p-3 font-cinzel font-bold text-brasil-green text-base bg-emerald-950/20 rounded">R$ ${item.costoTotal}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button type="button" class="px-2.5 py-1.5 bg-blue-600/40 text-blue-300 rounded text-xs btn-edit" data-json='${JSON.stringify(item)}'><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" class="px-2.5 py-1.5 bg-red-600/40 text-red-300 rounded text-xs btn-del" data-id="${item.id}"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Eventos de edición y eliminación seguros
+                document.querySelectorAll(".btn-edit").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const data = JSON.parse(btn.getAttribute("data-json"));
+                        document.getElementById("playa-id").value = data.id;
+                        document.getElementById("cantidad_dias").value = data.cantidad_dias;
+                        items.forEach(i => {
+                            document.getElementById(`cant_${i.id}`).value = data[`cant_${i.id}`] || 0;
+                            document.getElementById(`precio_${i.id}`).value = data[`precio_${i.id}`] || "";
+                        });
+                        calcular();
+                        document.getElementById("btn-cancelar").classList.remove("hidden");
+                        document.getElementById("btn-guardar").innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar`;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                document.querySelectorAll(".btn-del").forEach(btn => {
+                    btn.addEventListener("click", async () => {
+                        if (confirm("¿Eliminar registro?")) {
+                            try {
+                                await deleteDoc(doc(db, "playa_opciones", btn.getAttribute("data-id")));
+                                alert("Eliminado correctamente");
+                            } catch(e) {
+                                alert("Error: " + e.message);
+                            }
+                        }
+                    });
+                });
+
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Sin registros de playa.</td></tr>`;
             }
-        };
+        });
     </script>
 </body>
 </html>
