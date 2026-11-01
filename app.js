@@ -59,7 +59,6 @@ if (btnSalir) {
     });
 }
 
-// Función global garantizada para cambiar de módulo sin fallos
 window.cambiarModulo = function(pagina, btnElement) {
     const iframe = document.getElementById("content-iframe");
     if (iframe) {
