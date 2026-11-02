@@ -31,7 +31,7 @@
         <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h3 class="text-xl font-bold text-amber-400 mb-1"><i class="fa-solid fa-calculator mr-2"></i> Cálculo Final y Consolidado</h3>
-                <p class="text-slate-300 text-xs">Cálculo exacto, estricto y sin duplicaciones.</p>
+                <p class="text-slate-300 text-xs">Cálculo exacto y estricto (revisar consola F12 para ver el detalle de la suma).</p>
             </div>
             <div class="p-3 rounded-2xl bg-slate-900 border border-amber-400/30">
                 <label class="block text-[10px] font-bold uppercase text-amber-300 mb-1">Cotización: 1 R$ en Pesos ($)</label>
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT CORREGIDO Y ESTRICTO -->
+    <!-- SCRIPT DE CÁLCULO ESTRICTO Y DEPURADO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -152,7 +152,7 @@
             tbHot.innerHTML = "";
             if (cache.hoteles.length) {
                 cache.hoteles.forEach(i => {
-                    const m = parseFloat(i.costo) || 0;
+                    const m = parseFloat(i.costo || i.costoPesos) || 0;
                     const mon = (i.moneda || 'ARS').toUpperCase();
                     tbHot.innerHTML += `<tr class="border-b border-white/5"><td class="p-2">${i.nombre || 'Hotel'}</td><td class="p-2 font-bold">${mon}</td><td class="p-2 text-right text-brasil-green">${mon === 'BRL' ? 'R$' : '$'} ${m.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td></tr>`;
                 });
@@ -190,36 +190,46 @@
             } else { tbPlaya.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-slate-500">Sin registros.</td></tr>`; }
         }
 
-        // LÓGICA ESTRICTA Y BLINDADA PARA PESOS (ARS)
+        // CÁLCULO ESTRICTO Y LITERAL PARA PESOS (ARS) CON LOGS DE DEPURACIÓN EN CONSOLA (F12)
         function calcularTotalPesosExacto() {
             let totalARS = 0;
+            console.log("--- DETALLE DE SUMA EN PESOS ($) ---");
 
-            // 1. Hoteles: Sumar ÚNICAMENTE si la moneda es estrictamente 'ARS'
+            // 1. Hoteles: ÚNICAMENTE si moneda es estrictamente 'ARS'
             cache.hoteles.forEach(i => {
-                const moneda = (i.moneda || '').toUpperCase();
+                const moneda = (i.moneda || '').trim().toUpperCase();
+                const monto = parseFloat(i.costo || i.costoPesos) || 0;
                 if (moneda === 'ARS') {
-                    totalARS += parseFloat(i.costo) || 0;
+                    totalARS += monto;
+                    console.log(`[HOTEL ARS] ${i.nombre || 'Sin nombre'}: $${monto}`);
+                } else {
+                    console.log(`[HOTEL IGNORADO - NO ES ARS (${moneda})] ${i.nombre || 'Sin nombre'}: $${monto}`);
                 }
             });
 
-            // 2. Combustible: Sumar ÚNICAMENTE si el territorio es estrictamente 'ARG'
+            // 2. Combustible: ÚNICAMENTE si territorio es estrictamente 'ARG'
             cache.combustible.forEach(i => {
-                const territorio = (i.territorio || '').toUpperCase();
+                const territorio = (i.territorio || '').trim().toUpperCase();
+                const monto = parseFloat(i.costoFinal || i.costo) || 0;
                 if (territorio === 'ARG') {
-                    totalARS += parseFloat(i.costoFinal) || 0;
+                    totalARS += monto;
+                    console.log(`[COMBUSTIBLE ARG] ${i.origen} → ${i.destino}: $${monto}`);
+                } else {
+                    console.log(`[COMBUSTIBLE IGNORADO - NO ES ARG (${territorio})] ${i.origen} → ${i.destino}: $${monto}`);
                 }
             });
 
+            console.log(`TOTAL EXACTO ARS: $${totalARS}`);
             return totalARS;
         }
 
-        // LÓGICA ESTRICTA Y BLINDADA PARA REALES (BRL)
         function calcularTotalRealesExacto() {
             let totalBRL = 0;
 
             cache.hoteles.forEach(i => {
-                if ((i.moneda || '').toUpperCase() === 'BRL') {
-                    totalBRL += parseFloat(i.costo) || 0;
+                const moneda = (i.moneda || '').trim().toUpperCase();
+                if (moneda === 'BRL') {
+                    totalBRL += parseFloat(i.costo || i.costoPesos) || 0;
                 }
             });
 
@@ -228,8 +238,9 @@
             });
 
             cache.combustible.forEach(i => {
-                if ((i.territorio || '').toUpperCase() === 'BRA') {
-                    totalBRL += parseFloat(i.costoFinal) || 0;
+                const territorio = (i.territorio || '').trim().toUpperCase();
+                if (territorio === 'BRA') {
+                    totalBRL += parseFloat(i.costoFinal || i.costo) || 0;
                 }
             });
 
