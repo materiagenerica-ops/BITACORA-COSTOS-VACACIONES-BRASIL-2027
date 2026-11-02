@@ -27,8 +27,7 @@
         .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        .map-container { position: relative; width: 100%; height: 380px; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(254, 223, 0, 0.2); }
-        .map-container iframe { width: 100%; height: 100%; border: 0; }
+        #mapa-hotel { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -95,12 +94,10 @@
                 </div>
             </div>
 
-            <!-- CONTENEDOR GOOGLE MAPS -->
+            <!-- GOOGLE MAPS IFRAME -->
             <div class="pt-4 border-t border-white/10 space-y-3">
                 <label class="block text-xs font-bold uppercase tracking-wider text-cyan-400">Ubicación en Google Maps:</label>
-                <div class="map-container">
-                    <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy"></iframe>
-                </div>
+                <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy" style="width:100%; height:380px; border-radius:1rem; border:0;"></iframe>
             </div>
 
             <div class="flex items-center gap-4 pt-2">
@@ -151,22 +148,13 @@
         const costoInput = document.getElementById("costo_hotel");
         const labelCosto = document.getElementById("label-costo");
         const mapaIframe = document.getElementById("mapa-hotel");
-        const btnGuardar = document.getElementById("btn-guardar-hotel");
 
         function actualizarMapa() {
             const dir = direccionInput.value.trim();
             const nom = nombreInput.value.trim();
             const lugar = lugarSelect.value;
             
-            let consulta = "";
-            if (dir !== "") {
-                consulta = `${dir}, ${lugar}, Brasil`;
-            } else if (nom !== "") {
-                consulta = `${nom}, ${lugar}, Brasil`;
-            } else {
-                consulta = `${lugar}, Brasil`;
-            }
-
+            let consulta = dir !== "" ? `${dir}, ${lugar}, Brasil` : (nom !== "" ? `${nom}, ${lugar}, Brasil` : `${lugar}, Brasil`);
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
@@ -189,21 +177,21 @@
             }
         }
 
-        btnGuardar.addEventListener("click", async () => {
+        document.getElementById("btn-guardar-hotel").addEventListener("click", async () => {
+            const nombre = nombreInput.value.trim();
+            const direccion = direccionInput.value.trim();
+            const lugar = lugarSelect.value;
+            const checkIn = checkInInput.value || "Sin especificar";
+            const checkOut = checkOutInput.value || "Sin especificar";
+            const noches = parseInt(nochesInput.value) || 1;
+            const personas = parseInt(personasInput.value) || 1;
+            const moneda = monedaSelect.value;
+            const costo = parseFloat(costoInput.value) || 0;
+
+            if (!nombre) { alert("Completa el nombre del hotel"); return; }
+            if (costo <= 0) { alert("Ingresa un costo válido"); return; }
+
             try {
-                const nombre = nombreInput.value.trim();
-                const direccion = direccionInput.value.trim();
-                const lugar = lugarSelect.value;
-                const checkIn = checkInInput.value || "Sin especificar";
-                const checkOut = checkOutInput.value || "Sin especificar";
-                const noches = parseInt(nochesInput.value) || 1;
-                const personas = parseInt(personasInput.value) || 1;
-                const moneda = monedaSelect.value;
-                const costo = parseFloat(costoInput.value) || 0;
-
-                if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
-                if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
-
                 await addDoc(collection(db, "hoteles_reservas"), {
                     nombre,
                     direccion,
@@ -222,27 +210,19 @@
                 direccionInput.value = "";
                 costoInput.value = "";
                 actualizarMapa();
-            } catch (error) {
-                alert("Error al guardar en Firebase: " + error.message);
-                console.error(error);
+            } catch (e) {
+                alert("Error al guardar: " + e.message);
             }
         });
 
         onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
             const tbody = document.getElementById("historial-hoteles-body");
             tbody.innerHTML = "";
-            let primerItem = true;
-
             snap.forEach(d => {
                 const item = d.data();
                 const sim = item.moneda === 'BRL' ? 'R$' : '$';
                 const dirTxt = item.direccion ? `<span class="text-xs text-slate-400 block">${item.direccion}</span>` : '';
                 
-                if (primerItem) {
-                    actualizarMapa();
-                    primerItem = false;
-                }
-
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td class="p-3 font-semibold text-white">${item.nombre} <span class="text-xs text-cyan-400 block">${item.lugar}</span>${dirTxt}</td>
@@ -250,14 +230,12 @@
                     <td class="p-3 font-bold">${item.moneda}</td>
                     <td class="p-3 text-brasil-green font-bold">${sim} ${item.costo}</td>
                     <td class="p-3 text-center">
-                        <button type="button" onclick="window.verEnMapa('${item.nombre.replace(/'/g, "\\'")}', '${(item.direccion || '').replace(/'/g, "\\'")}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
-                        <button type="button" onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="window.verEnMapa('${item.nombre.replace(/'/g, "\\'")}', '${(item.direccion || '').replace(/'/g, "\\'")}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
+                        <button onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }, (error) => {
-            console.error("Error en onSnapshot:", error);
         });
 
         window.verEnMapa = (nombre, direccion, lugar) => {
@@ -268,11 +246,7 @@
 
         window.delHotel = async (id) => { 
             if (confirm("¿Eliminar este alojamiento?")) {
-                try {
-                    await deleteDoc(doc(db, "hoteles_reservas", id));
-                } catch (error) {
-                    alert("Error al eliminar: " + error.message);
-                }
+                await deleteDoc(doc(db, "hoteles_reservas", id)); 
             }
         };
     </script>
