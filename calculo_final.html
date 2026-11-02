@@ -31,7 +31,7 @@
         <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h3 class="text-xl font-bold text-amber-400 mb-1"><i class="fa-solid fa-calculator mr-2"></i> Cálculo Final y Consolidado</h3>
-                <p class="text-slate-300 text-xs">Suma independiente y precisa de Pesos y Reales según las reglas de negocio.</p>
+                <p class="text-slate-300 text-xs">Cálculo exacto, estricto y sin duplicaciones.</p>
             </div>
             <div class="p-3 rounded-2xl bg-slate-900 border border-amber-400/30">
                 <label class="block text-[10px] font-bold uppercase text-amber-300 mb-1">Cotización: 1 R$ en Pesos ($)</label>
@@ -89,7 +89,7 @@
             </div>
 
             <div class="glass-panel p-5 rounded-3xl space-y-3">
-                <h4 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-utensils mr-1"></i> Alimentos (Siempre Reales)</h4>
+                <h4 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-utensils mr-1"></i> Alimentos (Reales)</h4>
                 <div class="overflow-x-auto max-h-48 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900 text-brasil-yellow uppercase sticky top-0">
@@ -113,7 +113,7 @@
             </div>
 
             <div class="glass-panel p-5 rounded-3xl space-y-3">
-                <h4 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-umbrella-beach mr-1"></i> Playa (Siempre Reales)</h4>
+                <h4 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-umbrella-beach mr-1"></i> Playa (Reales)</h4>
                 <div class="overflow-x-auto max-h-48 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900 text-brasil-yellow uppercase sticky top-0">
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE CÁLCULO PRECISO -->
+    <!-- SCRIPT CORREGIDO Y ESTRICTO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -190,31 +190,30 @@
             } else { tbPlaya.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-slate-500">Sin registros.</td></tr>`; }
         }
 
-        // Función estricta para sumar ÚNICAMENTE en Pesos ($)
+        // LÓGICA ESTRICTA Y BLINDADA PARA PESOS (ARS)
         function calcularTotalPesosExacto() {
             let totalARS = 0;
 
-            // 1. Hoteles: Sumar solo si la moneda explícita es 'ARS'
+            // 1. Hoteles: Sumar ÚNICAMENTE si la moneda es estrictamente 'ARS'
             cache.hoteles.forEach(i => {
-                const moneda = (i.moneda || 'ARS').toUpperCase();
+                const moneda = (i.moneda || '').toUpperCase();
                 if (moneda === 'ARS') {
                     totalARS += parseFloat(i.costo) || 0;
                 }
             });
 
-            // 2. Combustible: Sumar solo tramos en territorio argentino ('ARG' o distinto de 'BRA')
+            // 2. Combustible: Sumar ÚNICAMENTE si el territorio es estrictamente 'ARG'
             cache.combustible.forEach(i => {
-                const territorio = (i.territorio || 'ARG').toUpperCase();
-                if (territorio !== 'BRA') {
+                const territorio = (i.territorio || '').toUpperCase();
+                if (territorio === 'ARG') {
                     totalARS += parseFloat(i.costoFinal) || 0;
                 }
             });
 
-            // Alimentos y Playa se omiten por completo porque son 100% en Reales (BRL).
             return totalARS;
         }
 
-        // Función estricta para sumar ÚNICAMENTE en Reales (R$)
+        // LÓGICA ESTRICTA Y BLINDADA PARA REALES (BRL)
         function calcularTotalRealesExacto() {
             let totalBRL = 0;
 
@@ -260,14 +259,13 @@
             const totalBRL = calcularTotalRealesExacto();
             const cotiz = parseFloat(cotizacionInput.value) || 0;
 
-            // Fórmula: Total en Pesos + (Total en Reales * Cotización Personalizada)
             const final = totalARS + (totalBRL * cotiz);
             document.getElementById("display-total-consolidado").textContent = `$ ${final.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
         }
 
         cotizacionInput.addEventListener("input", actualizarConsolidadoFinal);
 
-        // Listeners de Firestore en tiempo real
+        // Listeners de Firebase
         onSnapshot(collection(db, "hoteles_reservas"), (s) => { cache.hoteles = []; s.forEach(d => cache.hoteles.push(d.data())); renderizarTablas(); });
         onSnapshot(collection(db, "menu_comidas"), (s) => { cache.alimentos = []; s.forEach(d => cache.alimentos.push(d.data())); renderizarTablas(); });
         onSnapshot(collection(db, "combustible_recorridos"), (s) => { cache.combustible = []; s.forEach(d => cache.combustible.push(d.data())); renderizarTablas(); });
