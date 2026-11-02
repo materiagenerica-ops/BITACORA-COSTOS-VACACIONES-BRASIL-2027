@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combustible - Bitácora Brasil 2027</title>
+    <title>Hoteles y Alojamientos - Bitácora Brasil 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,77 +33,85 @@
     <div class="max-w-5xl mx-auto space-y-8 pb-12">
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2 flex items-center">
-                <i class="fa-solid fa-gas-pump mr-3 text-amber-400"></i> Control de Combustible Multi-Moneda
+                <i class="fa-solid fa-hotel mr-3 text-amber-400"></i> Hoteles y Alojamientos Multi-Moneda
             </h3>
-            <p class="text-slate-300 text-sm">Calcula trayectos en Argentina ($ ARS) o Brasil (R$).</p>
+            <p class="text-slate-300 text-sm">Gestiona reservas de hospedaje en Argentina ($ ARS) o Brasil (R$).</p>
         </div>
 
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
-            <input type="hidden" id="combustible-id">
+            <input type="hidden" id="hotel-id">
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Desde (Origen):</label>
-                    <input type="text" id="origen" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Buenos Aires">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nombre del Hotel:</label>
+                    <input type="text" id="hotel_nombre" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Hotel Copacabana">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Hasta (Destino):</label>
-                    <input type="text" id="destino" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Torres">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Dirección Exacta:</label>
+                    <input type="text" id="hotel_direccion" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: Av. Atlântica 1702, Río de Janeiro">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Kilómetros:</label>
-                    <input type="number" id="kilometros" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 850" value="0">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Rendimiento (Km/L):</label>
-                    <input type="number" id="km_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 12.5" value="0" step="0.1">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Territorio / Moneda:</label>
-                    <select id="territorio" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
-                        <option value="ARG">🇦🇷 Argentina ($ ARS)</option>
-                        <option value="BRA">🇧🇷 Brasil (R$ Reales)</option>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Lugar / Destino:</label>
+                    <select id="hotel_lugar" class="glass-input w-full px-4 py-3 rounded-xl text-sm bg-slate-900 text-amber-300">
+                        <option value="Sao Gabriel">Sao Gabriel</option>
+                        <option value="Capão da Canoa">Capão da Canoa</option>
+                        <option value="Torres">Torres</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Check-in:</label>
+                    <input type="date" id="check_in" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Check-out:</label>
+                    <input type="date" id="check_out" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-valor-litro">Valor Litro Nafta ($ ARS):</label>
-                    <input type="number" id="valor_litro" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="Ej: 1150.00" value="0" step="0.01">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Noches:</label>
+                    <input type="number" id="cantidad_noches" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300" value="1" min="1">
                 </div>
-                <div class="flex items-end">
-                    <div class="w-full p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-center justify-between">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-wider text-amber-300/80 font-bold block">Costo Final:</span>
-                            <div id="costo-final-display" class="font-cinzel text-2xl font-black text-amber-400">$ 0.00</div>
-                        </div>
-                        <div id="moneda-sufijo" class="text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded">ARS</div>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Personas (Pax):</label>
+                    <input type="number" id="cantidad_personas" class="glass-input w-full px-4 py-3 rounded-xl text-sm" value="2" min="1">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Moneda:</label>
+                    <select id="moneda_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                        <option value="ARS">🇦🇷 Argentina ($ ARS)</option>
+                        <option value="BRL">🇧🇷 Brasil (R$ Reales)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2" id="label-costo">Costo Total ($):</label>
+                    <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-bold text-brasil-green" placeholder="Ej: 85000" step="any">
                 </div>
             </div>
 
             <div class="flex items-center gap-4 pt-4 border-t border-white/10">
-                <button type="button" id="btn-guardar-combustible" class="px-8 py-4 rounded-xl bg-brasil-green text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">Guardar Recorrido</button>
+                <button type="button" id="btn-guardar-hotel" class="px-8 py-4 rounded-xl bg-brasil-green text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">Guardar Hotel</button>
             </div>
         </div>
 
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl">
-            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Combustible</h4>
+            <h4 class="font-cinzel text-lg font-bold text-white mb-4">Historial de Alojamientos</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/80 text-xs uppercase text-brasil-yellow tracking-wider border-b border-white/10">
                         <tr>
-                            <th class="p-3">Trayecto</th>
-                            <th class="p-3">Km</th>
+                            <th class="p-3">Hotel / Dirección</th>
+                            <th class="p-3">Noches</th>
                             <th class="p-3">Moneda</th>
-                            <th class="p-3 text-brasil-green">Costo Final</th>
+                            <th class="p-3 text-brasil-green">Costo Total</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="historial-combustible-body" class="divide-y divide-white/5"></tbody>
+                    <tbody id="historial-hoteles-body" class="divide-y divide-white/5"></tbody>
                 </table>
             </div>
         </div>
@@ -122,59 +130,90 @@
           appId: "1:558877802256:web:580e6a100a17b0ba062f95"
         }));
 
-        const km = document.getElementById("kilometros");
-        const kml = document.getElementById("km_litro");
-        const valLitro = document.getElementById("valor_litro");
-        const terr = document.getElementById("territorio");
-        const display = document.getElementById("costo-final-display");
-        const sufijo = document.getElementById("moneda-sufijo");
+        const nombreInput = document.getElementById("hotel_nombre");
+        const direccionInput = document.getElementById("hotel_direccion");
+        const lugarInput = document.getElementById("hotel_lugar");
+        const checkInInput = document.getElementById("check_in");
+        const checkOutInput = document.getElementById("check_out");
+        const nochesInput = document.getElementById("cantidad_noches");
+        const personasInput = document.getElementById("cantidad_personas");
+        const monedaSelect = document.getElementById("moneda_hotel");
+        const costoInput = document.getElementById("costo_hotel");
+        const labelCosto = document.getElementById("label-costo");
 
-        function calc() {
-            const k = parseFloat(km.value) || 0;
-            const l = parseFloat(kml.value) || 0;
-            const v = parseFloat(valLitro.value) || 0;
-            const res = l > 0 ? (k / l) * v : 0;
-            const sim = terr.value === "BRA" ? "R$" : "$";
-            sufijo.textContent = terr.value === "BRA" ? "BRL" : "ARS";
-            display.textContent = `${sim} ${res.toFixed(2)}`;
-        }
-
-        [km, kml, valLitro, terr].forEach(el => el.addEventListener("input", calc));
-        terr.addEventListener("change", calc);
-
-        document.getElementById("btn-guardar-combustible").addEventListener("click", async () => {
-            const origen = document.getElementById("origen").value;
-            const destino = document.getElementById("destino").value;
-            if(!origen || !destino) { alert("Completa origen y destino"); return; }
-            const k = parseFloat(km.value) || 0;
-            const l = parseFloat(kml.value) || 0;
-            const v = parseFloat(valLitro.value) || 0;
-            const costoFinal = l > 0 ? ((k / l) * v).toFixed(2) : "0.00";
-
-            await addDoc(collection(db, "combustible_recorridos"), {
-                origen, destino, kilometros: k, valor_litro: v, territorio: terr.value, costoFinal, timestamp: Date.now()
-            });
-            alert("Guardado con éxito");
+        monedaSelect.addEventListener("change", () => {
+            labelCosto.textContent = monedaSelect.value === 'BRL' ? "Costo Total (R$):" : "Costo Total ($):";
         });
 
-        onSnapshot(collection(db, "combustible_recorridos"), (snap) => {
-            const tbody = document.getElementById("historial-combustible-body");
+        checkInInput.addEventListener("change", calcNoches);
+        checkOutInput.addEventListener("change", calcNoches);
+
+        function calcNoches() {
+            if (checkInInput.value && checkOutInput.value) {
+                const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
+                const dias = Math.round(diff / (1000 * 60 * 60 * 24));
+                if (dias > 0) nochesInput.value = dias;
+            }
+        }
+
+        document.getElementById("btn-guardar-hotel").addEventListener("click", async () => {
+            const nombre = nombreInput.value.trim();
+            const direccion = direccionInput.value.trim();
+            const lugar = lugarInput.value;
+            const checkIn = checkInInput.value || "Sin especificar";
+            const checkOut = checkOutInput.value || "Sin especificar";
+            const noches = parseInt(nochesInput.value) || 1;
+            const personas = parseInt(personasInput.value) || 1;
+            const moneda = monedaSelect.value;
+            const costo = parseFloat(costoInput.value) || 0;
+
+            if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
+            if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
+
+            await addDoc(collection(db, "hoteles_reservas"), {
+                nombre,
+                direccion,
+                lugar,
+                checkIn,
+                checkOut,
+                noches,
+                personas,
+                moneda,
+                costo: costo.toFixed(2),
+                timestamp: Date.now()
+            });
+
+            alert("Hotel guardado con éxito");
+            nombreInput.value = "";
+            direccionInput.value = "";
+            costoInput.value = "";
+        });
+
+        onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
+            const tbody = document.getElementById("historial-hoteles-body");
             tbody.innerHTML = "";
             snap.forEach(d => {
                 const item = d.data();
+                const sim = item.moneda === 'BRL' ? 'R$' : '$';
+                const dirTxt = item.direccion ? `<span class="text-xs text-slate-400 block">${item.direccion}</span>` : '';
+                
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td class="p-3">${item.origen} &rarr; ${item.destino}</td>
-                    <td class="p-3">${item.kilometros} km</td>
-                    <td class="p-3">${item.territorio}</td>
-                    <td class="p-3 text-brasil-green font-bold">${item.territorio === 'BRA' ? 'R$' : '$'} ${item.costoFinal}</td>
-                    <td class="p-3 text-center"><button onclick="window.del('${d.id}')" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                    <td class="p-3 font-semibold text-white">${item.nombre} <span class="text-xs text-cyan-400 block">${item.lugar}</span>${dirTxt}</td>
+                    <td class="p-3">${item.noches} noches</td>
+                    <td class="p-3 font-bold">${item.moneda}</td>
+                    <td class="p-3 text-brasil-green font-bold">${sim} ${item.costo}</td>
+                    <td class="p-3 text-center"><button onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>
                 `;
                 tbody.appendChild(tr);
             });
         });
 
-        window.del = async (id) => { await deleteDoc(doc(db, "combustible_recorridos", id)); };
+        window.delHotel = async (id) => { 
+            if (confirm("¿Eliminar este alojamiento?")) {
+                await deleteDoc(doc(db, "hoteles_reservas", id)); 
+            }
+        };
     </script>
 </body>
 </html>
