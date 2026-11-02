@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoteles - Bitácora Brasil 2027</title>
+    <title>Hoteles y Alojamientos - Bitácora Brasil 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,7 +27,6 @@
         .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        #mapa-hotel { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -39,6 +38,7 @@
             <p class="text-slate-300 text-sm">Gestiona reservas de hospedaje en Argentina ($ ARS) o Brasil (R$).</p>
         </div>
 
+        <!-- CONTENEDOR IDÉNTICO A COMBUSTIBLE -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl border border-brasil-yellow/20 shadow-2xl space-y-6">
             <input type="hidden" id="hotel-id">
             
@@ -94,13 +94,14 @@
                 </div>
             </div>
 
-            <!-- GOOGLE MAPS IFRAME -->
+            <!-- MAPA DE GOOGLE MAPS -->
             <div class="pt-4 border-t border-white/10 space-y-3">
                 <label class="block text-xs font-bold uppercase tracking-wider text-cyan-400">Ubicación en Google Maps:</label>
                 <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy" style="width:100%; height:380px; border-radius:1rem; border:0;"></iframe>
             </div>
 
-            <div class="flex items-center gap-4 pt-2">
+            <!-- BOTÓN DIRECTO IDÉNTICO A COMBUSTIBLE -->
+            <div class="flex items-center gap-4 pt-4 border-t border-white/10">
                 <button type="button" id="btn-guardar-hotel" class="px-8 py-4 rounded-xl bg-brasil-green text-white font-bold tracking-wider uppercase text-xs shadow-xl cursor-pointer">Guardar Hotel</button>
             </div>
         </div>
@@ -124,6 +125,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT DIRECTO Y LIMPIO -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -149,12 +151,13 @@
         const labelCosto = document.getElementById("label-costo");
         const mapaIframe = document.getElementById("mapa-hotel");
 
+        // Función de mapa idéntica a la lógica probada
         function actualizarMapa() {
             const dir = direccionInput.value.trim();
             const nom = nombreInput.value.trim();
             const lugar = lugarSelect.value;
             
-            let consulta = dir !== "" ? `${dir}, ${lugar}, Brasil` : (nom !== "" ? `${nom}, ${lugar}, Brasil` : `${lugar}, Brasil`);
+            const consulta = dir !== "" ? `${dir}, ${lugar}, Brasil` : (nom !== "" ? `${nom}, ${lugar}, Brasil` : `${lugar}, Brasil`);
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
@@ -177,6 +180,7 @@
             }
         }
 
+        // Listener de clic idéntico al de combustible
         document.getElementById("btn-guardar-hotel").addEventListener("click", async () => {
             const nombre = nombreInput.value.trim();
             const direccion = direccionInput.value.trim();
@@ -188,8 +192,8 @@
             const moneda = monedaSelect.value;
             const costo = parseFloat(costoInput.value) || 0;
 
-            if (!nombre) { alert("Completa el nombre del hotel"); return; }
-            if (costo <= 0) { alert("Ingresa un costo válido"); return; }
+            if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
+            if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
 
             try {
                 await addDoc(collection(db, "hoteles_reservas"), {
@@ -218,11 +222,18 @@
         onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
             const tbody = document.getElementById("historial-hoteles-body");
             tbody.innerHTML = "";
+            let primerItem = true;
+
             snap.forEach(d => {
                 const item = d.data();
                 const sim = item.moneda === 'BRL' ? 'R$' : '$';
                 const dirTxt = item.direccion ? `<span class="text-xs text-slate-400 block">${item.direccion}</span>` : '';
                 
+                if (primerItem) {
+                    actualizarMapa();
+                    primerItem = false;
+                }
+
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td class="p-3 font-semibold text-white">${item.nombre} <span class="text-xs text-cyan-400 block">${item.lugar}</span>${dirTxt}</td>
@@ -230,8 +241,8 @@
                     <td class="p-3 font-bold">${item.moneda}</td>
                     <td class="p-3 text-brasil-green font-bold">${sim} ${item.costo}</td>
                     <td class="p-3 text-center">
-                        <button onclick="window.verEnMapa('${item.nombre.replace(/'/g, "\\'")}', '${(item.direccion || '').replace(/'/g, "\\'")}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
-                        <button onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" onclick="window.verEnMapa('${item.nombre.replace(/'/g, "\\'")}', '${(item.direccion || '').replace(/'/g, "\\'")}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
+                        <button type="button" onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
