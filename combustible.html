@@ -151,6 +151,7 @@
         const costoInput = document.getElementById("costo_hotel");
         const labelCosto = document.getElementById("label-costo");
         const mapaIframe = document.getElementById("mapa-hotel");
+        const btnGuardar = document.getElementById("btn-guardar-hotel");
 
         function actualizarMapa() {
             const dir = direccionInput.value.trim();
@@ -169,8 +170,8 @@
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
-        direccionInput.addEventListener("change", actualizarMapa);
-        nombreInput.addEventListener("change", actualizarMapa);
+        direccionInput.addEventListener("blur", actualizarMapa);
+        nombreInput.addEventListener("blur", actualizarMapa);
         lugarSelect.addEventListener("change", actualizarMapa);
 
         monedaSelect.addEventListener("change", () => {
@@ -188,38 +189,43 @@
             }
         }
 
-        document.getElementById("btn-guardar-hotel").addEventListener("click", async () => {
-            const nombre = nombreInput.value.trim();
-            const direccion = direccionInput.value.trim();
-            const lugar = lugarSelect.value;
-            const checkIn = checkInInput.value || "Sin especificar";
-            const checkOut = checkOutInput.value || "Sin especificar";
-            const noches = parseInt(nochesInput.value) || 1;
-            const personas = parseInt(personasInput.value) || 1;
-            const moneda = monedaSelect.value;
-            const costo = parseFloat(costoInput.value) || 0;
+        btnGuardar.addEventListener("click", async () => {
+            try {
+                const nombre = nombreInput.value.trim();
+                const direccion = direccionInput.value.trim();
+                const lugar = lugarSelect.value;
+                const checkIn = checkInInput.value || "Sin especificar";
+                const checkOut = checkOutInput.value || "Sin especificar";
+                const noches = parseInt(nochesInput.value) || 1;
+                const personas = parseInt(personasInput.value) || 1;
+                const moneda = monedaSelect.value;
+                const costo = parseFloat(costoInput.value) || 0;
 
-            if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
-            if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
+                if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
+                if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
 
-            await addDoc(collection(db, "hoteles_reservas"), {
-                nombre,
-                direccion,
-                lugar,
-                checkIn,
-                checkOut,
-                noches,
-                personas,
-                moneda,
-                costo: costo.toFixed(2),
-                timestamp: Date.now()
-            });
+                await addDoc(collection(db, "hoteles_reservas"), {
+                    nombre,
+                    direccion,
+                    lugar,
+                    checkIn,
+                    checkOut,
+                    noches,
+                    personas,
+                    moneda,
+                    costo: costo.toFixed(2),
+                    timestamp: Date.now()
+                });
 
-            alert("Hotel guardado con éxito");
-            nombreInput.value = "";
-            direccionInput.value = "";
-            costoInput.value = "";
-            actualizarMapa();
+                alert("Hotel guardado con éxito");
+                nombreInput.value = "";
+                direccionInput.value = "";
+                costoInput.value = "";
+                actualizarMapa();
+            } catch (error) {
+                alert("Error al guardar en Firebase: " + error.message);
+                console.error(error);
+            }
         });
 
         onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
@@ -244,12 +250,14 @@
                     <td class="p-3 font-bold">${item.moneda}</td>
                     <td class="p-3 text-brasil-green font-bold">${sim} ${item.costo}</td>
                     <td class="p-3 text-center">
-                        <button onclick="window.verEnMapa('${item.nombre}', '${item.direccion || ''}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
-                        <button onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" onclick="window.verEnMapa('${item.nombre.replace(/'/g, "\\'")}', '${(item.direccion || '').replace(/'/g, "\\'")}', '${item.lugar}')" class="text-cyan-400 cursor-pointer mr-3" title="Ver en Mapa"><i class="fa-solid fa-map"></i></button>
+                        <button type="button" onclick="window.delHotel('${d.id}')" class="text-red-400 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }, (error) => {
+            console.error("Error en onSnapshot:", error);
         });
 
         window.verEnMapa = (nombre, direccion, lugar) => {
@@ -260,7 +268,11 @@
 
         window.delHotel = async (id) => { 
             if (confirm("¿Eliminar este alojamiento?")) {
-                await deleteDoc(doc(db, "hoteles_reservas", id)); 
+                try {
+                    await deleteDoc(doc(db, "hoteles_reservas", id));
+                } catch (error) {
+                    alert("Error al eliminar: " + error.message);
+                }
             }
         };
     </script>
