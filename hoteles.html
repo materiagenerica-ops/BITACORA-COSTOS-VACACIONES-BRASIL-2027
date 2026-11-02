@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hoteles y Alojamientos - Bitácora Brasil 2027</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,108 +21,78 @@
         .glass-panel { background: rgba(10, 22, 40, 0.90); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; }
         .glass-input:focus { border-color: #fedf00; outline: none; }
-        #mapa-hotel { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
     </style>
 </head>
 <body class="min-h-screen">
-    <div class="max-w-6xl mx-auto space-y-6 pb-12">
-        
-        <!-- ENCABEZADO -->
+    <div class="max-w-4xl mx-auto space-y-6 pb-12">
         <div class="glass-panel p-6 rounded-3xl">
             <h3 class="text-xl font-bold text-amber-400 mb-2"><i class="fa-solid fa-hotel mr-2"></i> Hoteles y Alojamientos</h3>
-            <p class="text-slate-300 text-sm">Ingresa los datos del hospedaje, su dirección exacta y visualízalo con marcador en Google Maps.</p>
+            <p class="text-slate-300 text-sm">Ingresa los datos del hospedaje y selecciona si el costo es en Pesos o Reales.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="glass-panel p-6 rounded-3xl space-y-4">
+            <input type="hidden" id="hotel-id">
             
-            <!-- FORMULARIO -->
-            <div class="glass-panel p-6 rounded-3xl space-y-4 lg:col-span-1">
-                <input type="hidden" id="hotel-id">
-                
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Nombre del Hotel:</label>
                     <input type="text" id="hotel_nombre" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" placeholder="Ej: Hotel Copacabana">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Dirección Exacta:</label>
-                    <input type="text" id="hotel_direccion" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" placeholder="Ej: Av. Atlântica 1702, Rio de Janeiro">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Lugar / Destino:</label>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Lugar:</label>
                     <select id="hotel_lugar" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm bg-slate-900">
                         <option value="Sao Gabriel">Sao Gabriel</option>
                         <option value="Capão da Canoa">Capão da Canoa</option>
                         <option value="Torres">Torres</option>
                     </select>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Check-in:</label>
-                        <input type="date" id="check_in" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Check-out:</label>
-                        <input type="date" id="check_out" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Check-in:</label>
+                    <input type="date" id="check_in" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
                 </div>
-
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Noches:</label>
-                        <input type="number" id="cantidad_noches" class="glass-input w-full px-3 py-2.5 rounded-xl text-sm font-bold text-amber-300" value="1" min="1">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Pax:</label>
-                        <input type="number" id="cantidad_personas" class="glass-input w-full px-3 py-2.5 rounded-xl text-sm" value="2" min="1">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-amber-400 mb-1">Moneda:</label>
-                        <select id="moneda_hotel" class="glass-input w-full px-2 py-2.5 rounded-xl text-xs font-bold text-amber-300 bg-slate-900">
-                            <option value="ARS">Pesos ($)</option>
-                            <option value="BRL">Reales (R$)</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Check-out:</label>
+                    <input type="date" id="check_out" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Noches:</label>
+                    <input type="number" id="cantidad_noches" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm font-bold text-amber-300" value="1" min="1">
+                </div>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Personas:</label>
+                    <input type="number" id="cantidad_personas" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" value="2" min="1">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-amber-400 mb-1">Moneda:</label>
+                    <select id="moneda_hotel" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm font-bold text-amber-300 bg-slate-900">
+                        <option value="ARS">Pesos Argentinos ($ ARS)</option>
+                        <option value="BRL">Reales (R$)</option>
+                    </select>
+                </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-brasil-green mb-1" id="label-costo">Costo Total:</label>
                     <input type="number" id="costo_hotel" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm font-bold text-brasil-green" placeholder="Monto" step="any">
                 </div>
-
-                <div class="flex gap-2 pt-2">
-                    <button type="button" id="btn-guardar" class="w-full py-3 rounded-xl bg-brasil-green text-white font-bold text-xs uppercase cursor-pointer">Guardar Hotel</button>
-                    <button type="button" id="btn-cancelar" class="hidden px-4 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancelar</button>
-                </div>
             </div>
 
-            <!-- MAPA DE GOOGLE MAPS -->
-            <div class="glass-panel p-6 rounded-3xl space-y-4 lg:col-span-2 flex flex-col">
-                <h4 class="text-sm font-bold text-cyan-400 flex items-center justify-between">
-                    <span><i class="fa-solid fa-map-location-dot mr-2"></i> Google Maps - Marcador de Dirección</span>
-                    <span id="info-hotel-mapa" class="text-xs text-amber-300 font-normal">Ubicación general</span>
-                </h4>
-                <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy"></iframe>
-                <p class="text-xs text-slate-400 italic">Haz clic en el botón de mapa <i class="fa-solid fa-map text-cyan-300"></i> en cualquier hotel del historial para ubicar exactamente su dirección en el mapa.</p>
+            <div class="flex gap-4 pt-2">
+                <button type="button" id="btn-guardar" class="px-6 py-3 rounded-xl bg-brasil-green text-white font-bold text-xs uppercase cursor-pointer">Guardar Hotel</button>
+                <button type="button" id="btn-cancelar" class="hidden px-5 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancelar</button>
             </div>
-
         </div>
 
-        <!-- HISTORIAL -->
         <div class="glass-panel p-6 rounded-3xl">
-            <h4 class="text-base font-bold text-white mb-3">Historial de Alojamientos</h4>
+            <h4 class="text-base font-bold text-white mb-3">Historial Guardado</h4>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-300">
                     <thead class="bg-slate-900 text-brasil-yellow uppercase">
-                        <tr>
-                            <th class="p-2.5">Hotel / Dirección</th>
-                            <th class="p-2.5">Noches</th>
-                            <th class="p-2.5">Moneda</th>
-                            <th class="p-2.5 text-right">Costo</th>
-                            <th class="p-2.5 text-center">Acciones / Mapa</th>
-                        </tr>
+                        <tr><th class="p-2.5">Hotel</th><th class="p-2.5">Noches</th><th class="p-2.5">Moneda</th><th class="p-2.5 text-right">Costo</th><th class="p-2.5 text-center">Acciones</th></tr>
                     </thead>
                     <tbody id="historial-hoteles-body" class="divide-y divide-white/5"></tbody>
                 </table>
@@ -145,5 +114,133 @@
         }));
 
         const nombreInput = document.getElementById("hotel_nombre");
-        const direccionInput = document.getElementById("hotel_direccion");
-        const lugarInput = document.getElementById("hotel_lugar
+        const lugarInput = document.getElementById("hotel_lugar");
+        const checkInInput = document.getElementById("check_in");
+        const checkOutInput = document.getElementById("check_out");
+        const nochesInput = document.getElementById("cantidad_noches");
+        const personasInput = document.getElementById("cantidad_personas");
+        const monedaSelect = document.getElementById("moneda_hotel");
+        const costoInput = document.getElementById("costo_hotel");
+        const labelCosto = document.getElementById("label-costo");
+        const hotelIdInput = document.getElementById("hotel-id");
+        const btnGuardar = document.getElementById("btn-guardar");
+        const btnCancelar = document.getElementById("btn-cancelar");
+        const historialBody = document.getElementById("historial-hoteles-body");
+
+        monedaSelect.addEventListener("change", () => {
+            if (monedaSelect.value === 'BRL') {
+                labelCosto.textContent = "Costo en Reales (R$):";
+            } else {
+                labelCosto.textContent = "Costo en Pesos ($):";
+            }
+        });
+
+        checkInInput.addEventListener("change", calcNoches);
+        checkOutInput.addEventListener("change", calcNoches);
+
+        function calcNoches() {
+            if (checkInInput.value && checkOutInput.value) {
+                const diff = new Date(checkOutInput.value) - new Date(checkInInput.value);
+                const dias = Math.round(diff / (1000 * 60 * 60 * 24));
+                if (dias > 0) nochesInput.value = dias;
+            }
+        }
+
+        btnGuardar.addEventListener("click", async () => {
+            const id = hotelIdInput.value;
+            const nombre = nombreInput.value.trim();
+            const lugar = lugarInput.value;
+            const checkIn = checkInInput.value || "Sin especificar";
+            const checkOut = checkOutInput.value || "Sin especificar";
+            const noches = parseInt(nochesInput.value) || 1;
+            const personas = parseInt(personasInput.value) || 1;
+            const moneda = monedaSelect.value;
+            const costo = parseFloat(costoInput.value) || 0;
+
+            if (!nombre) { alert("Ingresa el nombre del hotel"); return; }
+            if (costo <= 0) { alert("Ingresa un costo válido mayor a 0"); return; }
+
+            const data = { nombre, lugar, checkIn, checkOut, noches, personas, moneda, costo: costo.toFixed(2), timestamp: Date.now() };
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "hoteles_reservas", id), data);
+                    alert("Hotel actualizado");
+                } else {
+                    await addDoc(collection(db, "hoteles_reservas"), data);
+                    alert("Hotel guardado");
+                }
+                resetForm();
+            } catch (e) { alert("Error: " + e.message); }
+        });
+
+        function resetForm() {
+            hotelIdInput.value = "";
+            nombreInput.value = "";
+            checkInInput.value = "";
+            checkOutInput.value = "";
+            nochesInput.value = "1";
+            personasInput.value = "2";
+            monedaSelect.value = "ARS";
+            costoInput.value = "";
+            labelCosto.textContent = "Costo Total:";
+            btnCancelar.classList.add("hidden");
+            btnGuardar.textContent = "Guardar Hotel";
+        }
+
+        btnCancelar.addEventListener("click", resetForm);
+
+        onSnapshot(collection(db, "hoteles_reservas"), (snap) => {
+            historialBody.innerHTML = "";
+            if (!snap.empty) {
+                let docs = [];
+                snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                docs.forEach(item => {
+                    const moneda = (item.moneda || 'ARS').toUpperCase();
+                    const monto = parseFloat(item.costo || item.costoPesos) || 0;
+                    const sim = moneda === 'BRL' ? 'R$' : '$';
+
+                    const tr = document.createElement("tr");
+                    tr.className = "border-b border-white/5";
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-semibold text-white">${item.nombre} <span class="text-[10px] text-cyan-400 block">${item.lugar}</span></td>
+                        <td class="p-2.5">${item.noches} noches</td>
+                        <td class="p-2.5 font-bold">${moneda}</td>
+                        <td class="p-2.5 text-right font-semibold text-brasil-green">${sim} ${monto.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2.5 text-center space-x-2">
+                            <button class="text-blue-400 cursor-pointer btn-edit"><i class="fa-solid fa-pen"></i></button>
+                            <button class="text-red-400 cursor-pointer btn-del"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+
+                    tr.querySelector(".btn-edit").addEventListener("click", () => {
+                        hotelIdInput.value = item.id;
+                        nombreInput.value = item.nombre;
+                        lugarInput.value = item.lugar;
+                        checkInInput.value = item.checkIn !== "Sin especificar" ? item.checkIn : "";
+                        checkOutInput.value = item.checkOut !== "Sin especificar" ? item.checkOut : "";
+                        nochesInput.value = item.noches;
+                        personasInput.value = item.personas;
+                        monedaSelect.value = moneda;
+                        costoInput.value = monto;
+                        labelCosto.textContent = moneda === 'BRL' ? "Costo en Reales (R$):" : "Costo en Pesos ($):";
+                        btnCancelar.classList.remove("hidden");
+                        btnGuardar.textContent = "Actualizar Hotel";
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+
+                    tr.querySelector(".btn-del").addEventListener("click", async () => {
+                        if (confirm("¿Eliminar?")) await deleteDoc(doc(db, "hoteles_reservas", item.id));
+                    });
+
+                    historialBody.appendChild(tr);
+                });
+            } else {
+                historialBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`;
+            }
+        });
+    </script>
+</body>
+</html>
