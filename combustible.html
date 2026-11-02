@@ -139,7 +139,7 @@
 
         const nombreInput = document.getElementById("hotel_nombre");
         const direccionInput = document.getElementById("hotel_direccion");
-        const lugarInput = document.getElementById("hotel_lugar");
+        const lugarSelect = document.getElementById("hotel_lugar");
         const checkInInput = document.getElementById("check_in");
         const checkOutInput = document.getElementById("check_out");
         const nochesInput = document.getElementById("cantidad_noches");
@@ -149,21 +149,29 @@
         const labelCosto = document.getElementById("label-costo");
         const mapaIframe = document.getElementById("mapa-hotel");
 
-        // Lógica idéntica a combustible para actualizar el mapa en tiempo real
+        // Función corregida: toma la dirección exacta del input y el select de lugar
         function actualizarMapa() {
-            const nom = nombreInput.value.trim();
             const dir = direccionInput.value.trim();
-            const lug = lugarInput.value;
+            const nom = nombreInput.value.trim();
+            const lugar = lugarSelect.value; // Correcto: extrae el valor del select
             
-            const consulta = `${nom} ${dir} ${lug} Brasil`.trim();
-            const query = encodeURIComponent(consulta);
-            mapaIframe.src = `https://maps.google.com/maps?q=${query}&output=embed`;
+            // Si hay dirección escrita, prioriza dirección + lugar. Si no, usa nombre + lugar.
+            let consulta = "";
+            if (dir !== "") {
+                consulta = `${dir}, ${lugar}, Brasil`;
+            } else if (nom !== "") {
+                consulta = `${nom}, ${lugar}, Brasil`;
+            } else {
+                consulta = `${lugar}, Brasil`;
+            }
+
+            mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
-        [nombreInput, direccionInput, lugarInput].forEach(el => {
-            el.addEventListener("input", actualizarMapa);
-        });
-        lugarInput.addEventListener("change", actualizarMapa);
+        // Eventos para actualizar en tiempo real al escribir la dirección o cambiar opciones
+        direccionInput.addEventListener("input", actualizarMapa);
+        nombreInput.addEventListener("input", actualizarMapa);
+        lugarSelect.addEventListener("change", actualizarMapa);
 
         monedaSelect.addEventListener("change", () => {
             labelCosto.textContent = monedaSelect.value === 'BRL' ? "Costo Total (R$):" : "Costo Total ($):";
@@ -183,7 +191,7 @@
         document.getElementById("btn-guardar-hotel").addEventListener("click", async () => {
             const nombre = nombreInput.value.trim();
             const direccion = direccionInput.value.trim();
-            const lugar = lugarInput.value;
+            const lugar = lugarSelect.value;
             const checkIn = checkInInput.value || "Sin especificar";
             const checkOut = checkOutInput.value || "Sin especificar";
             const noches = parseInt(nochesInput.value) || 1;
@@ -245,7 +253,7 @@
         });
 
         window.verEnMapa = (nombre, direccion, lugar) => {
-            const consulta = `${nombre} ${direccion} ${lugar} Brasil`.trim();
+            const consulta = direccion ? `${direccion}, ${lugar}, Brasil` : `${nombre}, ${lugar}, Brasil`;
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
