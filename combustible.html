@@ -149,13 +149,11 @@
         const labelCosto = document.getElementById("label-costo");
         const mapaIframe = document.getElementById("mapa-hotel");
 
-        // Función corregida: toma la dirección exacta del input y el select de lugar
         function actualizarMapa() {
             const dir = direccionInput.value.trim();
             const nom = nombreInput.value.trim();
-            const lugar = lugarSelect.value; // Correcto: extrae el valor del select
+            const lugar = lugarSelect.value;
             
-            // Si hay dirección escrita, prioriza dirección + lugar. Si no, usa nombre + lugar.
             let consulta = "";
             if (dir !== "") {
                 consulta = `${dir}, ${lugar}, Brasil`;
@@ -168,9 +166,9 @@
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
-        // Eventos para actualizar en tiempo real al escribir la dirección o cambiar opciones
-        direccionInput.addEventListener("input", actualizarMapa);
-        nombreInput.addEventListener("input", actualizarMapa);
+        // Se usa 'blur' (al salir del input) y 'change' (al cambiar el selector) exactamente igual que en combustible
+        direccionInput.addEventListener("blur", actualizarMapa);
+        nombreInput.addEventListener("blur", actualizarMapa);
         lugarSelect.addEventListener("change", actualizarMapa);
 
         monedaSelect.addEventListener("change", () => {
