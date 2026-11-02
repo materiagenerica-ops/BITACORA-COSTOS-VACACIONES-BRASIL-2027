@@ -27,7 +27,8 @@
         .glass-panel { background: rgba(10, 22, 40, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(254, 223, 0, 0.18); }
         .glass-input { background: rgba(5, 11, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; }
         .glass-input:focus { border-color: #fedf00; box-shadow: 0 0 20px rgba(254, 223, 0, 0.3); outline: none; }
-        #mapa-hotel { height: 380px; width: 100%; border-radius: 1rem; border: 1px solid rgba(254, 223, 0, 0.2); }
+        .map-container { position: relative; width: 100%; height: 380px; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(254, 223, 0, 0.2); }
+        .map-container iframe { width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -94,10 +95,12 @@
                 </div>
             </div>
 
-            <!-- GOOGLE MAPS IFRAME -->
+            <!-- CONTENEDOR GOOGLE MAPS -->
             <div class="pt-4 border-t border-white/10 space-y-3">
                 <label class="block text-xs font-bold uppercase tracking-wider text-cyan-400">Ubicación en Google Maps:</label>
-                <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy"></iframe>
+                <div class="map-container">
+                    <iframe id="mapa-hotel" src="https://maps.google.com/maps?q=Torres+Brasil&output=embed" allowfullscreen="" loading="lazy"></iframe>
+                </div>
             </div>
 
             <div class="flex items-center gap-4 pt-2">
@@ -166,9 +169,8 @@
             mapaIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&output=embed`;
         }
 
-        // Se usa 'blur' (al salir del input) y 'change' (al cambiar el selector) exactamente igual que en combustible
-        direccionInput.addEventListener("blur", actualizarMapa);
-        nombreInput.addEventListener("blur", actualizarMapa);
+        direccionInput.addEventListener("change", actualizarMapa);
+        nombreInput.addEventListener("change", actualizarMapa);
         lugarSelect.addEventListener("change", actualizarMapa);
 
         monedaSelect.addEventListener("change", () => {
